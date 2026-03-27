@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ place.name }} | CommitToEat</title>
+</head>
+<body>
+    <h1>{{ place.name }}</h1>
+    <p>📍 {{ place.address }}</p>
+    <p>💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}</p>
+    
+    <h2>Отзывы</h2>
+    {% for review in reviews %}
+        <div>
+            <strong>{{ review.user.username }}</strong> (⭐ {{ review.rating }}) 
+            <small>{{ review.created_at|date:"d.m.Y" }}</small>
+            <p>{{ review.text }}</p>
+            {% if review.photo_url %}
+                <img src="{{ review.photo_url }}" width="200">
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>Пока нет отзывов.</p>
+    {% endfor %}
+    
+    {% if user.is_authenticated %}
+        <h3>Добавить отзыв</h3>
+        <form method="post" action="{% url 'add_review' place.id %}">
+            {% csrf_token %}
+            <select name="rating" required>
+                <option value="5">5 ★</option>
+                <option value="4">4 ★</option>
+                <option value="3">3 ★</option>
+                <option value="2">2 ★</option>
+                <option value="1">1 ★</option>
+            </select>
+            <textarea name="text" rows="3" placeholder="Ваш отзыв..." required></textarea>
+            <input type="url" name="photo_url" placeholder="Ссылка на фото (необязательно)">
+            <button type="submit">Отправить</button>
+        </form>
+    {% else %}
+        <p><a href="/accounts/login/">Войдите</a>, чтобы оставить отзыв</p>
+    {% endif %}
+    
+    <p><a href="/">← На главную</a></p>
+</body>
+</html>

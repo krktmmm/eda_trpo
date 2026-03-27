@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CommitToEat - Все заведения</title>
+</head>
+<body>
+    <h1>🍔 CommitToEat</h1>
+    
+    {% if user.is_authenticated %}
+        <p>Привет, {{ user.username }}! <a href="/accounts/logout/">Выйти</a></p>
+    {% else %}
+        <p><a href="/accounts/login/">Войти</a> | <a href="/register/">Регистрация</a></p>
+    {% endif %}
+    
+    <h2>Все заведения</h2>
+    
+    {% for place in places %}
+        <div>
+            <h3>{{ place.name }}</h3>
+            <p>{{ place.address }}</p>
+            <p>💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}</p>
+            <a href="/place/{{ place.id }}/">Подробнее →</a>
+        </div>
+        <hr>
+    {% empty %}
+        <p>Пока нет заведений. Добавьте их через админку.</p>
+    {% endfor %}
+    
+    <p><a href="/admin/">Админка</a></p>
+</body>
+</html>
