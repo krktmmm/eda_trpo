@@ -10,7 +10,7 @@ class Place(models.Model):
     time_from_building_3 = models.IntegerField(default=100, verbose_name="Время от корпуса №3 (мин)")
     time_from_building_5 = models.IntegerField(default=100, verbose_name="Время от корпуса №5 (мин)")
     
-    nearest_building = models.CharField(max_length=10, blank=True, verbose_name="Ближайший корпус", help_text="Например: №1, №3, №5")
+    nearest_building = models.CharField(max_length=5, blank=True, verbose_name="Ближайший корпус", help_text="Например: №1, №3 или №5")
     
     cuisine_type = models.CharField(max_length=100, blank=True, verbose_name="Тип кухни")
     avg_price = models.IntegerField(blank=True, null=True, verbose_name="Средний чек (₽)")

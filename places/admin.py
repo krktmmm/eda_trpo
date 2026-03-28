@@ -4,8 +4,8 @@ from .models import Place, Review
 @admin.register(Place)
 class PlaceAdmin(admin.ModelAdmin):
     list_display = ('name', 'address', 'nearest_building', 'avg_price', 'rating')
-    search_fields = ('name', 'address')
     list_filter = ('nearest_building', 'cuisine_type')
+    search_fields = ('name', 'address')
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
