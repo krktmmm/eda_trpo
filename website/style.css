@@ -1,0 +1,139 @@
+@charset "UTF-8";
+
+* {                                     /* (*) - все элементы на странице*/
+    margin: 0;                          /* Убираем внешние отступы у всех элементов */
+    padding: 0;                         /* Убираем внутренние отступы у всех элементов */
+    box-sizing: border-box;             /* Ширина элемента включает padding и border */
+}
+
+/* СТИЛИ ДЛЯ ВСЕЙ СТРАНИЦЫ */
+body {
+    background-color: #fefcfc;        /* Цвет фона страницы */
+    font-family: Arial;                 /* Шрифт для всего текста на странице */
+    text-align: center;                 /* Выравнивание по центру */
+    overflow-x: hidden;                 /* Запрещаем горизонтальный скролл */
+}
+
+/* СТИЛИ ДЛЯ ЗАГОЛОВКА h1 */
+h1 {
+    color: rgb(1, 1, 18);        /* Цвет заголовка */
+    margin-top: 100px;                   /* Отступ сверху*/
+}
+
+/* ШАПКА САЙТА */
+.navigation {
+    background-color: #ADD8E6;        /* Цвет фона шапки */
+    padding: 0;                 /* вертикальные отступы */
+    width: 100%;                        /* На всю ширину окна */
+    overflow: hidden;                 /* Запрещаем горизонтальную прокрутку */
+}
+
+/* КНОПКИ */
+.panel {
+    display: flex;                      /* FLEX - элементы встают в ряд */
+    justify-content: space-between;     /* space-between - логотип слева, меню по центру, профиль справа */
+    align-items: center;                /* Выравниваем все кнопки по центру по вертикали */
+    max-width: 1200px;                  /* Максимальная ширина контейнера */
+    height: 150px;
+    margin: 0; 
+}
+
+/* Контейнер для меню, чтобы правильно центрировать кнопки */
+.menu {
+    display: flex;                      /* Кнопки в ряд */
+    gap: 20px;                          /* Расстояние между кнопками */
+    margin: 0 auto;                     /* Центрируем меню между логотипом и профилем */
+}
+
+/* Все кнопки, кроме профиля */
+.menu a {
+    /* настройка кнопок */
+    background-color: #5F9EA0;        /* Цвет фона кнопок */
+    text-decoration: none;              /* Убираем подчеркивание у ссылок */
+    color: #2c3e50;
+    width: 150px;                       /* Фиксированная ширина */
+    height: 75px; 
+    border-radius: 5px;                 /* Скругление углов - 5 пикселей */
+    /* расположение */
+    display: flex;                      /* Кнопки в ряд, но можно задавать размеры */
+    align-items: center;                /* Вертикальное выравнивание по центру */
+    justify-content: center;            /* Горизонтальное выравнивание по центру */
+    /* настройка текста */
+    font-family: Impact;                /* Шрифт для кнопок */
+    font-size: 25px;                    /* Размер текста на кнопках */
+    font-weight: bold;                  /* Жирный текст */
+    transition: 0.3s;                   /* Плавный переход при наведении */
+}
+
+/* КНОПКА ПРОФИЛЯ */
+.panel .profile {
+    background-color: #5F9EA0; 
+    text-decoration: none;
+    color: #2c3e50;
+    width: 78px;                        /* Ширина */
+    height: 78px;                       /* Высота */
+    border-radius: 50%;                 /* Скругление 50% = круг */
+    /* Выравнивание содержимого */
+    display: flex;
+    align-items: center;                /* Центрируем иконку по вертикали */
+    justify-content: center;            /* Центрируем иконку по горизонтали */
+    overflow: hidden;                   /* Обрезаем всё, что выходит за пределы круга */
+    flex-shrink: 0;                     /* Запрещаем сжатие */
+    transition: 0.3s;
+}
+
+.panel .profile img {
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;                 /* Обрезаем по кругу */
+    object-fit: cover;                  /* Сохраняем пропорции */
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+.menu a:hover {
+    background-color: #4b8082;        /* Цвет фона при наведении */
+    color: #1d2935;                   /* Цвет текста при наведении */
+    transform: scale(1.1);
+}
+
+.panel .profile:hover {
+    background-color: #4b8082;
+    transform: scale(1.1);
+}
+
+/* ЛОГОТИП */
+.logo {
+    display: flex;
+    margin-left: 0;
+    align-items: center;
+    flex-shrink: 0;                     /*Запрещаем сжатие логотипа */
+    height: 100%;
+}
+
+.logo img {
+    height: 350%;
+    object-fit: cover;                  /* Если нужно обрезать, сохраняя пропорции */
+    width: auto;                        /* Ширина автоматически пропорционально высоте */
+    display: block;                     /* Убираем лишние отступы */
+}
+
+/* СТИЛИ ДЛЯ ПРИВЕТСТВИЯ */
+.greeting {
+    max-width: 1200px;                  /* Максимальная ширина как у шапки */
+    margin: 0 auto;                     /* Центрируем на странице */
+    padding: 10px;                      /* Внутренние отступы */
+    text-align: start;                 /* Текст по центру */
+}
+
+/* Дополнительные стили для контента внутри greeting */
+.greeting h1 {
+    color: rgb(104, 104, 158);
+    font-size: 70px;
+    margin-bottom: 20px;
+}
+
+.greeting p {
+    color: #333;
+    font-size: 18px;
+    line-height: 1.5;
+}
