@@ -17,7 +17,7 @@
     {% for place in places %}
         <div>
             <h3>{{ place.name }}</h3>
-            <p>{{ place.address }}</p>
+            <p>📍 {{ place.address }}</p>
             <p>💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}</p>
             <a href="/place/{{ place.id }}/">Подробнее →</a>
         </div>
