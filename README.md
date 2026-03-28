@@ -1,4 +1,4 @@
-# CommitToEat 🍔
+# СытГУТИ 🍔
 
 Сайт-помощник для студентов СибГУТИ.
 
@@ -11,8 +11,8 @@ CommitToEat помогает:
 
 ### 1. Клонировать репозиторий:
 ```bash
-git clone https://github.com/krktmmm/commit-to-eat.git
-cd commit-to-eat
+git clone https://github.com/krktmmm/trpo_project.git
+cd trpo_project
 ```
 
 ### 2. Создать виртуальное окружение:
