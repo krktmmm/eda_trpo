@@ -1,52 +1,46 @@
-<!-- ОБЪЯВЛЕНИЕ ТИПА ДОКУМЕНТА -->
 <!DOCTYPE html>
-
 <html lang="ru">
-
-<!-- Информация, не видна на странице -->
-<head> 
-    <!-- КОДИРОВКА -->
-    <meta charset="UTF-8"> 
-    
-    <!-- НАЗВАНИЕ СТРАНИЦЫ -->
-    <title>my website</title> 
-    
-    <!-- Берем стили из файла style.css -->
-    <link rel="stylesheet" href="style.css"> 
-</head> 
-
-<!-- Всё, что видит пользователь, пишется здесь -->
-<body> 
-    <!-- Навигация -->
+<head>
+    <meta charset="UTF-8">
+    <title>my website</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ШАПКА САЙТА -->
     <div class="navigation">
-        <!-- ПАНЕЛЬ -->
+        <!-- ЛОГОТИП -->
+        <div class="logo">
+            <img src="images/log.png" alt="Логотип">
+        </div>
+        
+        <!-- КНОПКИ -->
         <div class="panel">
-            <!-- ЛОГОТИП -->
-            <div class="logo">
-                <img src="images/logo.png" alt="Логотип"> 
-                <!-- <img> — тег для вставки изображения
-                src = "logo.png" — указывает путь к файлу изображения (логотип должен лежать в той же папке, что и HTML-файл)
-                alt = "Логотип" — альтернативный текст, который покажется, если изображение не загрузится -->
+            <!-- ПОИСКОВАЯ СТРОКА -->
+            <div class="search">
+                <input type="text" placeholder="Поиск...">
+                <button>
+                    <span>🔍</span>
+                </button>
             </div>
             
-            <!-- ← ИСПРАВЛЕНО: добавил контейнер .menu для правильного центрирования кнопок -->
+            <!-- МЕНЮ -->
             <div class="menu">
-                <!-- КНОПКИ -->
                 <a href="#">Главная</a>
                 <a href="#">О нас</a>
                 <a href="#">Контакты</a>
             </div>
             
-            <!-- КНОПКА ПРОФИЛЯ -->
-            <a href="#" class="profile"><img src="images/avatar.jpg" alt="Профиль"></a>
-            
-        </div> 
+            <!-- ПРОФИЛЬ -->
+            <a href="#" class="profile">
+                <img src="images/avatar.jpg" alt="Профиль">
+            </a>
+        </div>
     </div>
-
+    
+    <!-- ПРИВЕТСТВИЕ -->
     <div class="greeting">
         <h1>Добро пожаловать!</h1>
-        <p>мемемемемемебебебебебе</p>
+        <p>мемемемемемемебебебебе</p>
     </div>
-
 </body>
 </html>
