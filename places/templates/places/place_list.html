@@ -1,31 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>CommitToEat - Все заведения</title>
+    <meta charset="UTF-8">
+    <title>СытГУТИ</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>СытГУТИ 🍔</h1>
-    
-    {% if user.is_authenticated %}
-        <p>Привет, {{ user.username }}! <a href="/accounts/logout/">Выйти</a></p>
-    {% else %}
-        <p><a href="/accounts/login/">Войти</a> | <a href="/register/">Регистрация</a></p>
-    {% endif %}
-    
-    <h2>Все заведения</h2>
-    
-    {% for place in places %}
-        <div>
-            <h3>{{ place.name }}</h3>
-            <p>📍 {{ place.address }}</p>
-            <p>💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}</p>
-            <a href="/place/{{ place.id }}/">Подробнее →</a>
+    <!-- ШАПКА САЙТА -->
+    <div class="navigation">
+        <!-- ЛОГОТИП -->
+        <div class="logo">
+            <img src="/static/images/log.png" alt="Логотип">
         </div>
-        <hr>
-    {% empty %}
-        <p>Пока нет заведений. Добавьте их через админку.</p>
-    {% endfor %}
+        
+        <!-- КНОПКИ -->
+        <div class="panel">
+            <!-- ПОИСКОВАЯ СТРОКА -->
+            <div class="search">
+                <input type="text" placeholder="Поиск...">
+                <button>
+                    <span>🔍</span>
+                </button>
+            </div>
+            
+            <!-- МЕНЮ -->
+            <div class="menu">
+                <a href="/">Главная</a>
+                <a href="#">О нас</a>
+                <a href="#">Контакты</a>
+            </div>
+            
+            <!-- ПРОФИЛЬ -->
+            {% if user.is_authenticated %}
+                <a href="/accounts/logout/" class="profile">
+                    <img src="/static/images/avatar.jpg" alt="Профиль">
+                </a>
+            {% else %}
+                <a href="/accounts/login/" class="profile">
+                    <img src="/static/images/avatar.jpg" alt="Войти">
+                </a>
+            {% endif %}    
+        </div>
+    </div>
     
-    <p><a href="/admin/">Админка</a></p>
+    <!-- ПРИВЕТСТВИЕ -->
+    <div class="greeting">
+        <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
+        {% if user.is_authenticated %}
+            <p>Привет, {{ user.username }}!</p>
+        {% else %}
+            <p><a href="/accounts/login/">Войдите</a> или <a href="/register/">зарегистрируйтесь</a></p>
+        {% endif %}
+    </div>
 </body>
 </html>
