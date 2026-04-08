@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой профиль | СытГУТИ 🍔</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- ШАПКА -->
+<div class="navigation">
+    <div class="logo">
+        <img src="/static/images/log.png" alt="Логотип">
+    </div>
+    <div class="panel">
+        <div class="search">
+            <input type="text" placeholder="Поиск...">
+            <button><span>🔍</span></button>
+        </div>
+        <div class="menu">
+            <a href="/">Главная</a>
+            <a href="#">О нас</a>
+            <a href="#">Контакты</a>
+        </div>
+        <a href="/accounts/logout/" class="profile">
+            <img src="/static/images/avatar.jpg" alt="Выйти">
+        </a>
+    </div>
+</div>
+
+<!-- ПРОФИЛЬ -->
+<div class="greeting">
+    <h1>Мой профиль</h1>
+    <p><strong>{{ user.username }}</strong></p>
+    <p>Email: {{ user.email|default:"Не указан" }}</p>
+    <p>Дата регистрации: {{ user.date_joined|date:"d.m.Y" }}</p>
+</div>
+
+<!-- ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ -->
+<h2 style="text-align:center;">Мои отзывы</h2>
+
+{% for review in reviews %}
+    <div style="border: 1px solid #ddd; margin: 10px auto; padding: 10px; width: 80%;">
+        <p><strong>{{ review.place.name }}</strong> — ⭐ {{ review.rating }}/5</p>
+        <p>{{ review.text }}</p>
+        <small>{{ review.created_at|date:"d.m.Y H:i" }}</small>
+    </div>
+{% empty %}
+    <p style="text-align:center;">Вы ещё не оставили ни одного отзыва.</p>
+{% endfor %}
+
+<div style="text-align: center; margin-top: 30px;">
+    <a href="/">На главную</a>
+</div>
+
+</body>
+</html>
