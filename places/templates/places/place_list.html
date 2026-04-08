@@ -48,8 +48,6 @@
         <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
         {% if user.is_authenticated %}
             <p>Привет, {{ user.username }}!</p>
-        {% else %}
-            <p><a href="/accounts/login/">Войдите</a> или <a href="/register/">зарегистрируйтесь</a></p>
         {% endif %}
     </div>
 </body>
