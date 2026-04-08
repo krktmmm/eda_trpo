@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+
+# Виртуальное окружение
+venv/
+env/
+ENV/
+.venv
+
+# База данных
+db.sqlite3
+db.sqlite3-journal
+
+# Django
+*.log
+*.pot
+*.pyc
+local_settings.py
+
+# Статика и загрузки (если будут)
+/staticfiles/
+/media/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Логи и тесты
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Миграции
+**/migrations/*.py
+!**/migrations/__init__.py
