@@ -6,13 +6,19 @@
     <link rel="stylesheet" href="/static/register_style.css">
 </head>
 <body>
-    <h2>Регистрация</h2>
+    
     <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+        <h2>Регистрация</h2>
+        <label>Имя пользователя</label><br>
+        <input type="text" name="username" required><br><br>
+        
+        <label>Пароль</label><br>
+        <input type="password" name="password" required><br><br>
+        
         <button type="submit">Зарегистрироваться</button>
+    
+        <p>Уже есть аккаунт? <a href="/accounts/login/">Войти</a></p>
+        <p><a href="/">На главную</a></p>
     </form>
-    <p>Уже есть аккаунт? <a href="/accounts/login/">Войти</a></p>
-    <p><a href="/">На главную</a></p>
 </body>
 </html>
