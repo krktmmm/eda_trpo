@@ -22,7 +22,9 @@
             <a href="#">О нас</a>
             <a href="#">Контакты</a>
         </div>
-        <a href="/accounts/logout/" class="logout-btn">Выйти из аккаунта</a>
+        <a href="/register/profile/" class="profile">
+            <img src="/static/images/avatar.jpg" alt="Профиль">
+        </a>
     </div>
 </div>
 
@@ -46,6 +48,11 @@
 {% empty %}
     <p style="text-align:center;">Вы ещё не оставили ни одного отзыва.</p>
 {% endfor %}
+
+<!-- КНОПКА ВЫХОДА -->
+<div style="text-align: center; margin: 20px;">
+    <a href="/accounts/logout/" class="logout-btn">Выйти из аккаунта</a>
+</div>
 
 <div style="text-align: center; margin-top: 30px;">
     <a href="/">На главную</a>
