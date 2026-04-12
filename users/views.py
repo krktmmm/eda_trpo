@@ -13,10 +13,7 @@ def register(request):
             login(request, user)
             return redirect('/')
         else:
-            for field, errors in form.errors.items():
-                 for error in errors:
-                      messages.error(request, f"{field}: {error}")
-            return redirect('/register/')
+            return render(request, 'registration/register.html', {'form': form})
     else:
         form = UserCreationForm()
         
