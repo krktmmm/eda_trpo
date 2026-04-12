@@ -50,5 +50,23 @@
             <p>Привет, {{ user.username }}!</p>
         {% endif %}
     </div>
+    
+    <!-- ЗАВЕДЕНИЯ -->
+    <h2 style="text-align:center; margin-top: 40px;">Все заведения</h2>
+    {% for place in places %}
+    <div style="border-bottom: 1px solid #ddd; margin: 10px auto; padding: 10px; width: 80%;">
+        <a href="/place/{{ place.id }}/" style="font-size: 1.3em; font-weight: bold; text-decoration: none; color: #2c3e50;">
+            {{ place.name }}
+        </a>
+        <br>
+        📍 {{ place.address }}<br>
+        💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}
+    </div>
+    {% empty %}
+    <p style="text-align:center;">Пока нет заведений. Добавьте их через админку.</p>
+    {% endfor %}
+    
+    <p style="text-align:center; margin-top: 20px;"><a href="/admin/">Админка</a></p>
+
 </body>
 </html>
