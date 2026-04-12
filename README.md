@@ -23,16 +23,16 @@ python -m venv venv
 ### 3. Активировать окружение:
 **Windows:**
 ```bash
-venv\Scripts\activate
+venv\Scripts\activate (для Git Bash: source venv/Scripts/activate)
 ```
 **Mac/Linux:**
 ```bash
 source venv/bin/activate
 ```
 
-### 4. Установить Django:
+### 4. Установить зависимости:
 ```bash
-pip install django
+pip install -r requirements.txt
 ```
 
 ### 5. Применить миграции:
