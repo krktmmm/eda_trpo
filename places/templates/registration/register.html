@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Регистрация | СытГУТИ 🍔</title>
@@ -10,15 +10,30 @@
     <form method="post">
         <h2>Регистрация</h2>
         {% csrf_token %}
-
-        <label>Имя пользователя</label><br>
-        <input type="text" name="username" required><br><br>
         
-        <label>Пароль</label><br>
-        <input type="password" name="password" required><br><br>
-
-        <label>Подтверждение пароля</label><br>
-        <input type="password" name="password2" required><br><br>
+        <!-- БЛОК С ОШИБКАМИ -->
+        {% if messages %}
+            <div style="color: red; margin-bottom: 15px;">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="input-box">
+            <span>Имя пользователя</span>
+            <input type="text" name="username" required>
+        </div>
+        
+        <div class="input-box">
+            <span>Пароль</span>
+            <input type="password" name="password1" required>
+        </div>
+        
+        <div class="input-box">
+            <span>Подтверждение пароля</span>
+            <input type="password" name="password2" required>
+        </div>
         
         <button type="submit" class="submit-bin">Зарегистрироваться</button>
     

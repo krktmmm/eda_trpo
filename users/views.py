@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from places.models import Review
+from django.contrib import messages
 
 def register(request):
     if request.method == 'POST':
@@ -11,8 +12,14 @@ def register(request):
             user = form.save()
             login(request, user)
             return redirect('/')
+        else:
+            for field, errors in form.errors.items():
+                 for error in errors:
+                      messages.error(request, f"{field}: {error}")
+            return redirect('/register/')
     else:
         form = UserCreationForm()
+        
     return render(request, 'registration/register.html', {'form': form})
 
 @login_required
