@@ -6,49 +6,167 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <!-- ШАПКА САЙТА -->
     <div class="navigation">
-        <!-- ЛОГОТИП -->
         <div class="logo">
             <img src="/static/images/log.png" alt="Логотип">
         </div>
-        
-        <!-- КНОПКИ -->
+
         <div class="panel">
-            <!-- ПОИСКОВАЯ СТРОКА -->
             <div class="search">
-                <input type="text" placeholder="Поиск...">
-                <button>
+                <input type="text" id="searchInput" placeholder="Поиск по названию...">
+                <button type="button">
                     <span>🔍</span>
                 </button>
             </div>
-            
-            <!-- МЕНЮ -->
+
             <div class="menu">
                 <a href="/">Главная</a>
                 <a href="#">О нас</a>
                 <a href="#">Контакты</a>
             </div>
-            
-            <!-- ПРОФИЛЬ -->
+
             {% if user.is_authenticated %}
-                <a href="/register/profile/" class="profile">
+                <a href="/accounts/logout/" class="profile">
                     <img src="/static/images/avatar.jpg" alt="Профиль">
                 </a>
             {% else %}
                 <a href="/accounts/login/" class="profile">
                     <img src="/static/images/avatar.jpg" alt="Войти">
                 </a>
-            {% endif %}    
+            {% endif %}
         </div>
     </div>
-    
-    <!-- ПРИВЕТСТВИЕ -->
+
     <div class="greeting">
         <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
         {% if user.is_authenticated %}
             <p>Привет, {{ user.username }}!</p>
+        {% else %}
+            <p><a href="/accounts/login/">Войдите</a> или <a href="/register/">зарегистрируйтесь</a></p>
         {% endif %}
     </div>
+
+    <div class="filters" style="margin: 20px;">
+        <h2>Поиск и фильтры</h2>
+
+        <div style="margin-bottom: 15px;">
+            <label for="cuisineFilter">Тип кухни:</label>
+            <select id="cuisineFilter">
+                <option value="">Все кухни</option>
+                {% for cuisine in cuisines %}
+                    <option value="{{ cuisine }}">{{ cuisine }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="buildingFilter">Ближайший корпус:</label>
+            <select id="buildingFilter">
+                <option value="">Все корпуса</option>
+                <option value="№1">№1</option>
+                <option value="№3">№3</option>
+                <option value="№5">№5</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="priceFilter">Средний чек до: <span id="priceValue">{{ max_price_value }}</span> ₽</label><br>
+            <input
+                type="range"
+                id="priceFilter"
+                min="0"
+                max="{{ max_price_value }}"
+                step="50"
+                value="{{ max_price_value }}"
+            >
+        </div>
+    </div>
+
+    <div id="placesList" style="margin: 20px;">
+        {% for place in places %}
+            <div class="place-card" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 10px;">
+                <h3>
+                    <a href="{% url 'place_detail' place.id %}">{{ place.name }}</a>
+                </h3>
+                <p><strong>Адрес:</strong> {{ place.address }}</p>
+                <p><strong>Кухня:</strong> {{ place.cuisine_type|default:"Не указано" }}</p>
+                <p><strong>Средний чек:</strong> {{ place.avg_price|default:"Не указан" }} ₽</p>
+                <p><strong>Ближайший корпус:</strong> {{ place.nearest_building|default:"Не указан" }}</p>
+                <p><strong>Рейтинг:</strong> {{ place.rating }}</p>
+            </div>
+        {% empty %}
+            <p>Заведений пока нет.</p>
+        {% endfor %}
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const cuisineFilter = document.getElementById('cuisineFilter');
+        const buildingFilter = document.getElementById('buildingFilter');
+        const priceFilter = document.getElementById('priceFilter');
+        const priceValue = document.getElementById('priceValue');
+        const placesList = document.getElementById('placesList');
+
+        function renderPlaces(places) {
+            placesList.innerHTML = '';
+
+            if (places.length === 0) {
+                placesList.innerHTML = '<p>Ничего не найдено.</p>';
+                return;
+            }
+
+            places.forEach(place => {
+                const card = document.createElement('div');
+                card.className = 'place-card';
+                card.style.border = '1px solid #ccc';
+                card.style.padding = '15px';
+                card.style.marginBottom = '15px';
+                card.style.borderRadius = '10px';
+
+                card.innerHTML = `
+                    <h3><a href="/place/${place.id}/">${place.name}</a></h3>
+                    <p><strong>Адрес:</strong> ${place.address}</p>
+                    <p><strong>Кухня:</strong> ${place.cuisine_type || 'Не указано'}</p>
+                    <p><strong>Средний чек:</strong> ${place.avg_price ?? 'Не указан'} ₽</p>
+                    <p><strong>Ближайший корпус:</strong> ${place.nearest_building || 'Не указан'}</p>
+                    <p><strong>Рейтинг:</strong> ${place.rating}</p>
+                `;
+
+                placesList.appendChild(card);
+            });
+        }
+
+        function loadPlaces() {
+            const query = searchInput.value;
+            const cuisine = cuisineFilter.value;
+            const building = buildingFilter.value;
+            const maxPrice = priceFilter.value;
+
+            const params = new URLSearchParams({
+                q: query,
+                cuisine: cuisine,
+                building: building,
+                max_price: maxPrice
+            });
+
+            fetch(`/filter/?${params.toString()}`)
+                .then(response => response.json())
+                .then(data => {
+                    renderPlaces(data.places);
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке заведений:', error);
+                });
+        }
+
+        searchInput.addEventListener('input', loadPlaces);
+        cuisineFilter.addEventListener('change', loadPlaces);
+        buildingFilter.addEventListener('change', loadPlaces);
+
+        priceFilter.addEventListener('input', function() {
+            priceValue.textContent = priceFilter.value;
+            loadPlaces();
+        });
+    </script>
 </body>
 </html>
