@@ -20,30 +20,30 @@
     
     <form method="post">
         <h2>РЕГИСТРАЦИЯ</h2>
-        {% csrf_token %}
+        <!-- {% csrf_token %} -->
         
         <div class="input-box {% if form.username.errors %}error{% endif %}">
             <span>Имя пользователя</span>
             <input type="text" name="username" value="{{ form.username.value|default:'' }}" required>
-            {% if form.username.errors %}
-                <div class="error-message">{{ form.username.errors.0 }}</div>
-            {% endif %}
+            <!-- {% if form.username.errors %} -->
+                <div class="error-message"><!--{{ form.username.errors.0 }}--></div>
+            <!-- {% endif %} -->
         </div>
         
         <div class="input-box {% if form.password1.errors %}error{% endif %}">
             <span>Пароль</span>
             <input type="password" name="password1" required>
-            {% if form.password1.errors %}
-                <div class="error-message">{{ form.password1.errors.0 }}</div>
-            {% endif %}
+            <!-- {% if form.password1.errors %} -->
+                <div class="error-message"><!--{{ form.password1.errors.0 }}--></div>
+            <!-- {% endif %} -->
         </div>
         
         <div class="input-box {% if form.password2.errors %}error{% endif %}">
             <span>Подтверждение пароля</span>
             <input type="password" name="password2" required>
-            {% if form.password2.errors %}
-                <div class="error-message">{{ form.password2.errors.0 }}</div>
-            {% endif %}
+            <!-- {% if form.password2.errors %} -->
+                <div class="error-message"><!--{{ form.password2.errors.0 }}--></div>
+            <!-- {% endif %} -->
         </div>
         
         <button type="submit" class="submit-bin">Зарегистрироваться</button>

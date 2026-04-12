@@ -1,4 +1,9 @@
 @charset "UTF-8";
+/* #fefcfc*/
+/* ADD8E6 */
+/* 5F9EA0 */
+/* 4b8082 */
+/* f99039 */
 
 * {                                     /* (*) - все элементы на странице */
     margin: 0;                          /* Убираем внешние отступы у всех элементов */
@@ -7,7 +12,7 @@
 }
 
 body {
-    background: radial-gradient(900px circle, #4b8082, #0f0601);
+    background: #ADD8E6;
     display: flex;
     justify-content: center;            /* Центрирование по горизонтали */
     align-items: center;                /* Центрирование по вертикали */
@@ -17,10 +22,10 @@ body {
 
 /* Контейнер формы */
 form {
-    background: #f1a356;
+    background: #fefcfc;
     padding: 40px;
     border-radius: 15px;
-    box-shadow: 0 0 65px #eb5708;
+    box-shadow: 0 0 85px #5F9EA0;
     width: 320px;
     text-align: center;
 }
@@ -57,14 +62,15 @@ h2 {
     outline: none;
     background: none;
     font-size: 18px;
-    border-bottom: 2px solid #eb5708;
+    border-bottom: 2px solid #4b8082;
     transition: 0.4s;
+    background-color: transparent;
 
 }
 
 .input-box input:focus {
     outline: none;
-    border-color: #ff6b35;
+    border-color: #4b8082;
 }
 
 /* Кнопка */
@@ -72,7 +78,7 @@ h2 {
     width: 100%;
     padding: 12px;
     font-family: "Brush Script MT", cursive;
-    background: radial-gradient(circle, #ff6b35, #4b8082);
+    background:  #4b8082;
     color: #0f3333;
     border: none;
     border-radius: 5px;
@@ -82,19 +88,19 @@ h2 {
 }
 
 .submit-bin:hover {
-    background: radial-gradient(circle, #f25116, #215354);
+    background: #f99039;
     transform: scale(1.02);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px #0000004d;
 }
 
 /* Текст и ссылки */
 p {
     margin-top: 20px;
-    color: #f25116;
+    color: #787371;
 }
 
 a {
-    color: #f25116;
+    color: #787371;
     text-decoration: none;
 }
 
