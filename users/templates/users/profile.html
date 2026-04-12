@@ -51,7 +51,10 @@
 
 <!-- КНОПКА ВЫХОДА -->
 <div style="text-align: center; margin: 20px;">
-    <a href="/accounts/logout/" class="logout-btn">Выйти из аккаунта</a>
+    <form action="/accounts/logout/" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Выйти из аккаунта</button>
+    </form>
 </div>
 
 <div style="text-align: center; margin-top: 30px;">

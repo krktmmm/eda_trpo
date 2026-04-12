@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <title>Вход | СытГУТИ 🍔</title>
     <link rel="stylesheet" href="/static/register_style.css">
+    <style>
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .input-box.error input {
+            border-color: red;
+            background-color: #fff0f0;
+        }
+    </style>
 </head>
 <body>
     
@@ -11,15 +22,21 @@
         <h2>Вход</h2>
         {% csrf_token %}
         
-        <div class="input-box">
+        <div class="input-box {% if form.errors %}error{% endif %}">
             <span>Имя пользователя</span>
-            <input type="text" name="username" required>
+            <input type="text" name="username" value="{{ form.username.value|default:'' }}" required>
         </div>
         
-        <div class="input-box">
+        <div class="input-box {% if form.errors %}error{% endif %}">
             <span>Пароль</span>
             <input type="password" name="password" required>
         </div>
+        
+        {% if form.errors %}
+            <div class="error-message" style="text-align: center; margin-bottom: 15px;">
+                Неверное имя пользователя или пароль. Попробуйте снова.
+            </div>
+        {% endif %}
         
         <button type="submit" class="submit-bin">Войти</button>
         
