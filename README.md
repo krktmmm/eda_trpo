@@ -23,7 +23,7 @@ python -m venv venv
 ### 3. Активировать окружение:
 **Windows:**
 ```bash
-venv\Scripts\activate
+source venv/Scripts/activate
 ```
 **Mac/Linux:**
 ```bash
