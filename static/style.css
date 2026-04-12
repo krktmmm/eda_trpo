@@ -193,3 +193,20 @@ h1 {
     font-size: 18px;
     line-height: 1.5;
 }
+
+/* ВИКА Я СДЕЛАЙ КАК НАДО И НИЖЕ ШТУКУ*/
+.logout-btn {
+    background-color: #5F9EA0;
+    color: #2c3e50;
+    padding: 14px 22px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 25px;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #4b8082;
+    transform: scale(1.1);
+}
