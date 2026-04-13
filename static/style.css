@@ -1,10 +1,10 @@
 @charset "UTF-8";
 
 /* #fefcfc*/
-/* ADD8E6 */
-/* 5F9EA0 */
-/* 4b8082 */
-/* f99039 */
+/* #ADD8E6 */
+/* #5F9EA0 */
+/* #4b8082 */
+/* #f99039 */
 
 * {                                     /* (*) - все элементы на странице*/
     margin: 0;                          /* Убираем внешние отступы у всех элементов */
@@ -164,15 +164,188 @@ h1 {
 
 /* Дополнительные стили для контента внутри greeting */
 .greeting h1 {
-    color: rgb(104, 104, 158);
-    font-size: 70px;
-    margin-bottom: 20px;
+    color: #2c3e50;
+    font-size: 66px;
+    margin-bottom: 18px;
+    margin-top: 20px;
 }
 
-.greeting p {
-    color: #333;
-    font-size: 18px;
-    line-height: 1.5;
+/* ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА */
+.main-container {
+    display: flex;
+    gap: 60px;               /* Расстояние между левой и правой панелью */
+    max-width: 1400px;       /* Максимальная ширина контейнера */
+    margin: 18px auto;       /* Отступ сверху, центрирование по горизонтали */
+    padding: 0 20px;         /* Отступы по бокам */
+    min-height: 500px;       /* Минимальная высота */
+}
+
+/* ЛЕВАЯ ПАНЕЛЬ (ВЫБОР ВРЕМЕНИ) */
+.time-panel {
+    flex: 1;                 /* Занимает 1 часть ширины (правая панель займёт 1.5) */
+    background: #4b8082;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px #0000001a;  /* Тень */
+    display: flex;
+    flex-direction: column;  /* Элементы внутри располагаются в колонку*/
+    justify-content: center; /* Центрирование по вертикали */
+}
+
+/* ЗАГОЛОВОК В ЛЕВОЙ ПАНЕЛИ */
+.time-panel h2 {
+    color: #2c3e50; 
+    text-align: center;
+    margin-bottom: 30px;     /* Отступ снизу */
+    font-size: 28px;         /* Размер шрифта */
+}
+
+/* КОНТЕЙНЕР ДЛЯ КНОПОК */
+.time-buttons {
+    display: flex;
+    flex-direction: column;  /* Кнопки располагаются в колонку */
+    gap: 15px;               /* Расстояние между кнопками */
+}
+
+/* КНОПКА ВРЕМЕНИ */
+.time-btn {
+    padding: 18px;           /* Внутренний отступ */
+    border: none;            /* Убираем стандартную рамку у кнопки */
+    border-radius: 60px;
+    background: white;       /* Фон кнопки */
+    color: #4b8082;
+    font-size: 20px;
+    font-weight: bold;       /* Жирное начертание */
+    cursor: pointer;         /* Курсор в виде руки при наведении */
+    transition: 0.3s;
+    font-family: Arial;
+    box-shadow: 0 4px 10px #0000001a;  /* Тень */
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+.time-btn:hover {
+    transform: scale(1.05);  /* Увеличивается */
+    background: #f99039;
+    color: white;
+}
+
+/* АКТИВНАЯ КНОПКА */
+.time-btn.active {
+    background: #f99039;
+    color: white;
+    box-shadow: 0 0 15px #f9903980;  /* Оранжевое свечение вокруг */
+}
+
+/* ПРАВАЯ ПАНЕЛЬ (СПИСОК ЗАВЕДЕНИЙ) */
+.places-panel {
+    flex: 1.5;
+    background: #fefcfc;
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 10px 30px #0000001a;  /* Тень — мягкая, полупрозрачная */
+    border: 1px solid #e0e0e0;  /* Тонкая серая рамка */
+    overflow-y: auto;        /* Вертикальная прокрутка, если заведений много */
+    max-height: 600px;       /* Максимальная высота, дальше скролл */
+}
+
+/* ЗАГОЛОВОК В ПРАВОЙ ПАНЕЛИ */
+.places-panel h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;     /* Отступ снизу */
+    font-size: 24px;
+    border-bottom: 3px solid #f99039;  /* Оранжевая полоска снизу */
+    display: inline-block;   /* Полоска занимает только ширину текста */
+    padding-bottom: 10px;    /* Отступ от текста до оранжевой полоски */
+}
+
+/* КАРТОЧКА ОДНОГО ЗАВЕДЕНИЯ */
+.place-card {
+    border-bottom: 1px solid #eee;  /* Серая линия-разделитель между заведениями */
+    padding: 15px;           /* Внутренний отступ 15px */
+    transition: 0.3s;
+    border-radius: 12px;
+    margin-bottom: 10px;     /* Отступ снизу */
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КАРТОЧКУ ЗАВЕДЕНИЯ */
+.place-card:hover {
+    background: #f8f9fa;
+    transform: translateX(5px);
+}
+
+/* СКРЫТАЯ КАРТОЧКА */
+.place-card.hidden {
+    display: none;           /* Полностью скрываем элемент */
+}
+
+/* НАЗВАНИЕ ЗАВЕДЕНИЯ (ссылка) */
+.place-name {
+    font-size: 1.3em;        /* Размер шрифта — 130% от обычного */
+    font-weight: bold;       /* Жирное начертание */
+    text-decoration: none;   /* Убираем подчёркивание у ссылки */
+    color: #2c3e50;
+    display: block;          /* Занимает всю ширину */
+    margin-bottom: 8px;      /* Отступ снизу */
+}
+
+/* АДРЕС ЗАВЕДЕНИЯ */
+.place-address {
+    color: #666;             /* Серый цвет */
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+/* КОНТЕЙНЕР ДЛЯ ИНФОРМАЦИИ (цена, рейтинг, время) */
+.place-info {
+    display: flex;
+    gap: 20px;               /* Расстояние между элементами */
+    flex-wrap: wrap;         /* Если не влезают — переносятся на новую строку */
+}
+
+/* ЦЕНА */
+.price {
+    color: #2ecc71;
+    font-weight: bold;       /* Жирное начертание */
+}
+
+/* РЕЙТИНГ */
+.rating {
+    color: #f39c12;
+}
+
+/* ВРЕМЯ, НУЖНОЕ ДЛЯ ПОСЕЩЕНИЯ */
+.time-needed {
+    color: #e74c3c;
+    font-size: 14px;
+}
+
+/* СООБЩЕНИЕ, ЕСЛИ ЗАВЕДЕНИЙ НЕТ */
+.empty-message {
+    text-align: center;
+    color: #999;
+    padding: 40px;
+}
+
+/* АДАПТИВНОСТЬ */
+@media (max-width: 900px) {
+    .main-container {
+        flex-direction: column;
+    }
+    
+    .time-panel {
+        min-height: auto;
+    }
+    
+    .time-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .time-btn {
+        flex: 1;
+        font-size: 16px;
+        padding: 12px;
+    }
 }
 
 /* ========== АДАПТИВНОСТЬ - СКРЫВАЕМ ЭЛЕМЕНТЫ ПРИ УМЕНЬШЕНИИ ОКНА ========== */
