@@ -1,4 +1,9 @@
 @charset "UTF-8";
+/* #fefcfc*/
+/* ADD8E6 */
+/* 5F9EA0 */
+/* 4b8082 */
+/* f99039 */
 
 * {                                     /* (*) - все элементы на странице */
     margin: 0;                          /* Убираем внешние отступы у всех элементов */
@@ -7,48 +12,44 @@
 }
 
 body {
-    background-color: #4b8082;          /* Цвет фона страницы */
+    background: rgb(173, 216, 230);
     display: flex;
     justify-content: center;            /* Центрирование по горизонтали */
     align-items: center;                /* Центрирование по вертикали */
-    font-family: Arial, sans-serif;     /* Шрифт для всего текста на странице */
-    margin: 0;
-    padding: 200px;
+    font-family: "Gill Sans UltraBold", "Gill Sans", "Gill Sans MT";     /* Шрифт для всего текста на странице */
+    height: 100vh;
 }
 
 /* Контейнер формы */
 form {
-    background: #f1a356;
-    padding: 80px;
-    border-radius: 10px;
-    box-shadow: 0 0 80px #eb5708;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto; 
+    background: #fefcfc;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 85px #5F9EA0;
+    width: 320px;
+    text-align: center;
 }
 
 /* Заголовок */
 h2 {
-    margin-bottom: 30px; /* отступ между регистрацией и полем */
-    color: #1d2935;
-    text-align: center;  /* Выравнивание по центру */
+    margin-bottom: 30px;
+    color: #5a9a9c;
+    font-size: 28px;
+    -webkit-text-stroke: 0.5px #2c3e50;
+    font-weight: bold;
 }
 
 /* Блок с полем ввода */
 .input-box {
-    margin-bottom: 20px;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+    position: relative;
+    margin: 20px 0;
 }
 
 /* Подпись над полем */
 .input-box span {
     display: block;
     margin-bottom: 8px;
-    color: #555;
+    color: #0f3333;
     font-weight: bold;
     width: 100%;
 }
@@ -56,23 +57,29 @@ h2 {
 /* Поля ввода */
 .input-box input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
+    padding: 12px 15px;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 18px;
+    border-bottom: 2px solid #4b8082;
+    transition: 0.4s;
+    background-color: transparent;
+
 }
 
 .input-box input:focus {
     outline: none;
-    border-color: #ff6b35;
+    border-color: #4b8082;
 }
 
 /* Кнопка */
 .submit-bin {
     width: 100%;
     padding: 12px;
-    background-color: #ff6b35;
-    color: white;
+    font-family: "Gill Sans UltraBold", "Gill Sans", "Gill Sans MT";
+    background:  #4b8082;
+    color: #0f3333;
     border: none;
     border-radius: 5px;
     font-size: 16px;
@@ -81,17 +88,19 @@ h2 {
 }
 
 .submit-bin:hover {
-    background-color: #e55a2b;
+    background: #f99039;
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px #0000004d;
 }
 
 /* Текст и ссылки */
 p {
     margin-top: 20px;
-    color: #666;
+    color: #787371;
 }
 
 a {
-    color: #ff6b35;
+    color: #787371;
     text-decoration: none;
 }
 
