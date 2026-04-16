@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+    
     <!-- ШАПКА САЙТА -->
     <div class="navigation">
         <!-- КНОПКИ -->
@@ -41,14 +42,13 @@
             {% endif %}    
         </div>
     </div>
-        </div>
-    </div>
+
     
     <!-- ПРИВЕТСТВИЕ -->
     <div class="greeting">
         <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
         {% if user.is_authenticated %}
-            <p>Привет, {{ user.username }}!</p>
+            <p>Привет, сладенький-вкусненький малышочек {{ user.username }}!</p>
         {% endif %}
     </div>
     
@@ -58,11 +58,11 @@
         <div class="time-panel">
             <h2>⏱️ Выбери, сколько у тебя есть времени</h2>
             <div class="time-buttons">
-                <button class="time-btn" data-time="5">⚡ 5 мин</button>
-                <button class="time-btn" data-time="15">⚡ 15 мин</button>
-                <button class="time-btn" data-time="30">🍜 30 мин</button>
-                <button class="time-btn" data-time="60">🍽️ 60 мин</button>
-                <button class="time-btn" data-time="90">🎉 90+ мин</button>
+                <button class="time-btn" data-time="5">🍵 5 мин</button>
+                <button class="time-btn" data-time="15">🥪 15 мин</button>
+                <button class="time-btn" data-time="30">🍝 30 мин</button>
+                <button class="time-btn" data-time="60">🥗 60 мин</button>
+                <button class="time-btn" data-time="90">🍱 90+ мин</button>
             </div>
         </div>
 
@@ -86,5 +86,38 @@
             </div>
         </div>
     </div>
+
+        <!-- ФУТЕР -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>🍽️ СытГУТИ</h3>
+                <p>Умный поиск заведений<br>рядом с учебными корпусами</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>О нас</h3>
+                <p>Мы помогаем студентам быстро найти<br>место для перекуса между парами.<br>Подбираем заведения под твой перерыв!</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Соцсети</h3>
+                <div class="social-links">
+                    <a href="#">📘 VK</a>
+                    <a href="#">📱 Telegram</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>📧 info@sytguti.ru<br>📞 ************</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 СытГУТИ. Все права защищены.</p>
+        </div>
+    </footer>
+
 </body>
 </html>
