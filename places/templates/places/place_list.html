@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>СытГУТИ</title>
+    <title>СытГУТИ 🍔</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -31,7 +31,7 @@
             
             <!-- ПРОФИЛЬ -->
             {% if user.is_authenticated %}
-                <a href="/register/profile/" class="profile">
+                <a href="/profile/" class="profile">
                     <img src="/static/images/avatar.jpg" alt="Профиль">
                 </a>
             {% else %}
@@ -77,7 +77,7 @@
                     <div class="place-info">
                         <span class="price">💰 {{ place.avg_price|default:"—" }} ₽</span>
                         <span class="rating">⭐ {{ place.rating|floatformat:1 }}</span>
-                        <span class="time-needed">⏱ {{ place.required_time|default:30 }} мин</span>
+                        <span class="time-needed">⏱ {{ place.required_time|default:0 }} мин</span>
                     </div>
                 </div>
                 {% empty %}

@@ -6,19 +6,17 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-
     <!-- ШАПКА САЙТА -->
     <div class="navigation">
-        <!-- ЛОГОТИП -->
-        <div class="logo">
-            <img src="/static/images/log.png" alt="Логотип">
-        </div>
-        
         <!-- КНОПКИ -->
         <div class="panel">
+            <!-- ЛОГОТИП -->
+            <div class="logo">
+                <img src="/static/images/log.png" alt="Логотип">
+            </div>
             <!-- ПОИСКОВАЯ СТРОКА -->
             <div class="search">
-                <input type="text" placeholder="Поиск...">
+                <input type="text" placeholder="Нямка...">
                 <button>
                     <span>🔍</span>
                 </button>
@@ -33,7 +31,7 @@
             
             <!-- ПРОФИЛЬ -->
             {% if user.is_authenticated %}
-                <a href="/register/profile/" class="profile">
+                <a href="/profile/" class="profile">
                     <img src="/static/images/avatar.jpg" alt="Профиль">
                 </a>
             {% else %}
@@ -41,6 +39,8 @@
                     <img src="/static/images/avatar.jpg" alt="Войти">
                 </a>
             {% endif %}    
+        </div>
+    </div>
         </div>
     </div>
 
@@ -80,7 +80,7 @@
                 <button type="submit" style="background-color: #5F9EA0; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Отправить</button>
             </form>
         {% else %}
-            <p><a href="/accounts/login/">Войдите</a>, чтобы оставить отзыв</p>
+            <p><a href="/accounts/login/">Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв</p>
         {% endif %}
         
         <p style="margin-top: 30px;"><a href="/">← На главную</a></p>
