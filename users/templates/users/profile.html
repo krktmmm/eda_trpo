@@ -2,50 +2,64 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Мой профиль | СытГУТИ 🍔</title>
+    <title>СытГУТИ</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-
-<!-- ШАПКА -->
-<div class="navigation">
-    <div class="logo">
-        <img src="/static/images/log.png" alt="Логотип">
-    </div>
-    <div class="panel">
-        <div class="search">
-            <input type="text" placeholder="Поиск...">
-            <button><span>🔍</span></button>
+    <!-- ШАПКА САЙТА -->
+    <div class="navigation">
+        <!-- КНОПКИ -->
+        <div class="panel">
+            <!-- ЛОГОТИП -->
+            <div class="logo">
+                <img src="/static/images/log.png" alt="Логотип">
+            </div>
+            <!-- ПОИСКОВАЯ СТРОКА -->
+            <div class="search">
+                <input type="text" placeholder="Нямка...">
+                <button>
+                    <span>🔍</span>
+                </button>
+            </div>
+            
+            <!-- МЕНЮ -->
+            <div class="menu">
+                <a href="/">Главная</a>
+                <a href="#">О нас</a>
+                <a href="#">Контакты</a>
+            </div>
+            
+            <!-- ПРОФИЛЬ -->
+            {% if user.is_authenticated %}
+                <a href="/register/profile/" class="profile">
+                    <img src="/static/images/avatar.jpg" alt="Профиль">
+                </a>
+            {% else %}
+                <a href="/accounts/login/" class="profile">
+                    <img src="/static/images/avatar.jpg" alt="Войти">
+                </a>
+            {% endif %}    
         </div>
-        <div class="menu">
-            <a href="/">Главная</a>
-            <a href="#">О нас</a>
-            <a href="#">Контакты</a>
-        </div>
-        <a href="/register/profile/" class="profile">
-            <img src="/static/images/avatar.jpg" alt="Профиль">
-        </a>
     </div>
-</div>
-
-<!-- ПРОФИЛЬ -->
-<div class="greeting">
-    <h1>Мой профиль</h1>
-    <p><strong>{{ user.username }}</strong></p>
-    <p>Email: {{ user.email|default:"Не указан" }}</p>
-    <p>Дата регистрации: {{ user.date_joined|date:"d.m.Y" }}</p>
-</div>
-
-<!-- ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ -->
-<h2 style="text-align:center;">Мои отзывы</h2>
-
-{% for review in reviews %}
+    
+    <!-- ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ -->
+    <div class="greeting">
+        <h1>Мой профиль</h1>
+        <p><strong>{{ user.username }}</strong></p>
+        <p>Email: {{ user.email|default:"Не указан" }}</p>
+        <p>Дата регистрации: {{ user.date_joined|date:"d.m.Y" }}</p>
+    </div>
+    
+    <!-- ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ -->
+    <h2 style="text-align:center;">Мои отзывы</h2>
+    
+    {% for review in reviews %}
     <div style="border: 1px solid #ddd; margin: 10px auto; padding: 10px; width: 80%;">
         <p><strong>{{ review.place.name }}</strong> — ⭐ {{ review.rating }}/5</p>
         <p>{{ review.text }}</p>
         <small>{{ review.created_at|date:"d.m.Y H:i" }}</small>
     </div>
-{% empty %}
+    {% empty %}
     <p style="text-align:center;">Вы ещё не оставили ни одного отзыва.</p>
 {% endfor %}
 
