@@ -1,17 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Главная | СытГУТИ{% endblock %}
+{% block title %}Заведения | СытГУТИ{% endblock %}
 
 {% block content %}
 
-    <!-- ПРИВЕТСТВИЕ -->
-    <div class="greeting">
-        <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
-        {% if user.is_authenticated %}
-            <p>Привет, сладенький-вкусненький малышочек {{ user.username }}!</p>
-        {% endif %}
-    </div>
-    
     <!-- ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА -->
     <div class="main-container">
         <!-- ЛЕВЫЙ ПРЯМОУГОЛЬНИК (ВЫБОР КОРПУСА → ВЫБОР ВРЕМЕНИ) -->

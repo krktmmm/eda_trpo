@@ -200,6 +200,22 @@ h1 {
     background-color: #4b8082;
     transform: scale(1.1);
 }
+
+/* СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ */
+.menu-card {
+    text-decoration: none;
+    text-align: center;
+}
+
+.menu-card div {
+    transition: 0.3s;
+}
+
+.menu-card div:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
 /* ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА */
 .main-container {
     display: flex;
