@@ -14,14 +14,18 @@
     
     <!-- ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА -->
     <div class="main-container">
-        <!-- ЛЕВЫЙ ПРЯМОУГОЛЬНИК - ВЫБОР ВРЕМЕНИ -->
-        <div class="time-panel">
+        <!-- ЛЕВЫЙ ПРЯМОУГОЛЬНИК (ВЫБОР КОРПУСА → ВЫБОР ВРЕМЕНИ) -->
+        <div class="time-panel" id="step1">
+            <h2>🏢 Выбери корпус</h2>
             <div class="building-selector">
-                <button class="building-btn" data-building="1">🏢 Корпус №1</button>
-                <button class="building-btn" data-building="3">🏢 Корпус №3</button>
-                <button class="building-btn" data-building="5">🏢 Корпус №5</button>
+                <button class="building-btn" data-building="1">Корпус №1</button>
+                <button class="building-btn" data-building="3">Корпус №3</button>
+                <button class="building-btn" data-building="5">Корпус №5</button>
             </div>
-            <h2>⏳ Выбери, сколько у тебя есть времени</h2>
+        </div>
+
+        <div class="time-panel hidden" id="step2">
+            <h2>⏳ Сколько у тебя есть времени?</h2>
             <div class="time-buttons">
                 <button class="time-btn" data-time="5">🍵 5 мин</button>
                 <button class="time-btn" data-time="15">🥪 15 мин</button>
@@ -29,11 +33,12 @@
                 <button class="time-btn" data-time="60">🥗 60 мин</button>
                 <button class="time-btn" data-time="90">🍱 90+ мин</button>
             </div>
+            <button id="back-to-buildings" class="back-btn">← Назад</button>
         </div>
 
-        <!-- ПРАВЫЙ ПРЯМОУГОЛЬНИК - ЗАВЕДЕНИЯ -->
-        <div class="places-panel">
-            <h2>🍴 Заведения рядом с корпусами</h2>
+        <!-- ПРАВЫЙ ПРЯМОУГОЛЬНИК (ЗАВЕДЕНИЯ → ПОЯВЛЯЕТСЯ ПОСЛЕ ВЫБОРА КОРПУСА) -->
+        <div class="places-panel hidden" id="places-panel">
+            <h2>🍴 Заведения рядом с корпусом <span id="selected-building-name"></span></h2>
             <div id="places-list">
                 {% for place in places %}
                 <div class="place-card"
@@ -46,7 +51,7 @@
                     <div class="place-info">
                         <span class="price">💰 {{ place.avg_price|default:"—" }} ₽</span>
                         <span class="rating">⭐ {{ place.rating|floatformat:1 }}</span>
-                        <span class="time-needed" id="time-{{ place.id }}">⏰ -- мин</span>
+                        <span class="time-needed">⏰ -- мин</span>
                     </div>
                 </div>
                 {% empty %}
@@ -56,4 +61,74 @@
         </div>
     </div>
 
+    <script>
+        let selectedBuilding = null;
+        let currentTimeFilter = 0;
+        
+        function showStep(step) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.toggle('hidden', step !== 1);
+            document.getElementById('step2').classList.toggle('hidden', step !== 2);
+        }
+        
+        function showPlaces(building) {
+            selectedBuilding = building;
+            document.getElementById('places-panel').classList.remove('hidden');
+            document.getElementById('selected-building-name').textContent = `№${building}`;
+            
+            // Обновляем время в карточках
+            document.querySelectorAll('.place-card').forEach(card => {
+                const time = parseInt(card.dataset[`time-${building}`]) || 0;
+                const timeSpan = card.querySelector('.time-needed');
+                if (timeSpan) {
+                    timeSpan.textContent = time === 100 ? '∞ мин' : `⏰ ${time} мин`;
+                }
+                // Показываем все заведения, потом будет фильтр по времени
+                card.classList.remove('hidden');
+            });
+
+            showStep(2);
+        }
+        
+        function filterByTime(maxTime) {
+            currentTimeFilter = maxTime;
+            document.querySelectorAll('.place-card').forEach(card => {
+                const time = parseInt(card.dataset[`time-${selectedBuilding}`]) || 0;
+                if (maxTime === 0 || time <= maxTime) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Обработчики
+        document.querySelectorAll('.building-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const building = btn.dataset.building;
+                showPlaces(building);
+            });
+        });
+        
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const time = parseInt(btn.dataset.time);
+                filterByTime(time);
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+        
+        document.getElementById('back-to-buildings').addEventListener('click', () => {
+            showStep(1);
+            // Сброс фильтра времени (опционально)
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+        });
+        
+        // Показываем первый шаг, правую панель скрываем
+        showStep(1);
+        document.getElementById('places-panel').classList.add('hidden');
+    </script>
+    
 {% endblock %}

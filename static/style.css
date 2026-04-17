@@ -233,12 +233,14 @@ h1 {
 
 .building-selector {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row;
+    justify-content: center; 
+    gap: 20px;
+    flex-wrap: wrap;         /* Перенос */
 }
 
 .building-btn {
-    padding: 18px;
+    padding: 18px 30px;
     border: none;
     border-radius: 60px;
     background: white;
@@ -260,6 +262,28 @@ h1 {
     transform: scale(1.05);
     background: #f99039;
     color: white;
+}
+
+.back-btn {
+    background-color: #5F9EA0;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Tobi';
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #4b8082;
+    transform: scale(1.02);
+}
+
+.hidden {
+    display: none;
 }
 
 /* КОНТЕЙНЕР ДЛЯ КНОПОК */
