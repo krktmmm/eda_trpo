@@ -336,7 +336,7 @@ h1 {
 /* ЦЕНА */
 .price {
     color: #2ecc71;
-    font-weight: normal;       /* Жирное начертание */
+    font-weight: normal;
 }
 
 /* РЕЙТИНГ */
@@ -347,7 +347,6 @@ h1 {
 /* ВРЕМЯ, НУЖНОЕ ДЛЯ ПОСЕЩЕНИЯ */
 .time-needed {
     color: #e74c3c;
-    font-size: 14px;
 }
 
 /* СООБЩЕНИЕ, ЕСЛИ ЗАВЕДЕНИЙ НЕТ */

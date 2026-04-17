@@ -55,7 +55,7 @@
     <div class="main-container">
         <!-- ЛЕВЫЙ ПРЯМОУГОЛЬНИК - ВЫБОР ВРЕМЕНИ -->
         <div class="time-panel">
-            <h2>⏱️ Выбери, сколько у тебя есть времени</h2>
+            <h2>⏳ Выбери, сколько у тебя есть времени</h2>
             <div class="time-buttons">
                 <button class="time-btn" data-time="5">🍵 5 мин</button>
                 <button class="time-btn" data-time="15">🥪 15 мин</button>
@@ -76,7 +76,7 @@
                     <div class="place-info">
                         <span class="price">💰 {{ place.avg_price|default:"—" }} ₽</span>
                         <span class="rating">⭐ {{ place.rating|floatformat:1 }}</span>
-                        <span class="time-needed">⏱ {{ place.required_time|default:0 }} мин</span>
+                        <span class="time-needed">⏰ {{ place.required_time|default:0 }} мин</span>
                     </div>
                 </div>
                 {% empty %}
