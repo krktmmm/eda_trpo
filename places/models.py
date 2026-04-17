@@ -6,6 +6,8 @@ class Place(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название")
     address = models.CharField(max_length=200, verbose_name="Адрес")
     
+    required_time = models.IntegerField(default=100, verbose_name="Необходимое время (мин)")
+
     time_from_building_1 = models.IntegerField(default=100, verbose_name="Время от корпуса №1 (мин)")
     time_from_building_3 = models.IntegerField(default=100, verbose_name="Время от корпуса №3 (мин)")
     time_from_building_5 = models.IntegerField(default=100, verbose_name="Время от корпуса №5 (мин)")

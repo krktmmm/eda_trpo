@@ -231,6 +231,37 @@ h1 {
     font-weight: normal;
 }
 
+.building-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.building-btn {
+    padding: 18px;
+    border: none;
+    border-radius: 60px;
+    background: white;
+    color: #4b8082;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: 'Tobi';
+    box-shadow: 0 4px 10px #0000001a;
+}
+
+.building-btn.active {
+    background: #f99039;
+    color: white;
+    box-shadow: 0 0 15px #f9903980;
+}
+
+.building-btn:hover {
+    transform: scale(1.05);
+    background: #f99039;
+    color: white;
+}
+
 /* КОНТЕЙНЕР ДЛЯ КНОПОК */
 .time-buttons {
     display: flex;

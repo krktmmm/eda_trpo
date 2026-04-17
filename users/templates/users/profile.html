@@ -1,46 +1,8 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>СытГУТИ</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <!-- ШАПКА САЙТА -->
-    <div class="navigation">
-        <!-- КНОПКИ -->
-        <div class="panel">
-            <!-- ЛОГОТИП -->
-            <div class="logo">
-                <img src="/static/images/log.png" alt="Логотип">
-            </div>
-            <!-- ПОИСКОВАЯ СТРОКА -->
-            <div class="search">
-                <input type="text" placeholder="Нямка...">
-                <button>
-                    <span>🔍</span>
-                </button>
-            </div>
-            
-            <!-- МЕНЮ -->
-            <div class="menu">
-                <a href="/">Главная</a>
-                <a href="#">О нас</a>
-                <a href="#">Контакты</a>
-            </div>
-            
-            <!-- ПРОФИЛЬ -->
-            {% if user.is_authenticated %}
-                <a href="/profile/" class="profile">
-                    <img src="/static/images/avatar.jpg" alt="Профиль">
-                </a>
-            {% else %}
-                <a href="/accounts/login/" class="profile">
-                    <img src="/static/images/avatar.jpg" alt="Войти">
-                </a>
-            {% endif %}    
-        </div>
-    </div>
+{% extends 'base.html' %}
+
+{% block title %}Профиль | СытГУТИ{% endblock %}
+
+{% block content %}
     
     <!-- ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ -->
     <div class="greeting">
@@ -61,19 +23,18 @@
     </div>
     {% empty %}
     <p style="text-align:center;">Вы ещё не оставили ни одного отзыва.</p>
-{% endfor %}
+    {% endfor %}
 
-<!-- КНОПКА ВЫХОДА -->
-<div style="text-align: center; margin: 20px;">
-    <form action="/accounts/logout/" method="post" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit" class="logout-btn">Выйти из аккаунта</button>
-    </form>
-</div>
+    <!-- КНОПКА ВЫХОДА -->
+    <div style="text-align: center; margin: 20px;">
+        <form action="/accounts/logout/" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Выйти из аккаунта</button>
+        </form>
+    </div>
 
-<div style="text-align: center; margin-top: 30px;">
-    <a href="/">← На главную</a>
-</div>
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/">← На главную</a>
+    </div>
 
-</body>
-</html>
+{% endblock %}

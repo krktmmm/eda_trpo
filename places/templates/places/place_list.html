@@ -1,48 +1,9 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>СытГУТИ 🍔</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    
-    <!-- ШАПКА САЙТА -->
-    <div class="navigation">
-        <!-- КНОПКИ -->
-        <div class="panel">
-            <!-- ЛОГОТИП -->
-            <div class="logo">
-                <img src="/static/images/log.png" alt="Логотип">
-            </div>
-            <!-- ПОИСКОВАЯ СТРОКА -->
-            <div class="search">
-                <input type="text" placeholder="Нямка...">
-                <button>
-                    <span>🔍</span>
-                </button>
-            </div>
-            
-            <!-- МЕНЮ -->
-            <div class="menu">
-                <a href="/">Главная</a>
-                <a href="#">О нас</a>
-                <a href="#">Контакты</a>
-            </div>
-            
-            <!-- ПРОФИЛЬ -->
-            {% if user.is_authenticated %}
-                <a href="/profile/" class="profile">
-                    <img src="/static/images/avatar.jpg" alt="Профиль">
-                </a>
-            {% else %}
-                <a href="/accounts/login/" class="profile">
-                    <img src="/static/images/avatar.jpg" alt="Войти">
-                </a>
-            {% endif %}    
-        </div>
-    </div>
-    
+{% extends 'base.html' %}
+
+{% block title %}Главная | СытГУТИ{% endblock %}
+
+{% block content %}
+
     <!-- ПРИВЕТСТВИЕ -->
     <div class="greeting">
         <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
@@ -55,6 +16,11 @@
     <div class="main-container">
         <!-- ЛЕВЫЙ ПРЯМОУГОЛЬНИК - ВЫБОР ВРЕМЕНИ -->
         <div class="time-panel">
+            <div class="building-selector">
+                <button class="building-btn" data-building="1">🏢 Корпус №1</button>
+                <button class="building-btn" data-building="3">🏢 Корпус №3</button>
+                <button class="building-btn" data-building="5">🏢 Корпус №5</button>
+            </div>
             <h2>⏳ Выбери, сколько у тебя есть времени</h2>
             <div class="time-buttons">
                 <button class="time-btn" data-time="5">🍵 5 мин</button>
@@ -70,13 +36,17 @@
             <h2>🍴 Заведения рядом с корпусами</h2>
             <div id="places-list">
                 {% for place in places %}
-                <div class="place-card" data-time="{{ place.required_time|default:30 }}">
+                <div class="place-card"
+                     data-time-1="{{ place.time_from_building_1 }}"
+                     data-time-3="{{ place.time_from_building_3 }}"
+                     data-time-5="{{ place.time_from_building_5 }}">
+                    
                     <a href="/place/{{ place.id }}/" class="place-name">{{ place.name }}</a>
                     <div class="place-address">📍 {{ place.address }}</div>
                     <div class="place-info">
                         <span class="price">💰 {{ place.avg_price|default:"—" }} ₽</span>
                         <span class="rating">⭐ {{ place.rating|floatformat:1 }}</span>
-                        <span class="time-needed">⏰ {{ place.required_time|default:0 }} мин</span>
+                        <span class="time-needed" id="time-{{ place.id }}">⏰ -- мин</span>
                     </div>
                 </div>
                 {% empty %}
@@ -86,37 +56,4 @@
         </div>
     </div>
 
-        <!-- ФУТЕР -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>🍽️ СытГУТИ</h3>
-                <p>Умный поиск заведений<br>рядом с учебными корпусами</p>
-            </div>
-            
-            <div class="footer-section">
-                <h3>О нас</h3>
-                <p>Мы помогаем студентам быстро найти<br>место для перекуса между парами.<br>Подбираем заведения под твой перерыв!</p>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Соцсети</h3>
-                <div class="social-links">
-                    <a href="#">📘 VK</a>
-                    <a href="#">📱 Telegram</a>
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Контакты</h3>
-                <p>📧 info@sytguti.ru<br>📞 ************</p>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>© 2026 СытГУТИ. Все права защищены.</p>
-        </div>
-    </footer>
-
-</body>
-</html>
+{% endblock %}
