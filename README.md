@@ -16,14 +16,19 @@ cd trpo_project
 ```
 
 ### 2. Создать виртуальное окружение:
+**Windows:**
 ```bash
 python -m venv venv
 ```
+**Mac/Linux:**
+```bash
+python3 -m venv venv
+```
 
 ### 3. Активировать окружение:
-**Windows:**
+**Windows (Git Bash):**
 ```bash
-venv\Scripts\activate (для Git Bash: source venv/Scripts/activate)
+source venv/Scripts/activate
 ```
 **Mac/Linux:**
 ```bash
@@ -40,7 +45,7 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-### 6. Создать суперпользователя:
+### 6. Создать суперпользователя (если нет):
 ```bash
 python manage.py createsuperuser
 ```
