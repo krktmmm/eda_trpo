@@ -200,6 +200,22 @@ h1 {
     background-color: #4b8082;
     transform: scale(1.1);
 }
+
+/* СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ */
+.menu-card {
+    text-decoration: none;
+    text-align: center;
+}
+
+.menu-card div {
+    transition: 0.3s;
+}
+
+.menu-card div:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
 /* ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА */
 .main-container {
     display: flex;
@@ -229,6 +245,61 @@ h1 {
     margin-bottom: 30px;     /* Отступ снизу */
     font-size: 28px;         /* Размер шрифта */
     font-weight: normal;
+}
+
+.building-selector {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; 
+    gap: 20px;
+    flex-wrap: wrap;         /* Перенос */
+}
+
+.building-btn {
+    padding: 18px 30px;
+    border: none;
+    border-radius: 60px;
+    background: white;
+    color: #4b8082;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: 'Tobi';
+    box-shadow: 0 4px 10px #0000001a;
+}
+
+.building-btn.active {
+    background: #f99039;
+    color: white;
+    box-shadow: 0 0 15px #f9903980;
+}
+
+.building-btn:hover {
+    transform: scale(1.05);
+    background: #f99039;
+    color: white;
+}
+
+.back-btn {
+    background-color: #5F9EA0;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Tobi';
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #4b8082;
+    transform: scale(1.02);
+}
+
+.hidden {
+    display: none;
 }
 
 /* КОНТЕЙНЕР ДЛЯ КНОПОК */
@@ -336,7 +407,7 @@ h1 {
 /* ЦЕНА */
 .price {
     color: #2ecc71;
-    font-weight: normal;       /* Жирное начертание */
+    font-weight: normal;
 }
 
 /* РЕЙТИНГ */
@@ -347,7 +418,6 @@ h1 {
 /* ВРЕМЯ, НУЖНОЕ ДЛЯ ПОСЕЩЕНИЯ */
 .time-needed {
     color: #e74c3c;
-    font-size: 14px;
 }
 
 /* СООБЩЕНИЕ, ЕСЛИ ЗАВЕДЕНИЙ НЕТ */
