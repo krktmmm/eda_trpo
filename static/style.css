@@ -1,5 +1,18 @@
 @charset "UTF-8";
 
+/* #fefcfc*/
+/* #ADD8E6 */
+/* #5F9EA0 */
+/* #4b8082 */
+/* #f99039 */
+
+@font-face {
+    font-family: 'Tobi';
+    src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {                                     /* (*) - все элементы на странице*/
     margin: 0;                          /* Убираем внешние отступы у всех элементов */
     padding: 0;                         /* Убираем внутренние отступы у всех элементов */
@@ -16,91 +29,66 @@ img {
 /* СТИЛИ ДЛЯ ВСЕЙ СТРАНИЦЫ */
 body {
     background-color: #fefcfc;        /* Цвет фона страницы */
-    font-family: Arial;                 /* Шрифт для всего текста на странице */
-    text-align: center;                 /* Выравнивание по центру */
+    font-family: 'Tobi';                 /* Шрифт для всего текста на странице */
     overflow-x: hidden;                 /* Запрещаем горизонтальный скролл */
 }
 
 /* СТИЛИ ДЛЯ ЗАГОЛОВКА h1 */
 h1 {
-    color: rgb(1, 1, 18);        /* Цвет заголовка */
+    color: #010112;        /* Цвет заголовка */
     margin-top: 100px;                   /* Отступ сверху*/
 }
 
 /* ШАПКА САЙТА */
 .navigation {
     background-color: #ADD8E6;        /* Цвет фона шапки */
-    padding: 0;                 /* вертикальные отступы */
+    padding: 1%;                 /* вертикальные отступы */
     width: 100%;                        /* На всю ширину окна */
     overflow: hidden;                 /* Запрещаем горизонтальную прокрутку */
-    position: relative;                 /* Родитель для абсолютного логотипа */
-}
-
-/* ========== ЛОГОТИП — НЕЗАВИСИМЫЙ ========== */
-.logo {
-    position: absolute;
-    left: 0;                         /* Отступ слева */
-    top: 50%;                           /* Центрируем по вертикали */
-    transform: translateY(-50%);        /* Точное центрирование */
-    z-index: 2;                        /* Чтобы был поверх других элементов */
 }
 
 .logo img {
-    height: 340px;                       /* Размер логотипа */
+    height: clamp(80px, 20vw, 340px);   /* Размер логотипа */
     width: auto;                        /* Ширина автоматически */
     object-fit: contain;                /* Сохраняем пропорции */
-    display: block;
 }
 
 /* КНОПКИ */
 .panel {
-    display: flex;                      /* FLEX - элементы встают в ряд */
-    justify-content: space-between;
-    align-items: center;                /* Выравниваем все кнопки по центру по вертикали */
-    max-width: 1200px;                  /* Максимальная ширина контейнера */
-    height: 150px;
-    margin: 0 auto;                     /* Центрируем контейнер */
-    gap: 20px;                          /* Расстояние между элементами */
-    position: relative;
-    z-index: 1;                         /* Кнопки под логотипом */
+    display: flex;                    /* В ряд */
+    justify-content: space-between;   /* Раздвигает элементы */
+    align-items: center;              /* Вертикальное выравнивание по центру */
+    height: 132px;                    /* Высота панели */
+    margin: 0 auto;                   /* Центрирование по горизонтали */
 }
 
 /* ПОИСКОВАЯ СТРОКА */
 .search {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1 1 auto;
-    max-width: 600px;
-    margin: 0 20px;
+    display: flex;                    /* Включаем flex */
+    align-items: center;              /* Вертикальное выравнивание */
+    justify-content: center;          /* Горизонтальное выравнивание */
+    flex: 1 1 auto;                   /* Может растягиваться и сжиматься */
+    max-width: 600px;                 /* Не шире 600px */
+    margin: 0 20px;                   /* Отступы слева и справа по 20px */
 }
 
 .search input {
     width: 100%;
-    padding: 14px 18px;
-    border: 2px solid #5F9EA0;
+    padding: 14px 22px;
+    border: 2px solid #4b8082;
     border-radius: 25px 0 0 25px;
     font-size: 18px;
+    font-family: 'Tobi';
+    font-weight: normal;
     outline: none;
-    font-family: Arial;
 }
-
-.search input:focus {
-    border-color: #4b8082;
-    box-shadow: 0 0 5px rgba(75, 128, 130, 0.5);
-}
-
+/* КНОПКА ПОИСКА */
 .search button {
     padding: 14px 22px;
     border-radius: 0 25px 25px 0;
-    border: none;
-    background-color: #5F9EA0;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.search button:hover {
+    border: 2px solid #4b8082; 
     background-color: #4b8082;
+    cursor: pointer;
 }
 
 .search button span {
@@ -121,44 +109,45 @@ h1 {
     /* настройка кнопок */
     background-color: #5F9EA0;        /* Цвет фона кнопок */
     text-decoration: none;              /* Убираем подчеркивание у ссылок */
-    color: #2c3e50;
-    width: 150px;                       /* Фиксированная ширина */
-    height: 75px; 
+    color: #2c3e50; 
+    width: clamp(80px, 10vw, 150px);   /* мин 80px, идеально 10% от ширины окна, макс 150px */
+    height: clamp(40px, 5vw, 75px);    /* мин 40px, идеально 5% от ширины окна, макс 75px */ 
     border-radius: 5px;                 /* Скругление углов - 5 пикселей */
     /* расположение */
     display: flex;                      /* Кнопки в ряд, но можно задавать размеры */
     align-items: center;                /* Вертикальное выравнивание по центру */
     justify-content: center;            /* Горизонтальное выравнивание по центру */
     /* настройка текста */
-    font-family: Impact;                /* Шрифт для кнопок */
-    font-size: 25px;                    /* Размер текста на кнопках */
-    font-weight: bold;                  /* Жирный текст */
+    font-family: 'Tobi';                /* Шрифт для кнопок */
+    font-size: clamp(14px, 2vw, 25px);  /* Размер шрифта — плавно уменьшается */
+    font-weight: normal;
     transition: 0.3s;                   /* Плавный переход при наведении */
 }
 
 /* КНОПКА ПРОФИЛЯ */
 .panel .profile {
     background-color: #5F9EA0; 
-    text-decoration: none;
-    color: #2c3e50;
     width: 78px;                        /* Ширина */
     height: 78px;                       /* Высота */
     border-radius: 50%;                 /* Скругление 50% = круг */
     /* Выравнивание содержимого */
+    margin-left: 20px;                  /* Отступ между меню и профилем */ 
     display: flex;
     align-items: center;                /* Центрируем иконку по вертикали */
     justify-content: center;            /* Центрируем иконку по горизонтали */
     overflow: hidden;                   /* Обрезаем всё, что выходит за пределы круга */
     flex-shrink: 0;                     /* Запрещаем сжатие */
     transition: 0.3s;
-    margin-left: 20px;                  /* Отступ между меню и профилем */
+   
 }
 /* КАРТИНКА ПРОФИЛЯ */
 .panel .profile img {
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;                 /* Обрезаем по кругу */
     object-fit: cover;                  /* Сохраняем пропорции */
+    border: 3px solid #4b8082;        /* обводка */
+    box-sizing: border-box;  /* чтобы рамка не увеличивала размер */
 }
 
 /* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
@@ -183,13 +172,389 @@ h1 {
 
 /* Дополнительные стили для контента внутри greeting */
 .greeting h1 {
-    color: rgb(104, 104, 158);
-    font-size: 70px;
-    margin-bottom: 20px;
+    color: #2c3e50;
+    font-size: 66px;
+    margin-bottom: 18px;
+    margin-top: 20px;
 }
 
 .greeting p {
-    color: #333;
-    font-size: 18px;
+    color: #2c3e50;
+    font-size: 36px;
     line-height: 1.5;
+    margin-top: 5px;
+}
+
+.logout-btn {
+    background-color: #5F9EA0;
+    color: #2c3e50;
+    padding: 14px 22px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 25px;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #4b8082;
+    transform: scale(1.1);
+}
+/* ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА */
+.main-container {
+    display: flex;
+    gap: 60px;               /* Расстояние между левой и правой панелью */
+    max-width: 1400px;       /* Максимальная ширина контейнера */
+    margin: 18px auto;       /* Отступ сверху, центрирование по горизонтали */
+    padding: 0 20px;         /* Отступы по бокам */
+    min-height: 500px;       /* Минимальная высота */
+}
+
+/* ЛЕВАЯ ПАНЕЛЬ (ВЫБОР ВРЕМЕНИ) */
+.time-panel {
+    flex: 1;                 /* Занимает 1 часть ширины (правая панель займёт 1.5) */
+    background: #5F9EA0;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px #0000001a;  /* Тень */
+    display: flex;
+    flex-direction: column;  /* Элементы внутри располагаются в колонку*/
+    justify-content: center; /* Центрирование по вертикали */
+}
+
+/* ЗАГОЛОВОК В ЛЕВОЙ ПАНЕЛИ */
+.time-panel h2 {
+    color: #2c3e50; 
+    text-align: center;
+    margin-bottom: 30px;     /* Отступ снизу */
+    font-size: 28px;         /* Размер шрифта */
+    font-weight: normal;
+}
+
+/* КОНТЕЙНЕР ДЛЯ КНОПОК */
+.time-buttons {
+    display: flex;
+    flex-direction: column;  /* Кнопки располагаются в колонку */
+    gap: 15px;               /* Расстояние между кнопками */
+}
+
+/* КНОПКА ВРЕМЕНИ */
+.time-btn {
+    padding: 18px;           /* Внутренний отступ */
+    border: none;            /* Убираем стандартную рамку у кнопки */
+    border-radius: 60px;
+    background: white;       /* Фон кнопки */
+    color: #4b8082;
+    font-size: 20px;
+    cursor: pointer;         /* Курсор в виде руки при наведении */
+    transition: 0.3s;
+    font-family: 'Tobi';
+    box-shadow: 0 4px 10px #0000001a;  /* Тень */
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+.time-btn:hover {
+    transform: scale(1.05);  /* Увеличивается */
+    background: #f99039;
+    color: white;
+}
+
+/* АКТИВНАЯ КНОПКА */
+.time-btn.active {
+    background: #f99039;
+    color: white;
+    box-shadow: 0 0 15px #f9903980;  /* Оранжевое свечение вокруг */
+}
+
+/* ПРАВАЯ ПАНЕЛЬ (СПИСОК ЗАВЕДЕНИЙ) */
+.places-panel {
+    flex: 1.5;
+    background: #fefcfc;
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 10px 30px #0000001a;  /* Тень — мягкая, полупрозрачная */
+    border: 1px solid #e0e0e0;  /* Тонкая серая рамка */
+    overflow-y: auto;        /* Вертикальная прокрутка, если заведений много */
+    max-height: 600px;       /* Максимальная высота, дальше скролл */
+}
+
+/* ЗАГОЛОВОК В ПРАВОЙ ПАНЕЛИ */
+.places-panel h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;     /* Отступ снизу */
+    font-size: 24px;
+    font-weight: normal;
+    font-family: 'Tobi';
+    border-bottom: 3px solid #f99039;  /* Оранжевая полоска снизу */
+    display: inline-block;   /* Полоска занимает только ширину текста */
+    padding-bottom: 10px;    /* Отступ от текста до оранжевой полоски */
+}
+
+/* КАРТОЧКА ОДНОГО ЗАВЕДЕНИЯ */
+.place-card {
+    border-bottom: 1px solid #eee;  /* Серая линия-разделитель между заведениями */
+    padding: 15px;           /* Внутренний отступ 15px */
+    transition: 0.3s;
+    border-radius: 12px;
+    margin-bottom: 10px;     /* Отступ снизу */
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КАРТОЧКУ ЗАВЕДЕНИЯ */
+.place-card:hover {
+    background: #f8f9fa;
+    transform: translateX(5px);
+}
+
+/* СКРЫТАЯ КАРТОЧКА */
+.place-card.hidden {
+    display: none;           /* Полностью скрываем элемент */
+}
+
+/* НАЗВАНИЕ ЗАВЕДЕНИЯ (ссылка) */
+.place-name {
+    font-size: 1.3em;        /* Размер шрифта — 130% от обычного */
+    text-decoration: none;   /* Убираем подчёркивание у ссылки */
+    color: #2c3e50;
+    display: block;          /* Занимает всю ширину */
+    margin-bottom: 8px;      /* Отступ снизу */
+}
+
+/* АДРЕС ЗАВЕДЕНИЯ */
+.place-address {
+    color: #666;             /* Серый цвет */
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+/* КОНТЕЙНЕР ДЛЯ ИНФОРМАЦИИ (цена, рейтинг, время) */
+.place-info {
+    display: flex;
+    gap: 20px;               /* Расстояние между элементами */
+    flex-wrap: wrap;         /* Если не влезают — переносятся на новую строку */
+}
+
+/* ЦЕНА */
+.price {
+    color: #2ecc71;
+    font-weight: normal;       /* Жирное начертание */
+}
+
+/* РЕЙТИНГ */
+.rating {
+    color: #f39c12;
+}
+
+/* ВРЕМЯ, НУЖНОЕ ДЛЯ ПОСЕЩЕНИЯ */
+.time-needed {
+    color: #e74c3c;
+    font-size: 14px;
+}
+
+/* СООБЩЕНИЕ, ЕСЛИ ЗАВЕДЕНИЙ НЕТ */
+.empty-message {
+    text-align: center;
+    color: #999;
+    padding: 40px;
+}
+
+/* ФУТЕР */
+.footer {
+    background-color: #ADD8E6;
+    margin-top: 60px;               /* Отступ сверху */
+    padding: 40px 20px 20px;
+    width: 100%;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-section h3 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-family: 'Tobi';
+    font-weight: normal;
+}
+
+.footer-section p {
+    color: #2c3e50;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: 'Tobi';
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.social-links a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+    font-family: 'Tobi';
+}
+
+.social-links a:hover {
+    color: #f99039;
+    transform: translateX(5px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    margin-top: 30px;
+    border-top: 1px solid #5F9EA0;
+}
+
+.footer-bottom p {
+    color: #2c3e50;
+    font-size: 12px;
+    font-family: 'Tobi';
+}
+
+/* АДАПТИВНОСТЬ */
+@media (max-width: 900px) {
+    .main-container {
+        flex-direction: column;
+    }
+    
+    .time-panel {
+    display: flex;
+    flex-direction: column;
+    }
+
+    .time-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .time-btn {
+        flex: 1;
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
+/* Адаптивность для футера */
+@media (max-width: 700px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+    
+    .social-links {
+        align-items: center;
+    }
+    
+    .social-links a:hover {
+        transform: scale(1.1);
+    }
+}
+
+/* ========== АДАПТИВНОСТЬ - СКРЫВАЕМ ЭЛЕМЕНТЫ ПРИ УМЕНЬШЕНИИ ОКНА ========== */
+
+/* При ширине меньше 900px - прячем кнопку "Контакты" (последнюю) */
+@media (max-width: 900px) {
+    .menu a:last-child {
+        display: none;
+    }
+}
+
+/* При ширине меньше 700px - прячем все кнопки меню, оставляем только поиск и профиль */
+@media (max-width: 700px) {
+    .menu {
+        display: none;
+    }
+}
+
+/* При ширине меньше 550px - прячем логотип, остаётся только поиск и профиль */
+@media (max-width: 550px) {
+    .logo {
+        display: none;
+    }
+    
+    /* Поиск растягивается на всю ширину */
+    .search {
+        max-width: 100%;
+        margin: 0 10px;
+    }
+    
+    /* Уменьшаем отступы в шапке */
+    .navigation {
+        padding: 10px;
+    }
+}
+
+/* При ширине меньше 450px - подстраиваем поиск и профиль */
+@media (max-width: 450px) {
+    .search input {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .search button {
+        padding: 10px 16px;
+    }
+    
+    .search button span {
+        font-size: 14px;
+    }
+    
+    .panel .profile {
+        width: 50px;
+        height: 50px;
+        margin-left: 10px;
+    }
+}
+.back-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1f2b45;
+
+    text-align: center;
+    margin-top: 25px;
+
+    cursor: pointer;
+    display: block;
+}
+
+#time-screen {
+    margin-top: -60px;
+}
+#time-screen h2 {
+    position: relative;
+    top: 30px;
+    margin: 0;
+}
+
+#selected-building {
+    position: relative;
+    top: 40px;
+    margin: 0;
+}
+
+#time-screen .time-buttons {
+    position: relative;
+    top: 35px;
+}
+
+.back-text {
+    position: relative;
+    top: 40px;
+    margin: 0;
 }
