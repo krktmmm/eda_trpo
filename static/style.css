@@ -6,6 +6,13 @@
 /* #4b8082 */
 /* #f99039 */
 
+@font-face {
+    font-family: 'Tobi';
+    src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {                                     /* (*) - все элементы на странице*/
     margin: 0;                          /* Убираем внешние отступы у всех элементов */
     padding: 0;                         /* Убираем внутренние отступы у всех элементов */
@@ -22,7 +29,7 @@ img {
 /* СТИЛИ ДЛЯ ВСЕЙ СТРАНИЦЫ */
 body {
     background-color: #fefcfc;        /* Цвет фона страницы */
-    font-family: Arial;                 /* Шрифт для всего текста на странице */
+    font-family: 'Tobi';                 /* Шрифт для всего текста на странице */
     overflow-x: hidden;                 /* Запрещаем горизонтальный скролл */
 }
 
@@ -67,18 +74,19 @@ h1 {
 
 .search input {
     width: 100%;
-    padding: 14px 18px;
+    padding: 14px 22px;
     border: 2px solid #4b8082;
     border-radius: 25px 0 0 25px;
     font-size: 18px;
+    font-family: 'Tobi';
+    font-weight: normal;
     outline: none;
-    font-family: Arial;
 }
 /* КНОПКА ПОИСКА */
 .search button {
     padding: 14px 22px;
     border-radius: 0 25px 25px 0;
-    border: none;
+    border: 2px solid #4b8082; 
     background-color: #4b8082;
     cursor: pointer;
 }
@@ -110,9 +118,9 @@ h1 {
     align-items: center;                /* Вертикальное выравнивание по центру */
     justify-content: center;            /* Горизонтальное выравнивание по центру */
     /* настройка текста */
-    font-family: Impact;                /* Шрифт для кнопок */
+    font-family: 'Tobi';                /* Шрифт для кнопок */
     font-size: clamp(14px, 2vw, 25px);  /* Размер шрифта — плавно уменьшается */
-    font-weight: bold;                  /* Жирный текст */
+    font-weight: normal;
     transition: 0.3s;                   /* Плавный переход при наведении */
 }
 
@@ -171,9 +179,10 @@ h1 {
 }
 
 .greeting p {
-    color: #333;
-    font-size: 18px;
+    color: #2c3e50;
+    font-size: 36px;
     line-height: 1.5;
+    margin-top: 5px;
 }
 
 .logout-btn {
@@ -191,6 +200,22 @@ h1 {
     background-color: #4b8082;
     transform: scale(1.1);
 }
+
+/* СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ */
+.menu-card {
+    text-decoration: none;
+    text-align: center;
+}
+
+.menu-card div {
+    transition: 0.3s;
+}
+
+.menu-card div:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
 /* ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА */
 .main-container {
     display: flex;
@@ -204,7 +229,7 @@ h1 {
 /* ЛЕВАЯ ПАНЕЛЬ (ВЫБОР ВРЕМЕНИ) */
 .time-panel {
     flex: 1;                 /* Занимает 1 часть ширины (правая панель займёт 1.5) */
-    background: #4b8082;
+    background: #5F9EA0;
     border-radius: 15px;
     padding: 30px;
     box-shadow: 0 10px 30px #0000001a;  /* Тень */
@@ -219,6 +244,62 @@ h1 {
     text-align: center;
     margin-bottom: 30px;     /* Отступ снизу */
     font-size: 28px;         /* Размер шрифта */
+    font-weight: normal;
+}
+
+.building-selector {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; 
+    gap: 20px;
+    flex-wrap: wrap;         /* Перенос */
+}
+
+.building-btn {
+    padding: 18px 30px;
+    border: none;
+    border-radius: 60px;
+    background: white;
+    color: #4b8082;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: 'Tobi';
+    box-shadow: 0 4px 10px #0000001a;
+}
+
+.building-btn.active {
+    background: #f99039;
+    color: white;
+    box-shadow: 0 0 15px #f9903980;
+}
+
+.building-btn:hover {
+    transform: scale(1.05);
+    background: #f99039;
+    color: white;
+}
+
+.back-btn {
+    background-color: #5F9EA0;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Tobi';
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #4b8082;
+    transform: scale(1.02);
+}
+
+.hidden {
+    display: none;
 }
 
 /* КОНТЕЙНЕР ДЛЯ КНОПОК */
@@ -236,10 +317,9 @@ h1 {
     background: white;       /* Фон кнопки */
     color: #4b8082;
     font-size: 20px;
-    font-weight: bold;       /* Жирное начертание */
     cursor: pointer;         /* Курсор в виде руки при наведении */
     transition: 0.3s;
-    font-family: Arial;
+    font-family: 'Tobi';
     box-shadow: 0 4px 10px #0000001a;  /* Тень */
 }
 
@@ -274,6 +354,8 @@ h1 {
     color: #2c3e50;
     margin-bottom: 20px;     /* Отступ снизу */
     font-size: 24px;
+    font-weight: normal;
+    font-family: 'Tobi';
     border-bottom: 3px solid #f99039;  /* Оранжевая полоска снизу */
     display: inline-block;   /* Полоска занимает только ширину текста */
     padding-bottom: 10px;    /* Отступ от текста до оранжевой полоски */
@@ -302,7 +384,6 @@ h1 {
 /* НАЗВАНИЕ ЗАВЕДЕНИЯ (ссылка) */
 .place-name {
     font-size: 1.3em;        /* Размер шрифта — 130% от обычного */
-    font-weight: bold;       /* Жирное начертание */
     text-decoration: none;   /* Убираем подчёркивание у ссылки */
     color: #2c3e50;
     display: block;          /* Занимает всю ширину */
@@ -326,7 +407,7 @@ h1 {
 /* ЦЕНА */
 .price {
     color: #2ecc71;
-    font-weight: bold;       /* Жирное начертание */
+    font-weight: normal;
 }
 
 /* РЕЙТИНГ */
@@ -337,7 +418,6 @@ h1 {
 /* ВРЕМЯ, НУЖНОЕ ДЛЯ ПОСЕЩЕНИЯ */
 .time-needed {
     color: #e74c3c;
-    font-size: 14px;
 }
 
 /* СООБЩЕНИЕ, ЕСЛИ ЗАВЕДЕНИЙ НЕТ */
@@ -345,6 +425,75 @@ h1 {
     text-align: center;
     color: #999;
     padding: 40px;
+}
+
+/* ФУТЕР */
+.footer {
+    background-color: #ADD8E6;
+    margin-top: 60px;               /* Отступ сверху */
+    padding: 40px 20px 20px;
+    width: 100%;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-section h3 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-family: 'Tobi';
+    font-weight: normal;
+}
+
+.footer-section p {
+    color: #2c3e50;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: 'Tobi';
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.social-links a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+    font-family: 'Tobi';
+}
+
+.social-links a:hover {
+    color: #f99039;
+    transform: translateX(5px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    margin-top: 30px;
+    border-top: 1px solid #5F9EA0;
+}
+
+.footer-bottom p {
+    color: #2c3e50;
+    font-size: 12px;
+    font-family: 'Tobi';
 }
 
 /* АДАПТИВНОСТЬ */
@@ -366,6 +515,23 @@ h1 {
         flex: 1;
         font-size: 16px;
         padding: 12px;
+    }
+}
+
+/* Адаптивность для футера */
+@media (max-width: 700px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+    
+    .social-links {
+        align-items: center;
+    }
+    
+    .social-links a:hover {
+        transform: scale(1.1);
     }
 }
 
