@@ -433,9 +433,10 @@ h1 {
     }
     
     .time-panel {
-        min-height: auto;
+    display: flex;
+    flex-direction: column;
     }
-    
+
     .time-buttons {
         flex-direction: row;
         flex-wrap: wrap;
@@ -519,4 +520,41 @@ h1 {
         height: 50px;
         margin-left: 10px;
     }
+}
+.back-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1f2b45;
+
+    text-align: center;
+    margin-top: 25px;
+
+    cursor: pointer;
+    display: block;
+}
+
+#time-screen {
+    margin-top: -60px;
+}
+#time-screen h2 {
+    position: relative;
+    top: 30px;
+    margin: 0;
+}
+
+#selected-building {
+    position: relative;
+    top: 40px;
+    margin: 0;
+}
+
+#time-screen .time-buttons {
+    position: relative;
+    top: 35px;
+}
+
+.back-text {
+    position: relative;
+    top: 40px;
+    margin: 0;
 }
