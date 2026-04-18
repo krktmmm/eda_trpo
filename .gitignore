@@ -39,7 +39,3 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
-
-# Миграции
-**/migrations/*.py
-!**/migrations/__init__.py

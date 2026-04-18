@@ -1,47 +1,8 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ place.name }} | СытГУТИ 🍔</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <!-- ШАПКА САЙТА -->
-    <div class="navigation">
-        <!-- КНОПКИ -->
-        <div class="panel">
-            <!-- ЛОГОТИП -->
-            <div class="logo">
-                <img src="/static/images/log.png" alt="Логотип">
-            </div>
-            <!-- ПОИСКОВАЯ СТРОКА -->
-            <div class="search">
-                <input type="text" placeholder="Нямка...">
-                <button>
-                    <span>🔍</span>
-                </button>
-            </div>
-            
-            <!-- МЕНЮ -->
-            <div class="menu">
-                <a href="/">Главная</a>
-                <a href="#">О нас</a>
-                <a href="#">Контакты</a>
-            </div>
-            
-            <!-- ПРОФИЛЬ -->
-            {% if user.is_authenticated %}
-                <a href="/profile/" class="profile">
-                    <img src="/static/images/avatar.jpg" alt="Профиль">
-                </a>
-            {% else %}
-                <a href="/accounts/login/" class="profile">
-                    <img src="/static/images/avatar.jpg" alt="Войти">
-                </a>
-            {% endif %}    
-        </div>
-    </div>
+{% block title %}{{ place.name }} | СытГУТИ{% endblock %}
+
+{% block content %}
 
     <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
     <div style="max-width: 800px; margin: 40px auto; padding: 20px;">
@@ -85,5 +46,4 @@
         <p style="margin-top: 30px;"><a href="/">← На главную</a></p>
     </div>
     
-</body>
-</html>
+{% endblock %}

@@ -1,261 +1,49 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>СытГУТИ 🍔</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <div class="navigation">
-        <div class="logo">
-            <img src="/static/images/log.png" alt="Логотип">
-        </div>
+{% extends 'base.html' %}
 
-        <div class="panel">
-            <div class="search">
-                <input type="text" id="searchInput" placeholder="Поиск по названию...">
-                <button type="button">
-                    <span>🔍</span>
-                </button>
-            </div>
+{% block title %}Заведения | СытГУТИ{% endblock %}
 
-    
-    <!-- ШАПКА САЙТА -->
-    <div class="navigation">
-        <!-- КНОПКИ -->
-        <div class="panel">
-            <!-- ЛОГОТИП -->
-            <div class="logo">
-                <img src="/static/images/log.png" alt="Логотип">
-            </div>
-            <!-- ПОИСКОВАЯ СТРОКА -->
-            <div class="search">
-                <input type="text" placeholder="Нямка...">
-                <button>
-                    <span>🔍</span>
-                </button>
-            </div>
-            
-            <!-- МЕНЮ -->
-            <div class="menu">
-                <a href="/">Главная</a>
-                <a href="#">О нас</a>
-                <a href="#">Контакты</a>
-            </div>
+{% block content %}
 
-            {% if user.is_authenticated %}
-                <a href="/accounts/logout/" class="profile">
-            
-            <!-- ПРОФИЛЬ -->
-            {% if user.is_authenticated %}
-                <a href="/register/profile/" class="profile">
-                <a href="/profile/" class="profile">
-                    <img src="/static/images/avatar.jpg" alt="Профиль">
-                </a>
-            {% else %}
-                <a href="/accounts/login/" class="profile">
-                    <img src="/static/images/avatar.jpg" alt="Войти">
-                </a>
-            {% endif %}
-        </div>
-    </div>
-
-            {% endif %}    
-        </div>
-    </div>
-    
-    <!-- ПРИВЕТСТВИЕ -->
-    <div class="greeting">
-        <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
-        {% if user.is_authenticated %}
-            <p>Привет, {{ user.username }}!</p>
-        {% else %}
-            <p><a href="/accounts/login/">Войдите</a> или <a href="/register/">зарегистрируйтесь</a></p>
-        {% endif %}
-    </div>
-
-    <div class="filters" style="margin: 20px;">
-        <h2>Поиск и фильтры</h2>
-
-        <div style="margin-bottom: 15px;">
-            <label for="cuisineFilter">Тип кухни:</label>
-            <select id="cuisineFilter">
-                <option value="">Все кухни</option>
-                {% for cuisine in cuisines %}
-                    <option value="{{ cuisine }}">{{ cuisine }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <label for="buildingFilter">Ближайший корпус:</label>
-            <select id="buildingFilter">
-                <option value="">Все корпуса</option>
-                <option value="№1">№1</option>
-                <option value="№3">№3</option>
-                <option value="№5">№5</option>
-            </select>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <label for="priceFilter">Средний чек до: <span id="priceValue">{{ max_price_value }}</span> ₽</label><br>
-            <input
-                type="range"
-                id="priceFilter"
-                min="0"
-                max="{{ max_price_value }}"
-                step="50"
-                value="{{ max_price_value }}"
-            >
-        </div>
-    </div>
-
-    <div id="placesList" style="margin: 20px;">
-        {% for place in places %}
-            <div class="place-card" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 10px;">
-                <h3>
-                    <a href="{% url 'place_detail' place.id %}">{{ place.name }}</a>
-                </h3>
-                <p><strong>Адрес:</strong> {{ place.address }}</p>
-                <p><strong>Кухня:</strong> {{ place.cuisine_type|default:"Не указано" }}</p>
-                <p><strong>Средний чек:</strong> {{ place.avg_price|default:"Не указан" }} ₽</p>
-                <p><strong>Ближайший корпус:</strong> {{ place.nearest_building|default:"Не указан" }}</p>
-                <p><strong>Рейтинг:</strong> {{ place.rating }}</p>
-            </div>
-        {% empty %}
-            <p>Заведений пока нет.</p>
-        {% endfor %}
-    </div>
-
-    <script>
-        const searchInput = document.getElementById('searchInput');
-        const cuisineFilter = document.getElementById('cuisineFilter');
-        const buildingFilter = document.getElementById('buildingFilter');
-        const priceFilter = document.getElementById('priceFilter');
-        const priceValue = document.getElementById('priceValue');
-        const placesList = document.getElementById('placesList');
-
-        function renderPlaces(places) {
-            placesList.innerHTML = '';
-
-            if (places.length === 0) {
-                placesList.innerHTML = '<p>Ничего не найдено.</p>';
-                return;
-            }
-
-            places.forEach(place => {
-                const card = document.createElement('div');
-                card.className = 'place-card';
-                card.style.border = '1px solid #ccc';
-                card.style.padding = '15px';
-                card.style.marginBottom = '15px';
-                card.style.borderRadius = '10px';
-
-                card.innerHTML = `
-                    <h3><a href="/place/${place.id}/">${place.name}</a></h3>
-                    <p><strong>Адрес:</strong> ${place.address}</p>
-                    <p><strong>Кухня:</strong> ${place.cuisine_type || 'Не указано'}</p>
-                    <p><strong>Средний чек:</strong> ${place.avg_price ?? 'Не указан'} ₽</p>
-                    <p><strong>Ближайший корпус:</strong> ${place.nearest_building || 'Не указан'}</p>
-                    <p><strong>Рейтинг:</strong> ${place.rating}</p>
-                `;
-
-                placesList.appendChild(card);
-            });
-        }
-
-        function loadPlaces() {
-            const query = searchInput.value;
-            const cuisine = cuisineFilter.value;
-            const building = buildingFilter.value;
-            const maxPrice = priceFilter.value;
-
-            const params = new URLSearchParams({
-                q: query,
-                cuisine: cuisine,
-                building: building,
-                max_price: maxPrice
-            });
-
-            fetch(`/filter/?${params.toString()}`)
-                .then(response => response.json())
-                .then(data => {
-                    renderPlaces(data.places);
-                })
-                .catch(error => {
-                    console.error('Ошибка при загрузке заведений:', error);
-                });
-        }
-
-        searchInput.addEventListener('input', loadPlaces);
-        cuisineFilter.addEventListener('change', loadPlaces);
-        buildingFilter.addEventListener('change', loadPlaces);
-
-        priceFilter.addEventListener('input', function() {
-            priceValue.textContent = priceFilter.value;
-            loadPlaces();
-        });
-    </script>
-        {% endif %}
-    </div>
-            <p>Привет, сладенький-вкусненький малышочек {{ user.username }}!</p>
-        {% endif %}
-    </div>
-    
     <!-- ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА -->
     <div class="main-container">
-        <!-- ЛЕВЫЙ ПРЯМОУГОЛЬНИК - ВЫБОР КОРПУСА И ВРЕМЕНИ -->
-<div class="time-panel">
-    <!-- ЭКРАН 1: ВЫБОР КОРПУСА -->
-    <div id="building-screen">
-        <h2>📍 Выбери корпус, в котором находишься</h2>
-        <div class="selected-building-placeholder"></div>
-        <div class="time-buttons">
-            <button class="time-btn building-btn" data-building="1">⛪️ 1</button>
-            <button class="time-btn building-btn" data-building="3">🏰 3</button>
-            <button class="time-btn building-btn" data-building="5">💒 5</button>
-        </div>
-    </div>
-
-    <!-- ЭКРАН 2: ВЫБОР ВРЕМЕНИ -->
-    <div id="time-screen" style="display: none;">
-        <h2>⏱️ Выбери, сколько у тебя есть времени</h2>
-        <p id="selected-building" style="
-            font-size: 22px;
-            margin: 10px 0 25px 0;
-            font-weight: 700;
-            text-align: center;
-            color: #1f2b45;
-        ">
-            Выбранный корпус:
-        </p>
-        <div class="time-buttons">
-            <button class="time-btn" data-time="5">🍵 5 мин</button>
-            <button class="time-btn" data-time="15">🥪 15 мин</button>
-            <button class="time-btn" data-time="30">🍝 30 мин</button>
-            <button class="time-btn" data-time="60">🥗 60 мин</button>
-            <button class="time-btn" data-time="90">🍱 90+ мин</button>
+        <!-- ЛЕВЫЙ ПРЯМОУГОЛЬНИК (ВЫБОР КОРПУСА → ВЫБОР ВРЕМЕНИ) -->
+        <div class="time-panel" id="step1">
+            <h2>🏢 Выбери корпус</h2>
+            <div class="building-selector">
+                <button class="building-btn" data-building="1">Корпус №1</button>
+                <button class="building-btn" data-building="3">Корпус №3</button>
+                <button class="building-btn" data-building="5">Корпус №5</button>
+            </div>
         </div>
 
-        <div id="back-btn" class="back-text">⬅ Назад</div>
-    </div>
-</div>
+        <div class="time-panel hidden" id="step2">
+            <h2>⏳ Сколько у тебя есть времени?</h2>
+            <div class="time-buttons">
+                <button class="time-btn" data-time="5">🍵 5 мин</button>
+                <button class="time-btn" data-time="15">🥪 15 мин</button>
+                <button class="time-btn" data-time="30">🍝 30 мин</button>
+                <button class="time-btn" data-time="60">🥗 60 мин</button>
+                <button class="time-btn" data-time="90">🍱 90+ мин</button>
+            </div>
+            <button id="back-to-buildings" class="back-btn">← Назад</button>
+        </div>
 
-        <!-- ПРАВЫЙ ПРЯМОУГОЛЬНИК - ЗАВЕДЕНИЯ -->
-        <div class="places-panel">
-            <h2>🍴 Заведения рядом с корпусами</h2>
+        <!-- ПРАВЫЙ ПРЯМОУГОЛЬНИК (ЗАВЕДЕНИЯ → ПОЯВЛЯЕТСЯ ПОСЛЕ ВЫБОРА КОРПУСА) -->
+        <div class="places-panel hidden" id="places-panel">
+            <h2>🍴 Заведения рядом с корпусом <span id="selected-building-name"></span></h2>
             <div id="places-list">
                 {% for place in places %}
                 <div class="place-card"
-                data-time1="{{ place.time_from_building_1|default:999 }}"
-                data-time3="{{ place.time_from_building_3|default:999 }}"
-                data-time5="{{ place.time_from_building_5|default:999 }}">
+                     data-time-1="{{ place.time_from_building_1 }}"
+                     data-time-3="{{ place.time_from_building_3 }}"
+                     data-time-5="{{ place.time_from_building_5 }}">
+                    
                     <a href="/place/{{ place.id }}/" class="place-name">{{ place.name }}</a>
                     <div class="place-address">📍 {{ place.address }}</div>
                     <div class="place-info">
                         <span class="price">💰 {{ place.avg_price|default:"—" }} ₽</span>
                         <span class="rating">⭐ {{ place.rating|floatformat:1 }}</span>
-                        <span class="time-needed">⏱ {{ place.required_time|default:0 }} мин</span>
+                        <span class="time-needed">⏰ -- мин</span>
                     </div>
                 </div>
                 {% empty %}
@@ -265,96 +53,74 @@
         </div>
     </div>
 
-        <!-- ФУТЕР -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>🍽️ СытГУТИ</h3>
-                <p>Умный поиск заведений<br>рядом с учебными корпусами</p>
-            </div>
-            
-            <div class="footer-section">
-                <h3>О нас</h3>
-                <p>Мы помогаем студентам быстро найти<br>место для перекуса между парами.<br>Подбираем заведения под твой перерыв!</p>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Соцсети</h3>
-                <div class="social-links">
-                    <a href="#">📘 VK</a>
-                    <a href="#">📱 Telegram</a>
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Контакты</h3>
-                <p>📧 info@sytguti.ru<br>📞 ************</p>
-            </div>
-        </div>
+    <script>
+        let selectedBuilding = null;
+        let currentTimeFilter = 0;
         
-        <div class="footer-bottom">
-            <p>© 2026 СытГУТИ. Все права защищены.</p>
-        </div>
-    </footer>
-<script>
-    let selectedBuilding = null;
-    let selectedTime = null;
-
-    const buildingButtons = document.querySelectorAll('.building-btn');
-    const timeButtons = document.querySelectorAll('#time-screen .time-btn[data-time]');
-    const placeCards = document.querySelectorAll('.place-card');
-
-    const buildingScreen = document.getElementById('building-screen');
-    const timeScreen = document.getElementById('time-screen');
-    const selectedBuildingText = document.getElementById('selected-building');
-    const backBtn = document.getElementById('back-btn');
-
-    buildingButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            selectedBuilding = this.dataset.building;
-
-            buildingScreen.style.display = 'none';
-            timeScreen.style.display = 'block';
-
-            selectedBuildingText.textContent = 'Выбранный корпус: №' + selectedBuilding;
-        });
-    });
-
-    timeButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            selectedTime = parseInt(this.dataset.time);
-
-            placeCards.forEach(card => {
-                let neededTime = 999;
-
-                if (selectedBuilding === '1') {
-                    neededTime = parseInt(card.dataset.time1 || 999);
-                } else if (selectedBuilding === '3') {
-                    neededTime = parseInt(card.dataset.time3 || 999);
-                } else if (selectedBuilding === '5') {
-                    neededTime = parseInt(card.dataset.time5 || 999);
+        function showStep(step) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.toggle('hidden', step !== 1);
+            document.getElementById('step2').classList.toggle('hidden', step !== 2);
+        }
+        
+        function showPlaces(building) {
+            selectedBuilding = building;
+            document.getElementById('places-panel').classList.remove('hidden');
+            document.getElementById('selected-building-name').textContent = `№${building}`;
+            
+            // Обновляем время в карточках
+            document.querySelectorAll('.place-card').forEach(card => {
+                const time = parseInt(card.dataset[`time-${building}`]) || 0;
+                const timeSpan = card.querySelector('.time-needed');
+                if (timeSpan) {
+                    timeSpan.textContent = time === 100 ? '∞ мин' : `⏰ ${time} мин`;
                 }
+                // Показываем все заведения, потом будет фильтр по времени
+                card.classList.remove('hidden');
+            });
 
-                if (neededTime <= selectedTime) {
-                    card.style.display = 'block';
+            showStep(2);
+        }
+        
+        function filterByTime(maxTime) {
+            currentTimeFilter = maxTime;
+            document.querySelectorAll('.place-card').forEach(card => {
+                const time = parseInt(card.dataset[`time-${selectedBuilding}`]) || 0;
+                if (maxTime === 0 || time <= maxTime) {
+                    card.classList.remove('hidden');
                 } else {
-                    card.style.display = 'none';
+                    card.classList.add('hidden');
                 }
             });
+        }
+        
+        // Обработчики
+        document.querySelectorAll('.building-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const building = btn.dataset.building;
+                showPlaces(building);
+            });
         });
-    });
-
-    backBtn.addEventListener('click', function () {
-        timeScreen.style.display = 'none';
-        buildingScreen.style.display = 'block';
-
-        selectedBuilding = null;
-        selectedTime = null;
-
-        placeCards.forEach(card => {
-            card.style.display = 'block';
+        
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const time = parseInt(btn.dataset.time);
+                filterByTime(time);
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
         });
-    });
-</script>
-</body>
-</html>
+        
+        document.getElementById('back-to-buildings').addEventListener('click', () => {
+            showStep(1);
+            // Сброс фильтра времени (опционально)
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+        });
+        
+        // Показываем первый шаг, правую панель скрываем
+        showStep(1);
+        document.getElementById('places-panel').classList.add('hidden');
+    </script>
+    
+{% endblock %}
