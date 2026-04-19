@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,6 +44,13 @@
             {% endif %}    
         </div>
     </div>
+=======
+{% extends 'base.html' %}
+
+{% block title %}{{ place.name }} | СытГУТИ{% endblock %}
+
+{% block content %}
+>>>>>>> origin/feature/website
 
     <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
     <div style="max-width: 800px; margin: 40px auto; padding: 20px;">
@@ -80,11 +88,19 @@
                 <button type="submit" style="background-color: #5F9EA0; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Отправить</button>
             </form>
         {% else %}
+<<<<<<< HEAD
             <p><a href="/accounts/login/">Войдите</a>, чтобы оставить отзыв</p>
+=======
+            <p><a href="/accounts/login/">Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв</p>
+>>>>>>> origin/feature/website
         {% endif %}
         
         <p style="margin-top: 30px;"><a href="/">← На главную</a></p>
     </div>
     
+<<<<<<< HEAD
 </body>
 </html>
+=======
+{% endblock %}
+>>>>>>> origin/feature/website

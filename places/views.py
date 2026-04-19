@@ -3,8 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Place, Review
 
+def main_menu(request):
+    """Стартовая страница с выбором: заведения или рулетка"""
+    return render(request, 'places/main_menu.html')
+
 def place_list(request):
-    """Страница со списком всех заведений"""
+    """Страница со списком всех заведений (выбор корпуса и времени)"""
     places = Place.objects.all().order_by('name')
     return render(request, 'places/place_list.html', {'places': places})
 
@@ -12,7 +16,6 @@ def place_detail(request, place_id):
     """Детальная страница заведения с отзывами"""
     place = get_object_or_404(Place, id=place_id)
     reviews = place.reviews.all().order_by('-created_at')  # все отзывы к этому заведению
-    
     return render(request, 'places/place_detail.html', {'place': place, 'reviews': reviews})
 
 @login_required
@@ -27,7 +30,13 @@ def add_review(request, place_id):
         
         if rating and text:
             # Создаём отзыв
-            review = Review.objects.create(place=place, user=request.user, rating=int(rating), text=text, photo_url=photo_url)
+            review = Review.objects.create(
+                place=place,
+                user=request.user,
+                rating=int(rating),
+                text=text,
+                photo_url=photo_url
+                )
             
             # Обновляем рейтинг заведения
             all_reviews = place.reviews.all()
@@ -43,3 +52,7 @@ def add_review(request, place_id):
         return redirect('place_detail', place_id=place.id)
     
     return redirect('place_detail', place_id=place.id)
+
+def roulette(request):
+    """Страница обед-рулетки (пока заглушка)"""
+    return render(request, 'places/roulette.html')
