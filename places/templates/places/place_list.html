@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -13,158 +12,44 @@
         <!-- ЛОГОТИП -->
         <div class="logo">
             <img src="/static/images/log.png" alt="Логотип">
-=======
-{% extends 'base.html' %}
-
-{% block title %}Заведения | СытГУТИ{% endblock %}
-
-{% block content %}
-
-<!-- ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА -->
-<div class="main-container">
-    <!-- ЛЕВАЯ ПАНЕЛЬ -->
-    <div class="time-panel">
-        <!-- ЭКРАН 1 -->
-        <div id="building-screen" class="panel-screen">
-            <h2>📍 Выбери корпус, в котором находишься</h2>
-
-            <div class="center-content">
-                <div class="time-buttons">
-                    <button class="time-btn building-btn" data-building="1">⛪️ Корпус №1</button>
-                    <button class="time-btn building-btn" data-building="3">🏰 Корпус №3</button>
-                    <button class="time-btn building-btn" data-building="5">💒 Корпус №5</button>
-                </div>
-            </div>
->>>>>>> origin/feature/website
         </div>
-        <!-- ЭКРАН 2 -->
-        <div id="time-screen" class="panel-screen hidden">
-            <h2>⏱️ Сколько у тебя есть времени?</h2>
-
-            <p id="selected-building" class="selected-building-text">
-                Выбранный корпус:
-            </p>
-
-            <div class="time-buttons">
-                <button class="time-btn" data-time="5">🍵 5 мин</button>
-                <button class="time-btn" data-time="15">🥪 15 мин</button>
-                <button class="time-btn" data-time="30">🍝 30 мин</button>
-                <button class="time-btn" data-time="60">🥗 60 мин</button>
-                <button class="time-btn" data-time="90">🍱 90+ мин</button>
-            </div>
-
-            <div id="back-btn" class="back-text">
-    ⬅ Назад
-</div>
-        </div>
-    </div>
-
-    <!-- ПРАВАЯ ПАНЕЛЬ -->
-    <div class="places-panel">
-        <h2 id="places-title">🍴 Все заведения</h2>
-
-        <div id="places-list">
-            {% for place in places %}
-            <div class="place-card"
-                 data-time1="{{ place.time_from_building_1|default:999 }}"
-                 data-time3="{{ place.time_from_building_3|default:999 }}"
-                 data-time5="{{ place.time_from_building_5|default:999 }}">
-                <a href="{% url 'place_detail' place.id %}" class="place-name">{{ place.name }}</a>
-                <div class="place-address">📍 {{ place.address }}</div>
-                <div class="place-info">
-                    <span class="price">💰 {{ place.avg_price|default:"—" }} ₽</span>
-                    <span class="rating">⭐ {{ place.rating|floatformat:1 }}</span>
-                </div>
-            </div>
-            {% empty %}
-            <p class="empty-message">Пока нет заведений. Добавьте их через админку.</p>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-
-<script>
-    let selectedBuilding = null;
-    let selectedTime = null;
-
-    const buildingButtons = document.querySelectorAll('.building-btn');
-    const timeButtons = document.querySelectorAll('#time-screen .time-btn[data-time]');
-    const placeCards = document.querySelectorAll('.place-card');
-
-    const buildingScreen = document.getElementById('building-screen');
-    const timeScreen = document.getElementById('time-screen');
-    const selectedBuildingText = document.getElementById('selected-building');
-    const backBtn = document.getElementById('back-btn');
-    const placesTitle = document.getElementById('places-title');
-
-    buildingButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            selectedBuilding = this.dataset.building;
-
-            buildingScreen.classList.add('hidden');
-            timeScreen.classList.remove('hidden');
-            timeScreen.classList.add('show-flex');
-
-            selectedBuildingText.textContent = 'Выбранный корпус: №' + selectedBuilding;
-            placesTitle.textContent = '🍴 Заведения рядом с корпусом №' + selectedBuilding;
-
-            selectedTime = null;
-            placeCards.forEach(card => {
-                card.style.display = 'block';
-            });
-        });
-    });
-
-    timeButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            selectedTime = parseInt(this.dataset.time);
-            filterPlaces();
-        });
-    });
-
-    backBtn.addEventListener('click', function () {
-        timeScreen.classList.add('hidden');
-        timeScreen.classList.remove('show-flex');
-        buildingScreen.classList.remove('hidden');
-        buildingScreen.classList.add('show-flex');
-
-        selectedBuilding = null;
-        selectedTime = null;
-        placesTitle.textContent = '🍴 Все заведения';
-
-        placeCards.forEach(card => {
-            card.style.display = 'block';
-        });
-<<<<<<< HEAD
         
-        // Показываем первый шаг, правую панель скрываем
-        showStep(1);
-        document.getElementById('places-panel').classList.add('hidden');
-    </script>
+        <!-- КНОПКИ -->
+        <div class="panel">
+            <!-- ПОИСКОВАЯ СТРОКА -->
+            <div class="search">
+                <input type="text" placeholder="Поиск...">
+                <button>
+                    <span>🔍</span>
+                </button>
+            </div>
+            
+            <!-- МЕНЮ -->
+            <div class="menu">
+                <a href="/">Главная</a>
+                <a href="#">О нас</a>
+                <a href="#">Контакты</a>
+            </div>
+            
+            <!-- ПРОФИЛЬ -->
+            {% if user.is_authenticated %}
+                <a href="/register/profile/" class="profile">
+                    <img src="/static/images/avatar.jpg" alt="Профиль">
+                </a>
+            {% else %}
+                <a href="/accounts/login/" class="profile">
+                    <img src="/static/images/avatar.jpg" alt="Войти">
+                </a>
+            {% endif %}    
+        </div>
+    </div>
     
-{% endblock %}
-=======
-    });
-
-    function filterPlaces() {
-        placeCards.forEach(card => {
-            let neededTime = 999;
-
-            if (selectedBuilding === '1') {
-                neededTime = parseInt(card.dataset.time1 || 999);
-            } else if (selectedBuilding === '3') {
-                neededTime = parseInt(card.dataset.time3 || 999);
-            } else if (selectedBuilding === '5') {
-                neededTime = parseInt(card.dataset.time5 || 999);
-            }
-
-            if (neededTime <= selectedTime) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-</script>
-{% endblock %}
->>>>>>> origin/feature/frontend
+    <!-- ПРИВЕТСТВИЕ -->
+    <div class="greeting">
+        <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
+        {% if user.is_authenticated %}
+            <p>Привет, {{ user.username }}!</p>
+        {% endif %}
+    </div>
+</body>
+</html>

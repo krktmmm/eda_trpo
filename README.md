@@ -16,28 +16,23 @@ cd trpo_project
 ```
 
 ### 2. Создать виртуальное окружение:
-**Windows:**
 ```bash
 python -m venv venv
 ```
-**Mac/Linux:**
-```bash
-python3 -m venv venv
-```
 
 ### 3. Активировать окружение:
-**Windows (Git Bash):**
+**Windows:**
 ```bash
-source venv/Scripts/activate
+venv\Scripts\activate
 ```
 **Mac/Linux:**
 ```bash
 source venv/bin/activate
 ```
 
-### 4. Установить зависимости:
+### 4. Установить Django:
 ```bash
-pip install -r requirements.txt
+pip install django
 ```
 
 ### 5. Применить миграции:
@@ -45,7 +40,7 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-### 6. Создать суперпользователя (если нет):
+### 6. Создать суперпользователя:
 ```bash
 python manage.py createsuperuser
 ```

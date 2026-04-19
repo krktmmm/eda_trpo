@@ -14,9 +14,6 @@ ENV/
 db.sqlite3
 db.sqlite3-journal
 
-# Бинарники
-sqlite3.exe
-
 # Django
 *.log
 *.pot
@@ -42,3 +39,7 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Миграции
+**/migrations/*.py
+!**/migrations/__init__.py
