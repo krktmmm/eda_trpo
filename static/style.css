@@ -6,13 +6,14 @@
 /* #4b8082 */
 /* #f99039 */
 
+/* ШРИФТ */
 @font-face {
     font-family: 'Tobi';
     src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
     font-weight: normal;
     font-style: normal;
 }
-
+/* ОБНУЛЕНИЕ ВСЕХ ОТСТУПОВ */
 * {                                     /* (*) - все элементы на странице*/
     margin: 0;                          /* Убираем внешние отступы у всех элементов */
     padding: 0;                         /* Убираем внутренние отступы у всех элементов */
@@ -26,17 +27,11 @@ img {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* СТИЛИ ДЛЯ ВСЕЙ СТРАНИЦЫ */
+/* ФОН И ШРИФТ ДЛЯ СТРАНИЦЫ */
 body {
     background-color: #fefcfc;        /* Цвет фона страницы */
     font-family: 'Tobi';                 /* Шрифт для всего текста на странице */
     overflow-x: hidden;                 /* Запрещаем горизонтальный скролл */
-}
-
-/* СТИЛИ ДЛЯ ЗАГОЛОВКА h1 */
-h1 {
-    color: #010112;        /* Цвет заголовка */
-    margin-top: 100px;                   /* Отступ сверху*/
 }
 
 /* ШАПКА САЙТА */
@@ -46,14 +41,14 @@ h1 {
     width: 100%;                        /* На всю ширину окна */
     overflow: hidden;                 /* Запрещаем горизонтальную прокрутку */
 }
-
+/* ЛОГОТИП */
 .logo img {
     height: clamp(80px, 20vw, 340px);   /* Размер логотипа */
     width: auto;                        /* Ширина автоматически */
     object-fit: contain;                /* Сохраняем пропорции */
 }
 
-/* КНОПКИ */
+/* КНОПКИ В ШАПКЕ*/
 .panel {
     display: flex;                    /* В ряд */
     justify-content: space-between;   /* Раздвигает элементы */
@@ -72,6 +67,7 @@ h1 {
     margin: 0 20px;                   /* Отступы слева и справа по 20px */
 }
 
+/* СТИЛЬ ПОЛЯ ВВОДА */
 .search input {
     width: 100%;
     padding: 14px 22px;
@@ -91,20 +87,21 @@ h1 {
     cursor: pointer;
 }
 
+/* СТИЛЬ ИКОНКИ ПОИСКА */
 .search button span {
     color: white;
     font-size: 18px;
     font-weight: bold;
 }
 
-/* Контейнер для меню, чтобы правильно центрировать кнопки */
+/* КОНТЕЙНЕР ДЛЯ МЕНЮ КНОПОК */
 .menu {
     display: flex;                      /* Кнопки в ряд */
     gap: 20px;                          /* Расстояние между кнопками */
     margin-left: auto;                  /* Прижимает меню к правому краю */
 }
 
-/* Все кнопки, кроме профиля */
+/* ГЛАВНАЯ, О НАС, КОНТАКТЫ */
 .menu a {
     /* настройка кнопок */
     background-color: #5F9EA0;        /* Цвет фона кнопок */
@@ -150,13 +147,14 @@ h1 {
     box-sizing: border-box;  /* чтобы рамка не увеличивала размер */
 }
 
-/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КНОПКИ МЕНЮ */
 .menu a:hover {
     background-color: #4b8082;        /* Цвет фона при наведении */
     color: #1d2935;                   /* Цвет текста при наведении */
     transform: scale(1.1);
 }
 
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КНОПКУ ПРОФИЛЯ */
 .panel .profile:hover {
     background-color: #4b8082;
     transform: scale(1.1);
@@ -170,7 +168,7 @@ h1 {
     text-align: start;                 /* Текст по центру */
 }
 
-/* Дополнительные стили для контента внутри greeting */
+/* СТИЛЬ ДЛЯ ЗАГОЛОВКА ВНУТРИ ПРИВЕТСТВИЯ */
 .greeting h1 {
     color: #2c3e50;
     font-size: 66px;
@@ -178,6 +176,7 @@ h1 {
     margin-top: 20px;
 }
 
+/* СТИЛЬ ДЛЯ ПРИВЕТСТВИЯ ПОЛЬЗОВАТЕЛЯ */
 .greeting p {
     color: #2c3e50;
     font-size: 36px;
@@ -185,35 +184,60 @@ h1 {
     margin-top: 5px;
 }
 
-.logout-btn {
-    background-color: #5F9EA0;
-    color: #2c3e50;
-    padding: 14px 22px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    font-size: 25px;
-    transition: 0.3s;
+/* КОНТЕЙНЕР ДЛЯ КАРТОЧЕК */
+.main-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    min-height: 60vh;
+    flex-wrap: wrap;
 }
 
-.logout-btn:hover {
-    background-color: #4b8082;
-    transform: scale(1.1);
-}
-
-/* СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ */
+/* ТЕКСТ ВНУТРИ КАРТОЧЕК */
 .menu-card {
     text-decoration: none;
     text-align: center;
 }
 
-.menu-card div {
-    transition: 0.3s;
+/* КАРТОЧКА ЗАВЕДЕНИЙ */
+.menu-card-inner {
+    background: #5F9EA0;
+    padding: 50px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px #0000001a; /* тень */
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.menu-card div:hover {
+/* КАРТОЧКА РУЛЕТКА */
+.menu-card-inner.roulette {
+    background: #f99039;
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+.menu-card-inner:hover {
     transform: scale(1.05);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 15px 40px #00000033;
+}
+
+/* ИКОНКИ В КАРТОЧКАХ */
+.menu-icon {
+    font-size: 64px;
+}
+
+/* ЗАГОЛОВОК В КАРТОЧКАХ */
+.menu-card h2 {
+    color: white;
+    margin-top: 20px;
+    font-family: 'Tobi';
+    font-weight: normal;
+}
+
+/* ОПИСАНИЕ КАРТОЧКИ */
+.menu-card p {
+    color: white;
+    font-family: 'Tobi';
+    font-size: 14px;
 }
 
 /* ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА */
@@ -247,24 +271,7 @@ h1 {
     font-weight: normal;
 }
 
-.back-btn {
-    background-color: #5F9EA0;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 30px;
-    font-family: 'Tobi';
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: 0.3s;
-}
-
-.back-btn:hover {
-    background-color: #4b8082;
-    transform: scale(1.02);
-}
-
+/* СКРЫВАЕТ ЭКРАН ВЫБОРА ВРЕМЕНИ */
 .hidden {
     display: none;
 }
@@ -276,8 +283,19 @@ h1 {
     gap: 15px;               /* Расстояние между кнопками */
 }
 
-/* КНОПКА ВРЕМЕНИ */
-
+/* КНОПКИ ВЫБОРА ВРЕМЕНИ */
+.time-btn {
+    background: #f5f5f5;
+    border: none;
+    border-radius: 25px;
+    padding: 18px 60px !important;   /* ← добавить !important */
+    font-size: 22px !important;
+    font-family: 'Tobi';
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100% !important;          /* ← добавить */
+    max-width: 400px !important;     /* ← добавить */
+}
 
 /* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
 .time-btn:hover {
@@ -337,7 +355,7 @@ h1 {
     display: none;           /* Полностью скрываем элемент */
 }
 
-/* НАЗВАНИЕ ЗАВЕДЕНИЯ (ссылка) */
+/* НАЗВАНИЕ ЗАВЕДЕНИЯ */
 .place-name {
     font-size: 1.3em;        /* Размер шрифта — 130% от обычного */
     text-decoration: none;   /* Убираем подчёркивание у ссылки */
@@ -391,6 +409,7 @@ h1 {
     width: 100%;
 }
 
+/* СТИЛИ СОДЕРЖИМОГО ФУТЕРА */
 .footer-content {
     display: flex;
     flex-wrap: wrap;
@@ -400,11 +419,13 @@ h1 {
     gap: 40px;
 }
 
+/* СТИЛИ ДЛЯ КОЛОНОК */
 .footer-section {
     flex: 1;
     min-width: 200px;
 }
 
+/* СТИЛИ ДЛЯ ЗАГОЛОВКОВ ВНУТРИ ФУТЕРА */
 .footer-section h3 {
     color: #2c3e50;
     font-size: 20px;
@@ -413,6 +434,7 @@ h1 {
     font-weight: normal;
 }
 
+/* СТИЛИ ДЛЯ ОПИСАНИЯ ВНУТРИ ФУТЕРА */
 .footer-section p {
     color: #2c3e50;
     font-size: 14px;
@@ -420,12 +442,14 @@ h1 {
     font-family: 'Tobi';
 }
 
+/* СТИЛИ ДЛЯ КОНТЕЙНЕРА НА СОЦСЕТИ */
 .social-links {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
+/* СТИЛИ НА ССЫЛКИ ДЛЯ СОЦСЕТЕЙ */
 .social-links a {
     color: #2c3e50;
     text-decoration: none;
@@ -434,11 +458,13 @@ h1 {
     font-family: 'Tobi';
 }
 
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА ССЫЛКИ СОЦСЕТЕЙ */
 .social-links a:hover {
     color: #f99039;
     transform: translateX(5px);
 }
 
+/* СТИЛЬ ДЛЯ КОПИРАЙТА */
 .footer-bottom {
     text-align: center;
     padding-top: 30px;
@@ -446,6 +472,7 @@ h1 {
     border-top: 1px solid #5F9EA0;
 }
 
+/* СТИЛЬ ДЛЯ ТЕКСТА КОПИРАЙТА */
 .footer-bottom p {
     color: #2c3e50;
     font-size: 12px;
@@ -453,226 +480,85 @@ h1 {
 }
 
 /* АДАПТИВНОСТЬ */
+/* Ширина меньше 900px */
 @media (max-width: 900px) {
+    /* Панели в столбик */
     .main-container {
         flex-direction: column;
     }
-    
     .time-panel {
         min-height: auto;
     }
-    
+    /* Кнопки времени в строку */
     .time-buttons {
         flex-direction: row;
         flex-wrap: wrap;
     }
-    
     .time-btn {
         flex: 1;
         font-size: 16px;
-        padding: 12px;
+        padding: 15px 40px;
     }
-}
-
-/* Адаптивность для футера */
-@media (max-width: 700px) {
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 30px;
-    }
-    
-    .social-links {
-        align-items: center;
-    }
-    
-    .social-links a:hover {
-        transform: scale(1.1);
-    }
-}
-
-/* ========== АДАПТИВНОСТЬ - СКРЫВАЕМ ЭЛЕМЕНТЫ ПРИ УМЕНЬШЕНИИ ОКНА ========== */
-
-/* При ширине меньше 900px - прячем кнопку "Контакты" (последнюю) */
-@media (max-width: 900px) {
+    /* Скрыть кнопку "Контакты" в меню */
     .menu a:last-child {
         display: none;
     }
 }
 
-/* При ширине меньше 700px - прячем все кнопки меню, оставляем только поиск и профиль */
+/* Ширина меньше 700px */
 @media (max-width: 700px) {
+    /* Футер в столбик */
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+    .social-links {
+        align-items: center;
+    }
+    .social-links a:hover {
+        transform: scale(1.1);
+    }
+    /* Скрыть всё меню */
     .menu {
         display: none;
     }
 }
 
-/* При ширине меньше 550px - прячем логотип, остаётся только поиск и профиль */
+/* Ширина меньше 550px */
 @media (max-width: 550px) {
+    /* Скрыть логотип */
     .logo {
         display: none;
     }
-    
-    /* Поиск растягивается на всю ширину */
+    /* Поиск на всю ширину */
     .search {
         max-width: 100%;
         margin: 0 10px;
     }
-    
-    /* Уменьшаем отступы в шапке */
+    /* Уменьшить отступы шапки */
     .navigation {
         padding: 10px;
     }
 }
 
-/* При ширине меньше 450px - подстраиваем поиск и профиль */
+/* Ширина меньше 450px */
 @media (max-width: 450px) {
+    /* Уменьшить поиск */
     .search input {
         padding: 10px 12px;
         font-size: 14px;
     }
-    
     .search button {
         padding: 10px 16px;
     }
-    
     .search button span {
         font-size: 14px;
     }
-    
+    /* Уменьшить профиль */
     .panel .profile {
         width: 50px;
         height: 50px;
         margin-left: 10px;
     }
-}
-
-/* .time-panel {
-    width: 40%;
-    background-color: #77a4a8;
-    border-radius: 30px;
-    padding: 40px 30px;
-    box-sizing: border-box;
-    min-height: 600px;
-    position: relative;
-}
-
-.panel-screen {
-    position: absolute;
-    top: 40px;
-    left: 30px;
-    right: 30px;
-    bottom: 40px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.hidden {
-    display: none !important;
-}
-
-#building-screen {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;   кнопки по центру по высоте
-    align-items: center;
-}
-
-#time-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.time-panel h2 {
-    text-align: center;
-    color: #2c3f51;
-    margin: 0 0 10px 0;
-    font-size: 28px;
-} */
-
-.selected-building-text {
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-    color: #2c3f51;
-    margin: 0 0 18px 0;
-}
-
-.center-content {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.time-buttons {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    align-items: center;
-}
-
-.time-btn,
-.building-btn {
-    width: 88%;
-    max-width: 520px;
-    min-width: 320px;
-
-    background: #f5f5f5;
-    border: none;
-    border-radius: 999px;
-
-    padding: 18px 24px;
-    font-size: 22px;
-    font-weight: 700;
-    color: #4f7f82;
-    font-family: 'Tobi';
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-
-    cursor: pointer;
-    box-shadow: 0 4px 10px #0000001a;
-    transition: 0.3s;
-}
-
-.time-btn:hover,
-.building-btn:hover {
-    transform: scale(1.03);
-    background: #f99039;
-    color: white;
-}
-
-.time-btn.active,
-.building-btn.active {
-    background: #f99039;
-    color: white;
-    box-shadow: 0 0 15px #f9903980;
-}
-
-.back-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 12px auto 0 auto;
-    padding: 0;
-    background: transparent;
-    border: none;
-    color: #2c3f51;
-    font-size: 20px;
-    font-weight: 800;
-    cursor: pointer;
-    width: fit-content;
-    gap: 8px;
-}
-
-.back-text:hover {
-    background: transparent;
-    transform: scale(1.05);
 }
