@@ -72,7 +72,7 @@ body {
     width: 100%;
     padding: 14px 22px;
     border: 2px solid #4b8082;
-    border-radius: 25px 0 0 25px;
+    border-radius: 15px 0 0 15px;
     font-size: 18px;
     font-family: 'Tobi';
     font-weight: normal;
@@ -81,7 +81,7 @@ body {
 /* КНОПКА ПОИСКА */
 .search button {
     padding: 14px 22px;
-    border-radius: 0 25px 25px 0;
+    border-radius: 0 15px 15px 0;
     border: 2px solid #4b8082; 
     background-color: #4b8082;
     cursor: pointer;
@@ -109,7 +109,7 @@ body {
     color: #2c3e50; 
     width: clamp(80px, 10vw, 150px);   /* мин 80px, идеально 10% от ширины окна, макс 150px */
     height: clamp(40px, 5vw, 75px);    /* мин 40px, идеально 5% от ширины окна, макс 75px */ 
-    border-radius: 5px;                 /* Скругление углов - 5 пикселей */
+    border-radius: 15px;                 /* Скругление углов - 5 пикселей */
     /* расположение */
     display: flex;                      /* Кнопки в ряд, но можно задавать размеры */
     align-items: center;                /* Вертикальное выравнивание по центру */
@@ -204,7 +204,7 @@ body {
 .menu-card-inner {
     background: #5F9EA0;
     padding: 50px;
-    border-radius: 25px;
+    border-radius: 15px;
     box-shadow: 0 10px 30px #0000001a; /* тень */
     transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -252,14 +252,14 @@ body {
 
 /* ЛЕВАЯ ПАНЕЛЬ (ВЫБОР ВРЕМЕНИ) */
 .time-panel {
-    flex: 1;                 /* Занимает 1 часть ширины (правая панель займёт 1.5) */
+    flex: 1;
     background: #5F9EA0;
     border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 30px #0000001a;  /* Тень */
+    padding: 30px 20px;
+    box-shadow: 0 10px 30px #0000001a;
     display: flex;
-    flex-direction: column;  /* Элементы внутри располагаются в колонку*/
-    justify-content: center; /* Центрирование по вертикали */
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* ЗАГОЛОВОК В ЛЕВОЙ ПАНЕЛИ */
@@ -287,14 +287,12 @@ body {
 .time-btn {
     background: #f5f5f5;
     border: none;
-    border-radius: 25px;
-    padding: 18px 60px !important;   /* ← добавить !important */
-    font-size: 22px !important;
+    border-radius: 15px;
+    padding: 18px 20px;
+    font-size: 22px;
     font-family: 'Tobi';
     cursor: pointer;
     transition: 0.3s;
-    width: 100% !important;          /* ← добавить */
-    max-width: 400px !important;     /* ← добавить */
 }
 
 /* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
@@ -311,11 +309,33 @@ body {
     box-shadow: 0 0 15px #f9903980;  /* Оранжевое свечение вокруг */
 }
 
+/* КОНТЕЙНЕР КАРТЫ */
+.map-placeholder-inner {
+    background: #e0e0e0;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    margin: 20px 0;
+}
+
+/* ТЕКСТ ВНУТРИ КАРТЫ */
+.map-placeholder-inner p {
+    color: #666;
+}
+
+/* ТЕКСТ ПОД КАРТОЙ */
+.map-hint {
+    text-align: center;
+    color: #666;
+}
+
 /* ПРАВАЯ ПАНЕЛЬ (СПИСОК ЗАВЕДЕНИЙ) */
 .places-panel {
     flex: 1.5;
     background: #fefcfc;
-    border-radius: 30px;
+    border-radius: 15px;
     padding: 30px;
     box-shadow: 0 10px 30px #0000001a;  /* Тень — мягкая, полупрозрачная */
     border: 1px solid #e0e0e0;  /* Тонкая серая рамка */
@@ -340,7 +360,7 @@ body {
     border-bottom: 1px solid #eee;  /* Серая линия-разделитель между заведениями */
     padding: 15px;           /* Внутренний отступ 15px */
     transition: 0.3s;
-    border-radius: 12px;
+    border-radius: 15px;
     margin-bottom: 10px;     /* Отступ снизу */
 }
 
@@ -497,7 +517,8 @@ body {
     .time-btn {
         flex: 1;
         font-size: 16px;
-        padding: 15px 40px;
+        padding: 15px 10px;
+        width: auto; 
     }
     /* Скрыть кнопку "Контакты" в меню */
     .menu a:last-child {
@@ -561,4 +582,5 @@ body {
         height: 50px;
         margin-left: 10px;
     }
+
 }

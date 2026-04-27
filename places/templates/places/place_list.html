@@ -41,10 +41,10 @@
         <!-- КАРТА-ЗАГЛУШКА (ВИДНА ИЗНАЧАЛЬНО) -->
         <div id="map-placeholder">
             <h2>🗺️ Карта заведений</h2>
-            <div style="background: #e0e0e0; height: 400px; display: flex; align-items: center; justify-content: center; border-radius: 20px; margin: 20px 0;">
-                <p style="color: #666;">📍 Здесь будет карта с метками заведений</p>
+            <div class="map-placeholder-inner">
+                <p>📍 Здесь будет карта с метками заведений</p>
             </div>
-            <p style="text-align: center; color: #666;">Выберите корпус, чтобы увидеть список заведений</p>
+            <p class="map-hint">Выберите корпус, чтобы увидеть список заведений</p>
         </div>
 
         <!-- СПИСОК ЗАВЕДЕНИЙ (ИЗНАЧАЛЬНО СКРЫТ) -->
@@ -152,47 +152,5 @@
         });
     });
 </script>
-
-<style>
-    .panel-screen {
-        width: 100%;
-    }
-    .panel-screen.hidden {
-        display: none;
-    }
-    .time-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
-    }
-    .building-btn, .time-btn {
-        width: 100%;
-        max-width: 280px;
-        padding: 15px 20px;
-        background: #f5f5f5;
-        border: none;
-        border-radius: 50px;
-        font-size: 18px;
-        cursor: pointer;
-        transition: 0.3s;
-        font-family: 'Tobi';
-    }
-    .building-btn:hover, .time-btn:hover {
-        background: #f99039;
-        color: white;
-        transform: scale(1.02);
-    }
-    .back-text {
-        text-align: center;
-        margin-top: 20px;
-        cursor: pointer;
-        font-size: 18px;
-        color: #2c3e50;
-    }
-    .back-text:hover {
-        color: #f99039;
-    }
-</style>
 
 {% endblock %}
