@@ -1,0 +1,210 @@
+@charset "UTF-8";
+
+/* ШАПКА САЙТА */
+.navigation {
+    background-color: #ADD8E6;   /* Цвет фона шапки */
+    padding: 1%;                   /* вертикальные отступы */
+    width: 100%;                   /* На всю ширину окна */
+    overflow: hidden;              /* Запрещаем горизонтальную прокрутку */
+}
+
+/* ЛОГОТИП */
+.logo img {
+    height: clamp(80px, 20vw, 340px);   /* Размер логотипа */
+    width: auto;                        /* Ширина автоматически */
+    object-fit: contain;                /* Сохраняем пропорции */
+}
+
+/* КНОПКИ В ШАПКЕ*/
+.panel {
+    display: flex;                    /* В ряд */
+    justify-content: space-between;   /* Раздвигает элементы */
+    align-items: center;              /* Вертикальное выравнивание по центру */
+    height: 132px;                    /* Высота панели */
+    margin: 0 auto;                   /* Центрирование по горизонтали */
+}
+
+/* ПОИСКОВАЯ СТРОКА */
+.search {
+    display: flex;                 /* Включаем flex */
+    align-items: center;           /* Вертикальное выравнивание */
+    justify-content: center;       /* Горизонтальное выравнивание */
+    flex: 1 1 auto;                /* Может растягиваться и сжиматься */
+    max-width: 600px;              /* Не шире 600px */
+    margin: 0 20px;                /* Отступы слева и справа по 20px */
+}
+
+/* СТИЛЬ ПОЛЯ ВВОДА */
+.search input {
+    width: 100%;
+    padding: 14px 22px;
+    border: 2px solid #4b8082;
+    border-radius: 15px 0 0 15px;
+    font-size: 18px;
+    font-family: 'Tobi';
+    font-weight: normal;
+    outline: none;
+}
+
+/* КНОПКА ПОИСКА */
+.search button {
+    padding: 14px 22px;
+    border-radius: 0 15px 15px 0;
+    border: 2px solid #4b8082; 
+    background-color: #4b8082;
+    cursor: pointer;
+}
+
+/* СТИЛЬ ИКОНКИ ПОИСКА */
+.search button span {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* КОНТЕЙНЕР ДЛЯ МЕНЮ КНОПОК */
+.menu {
+    display: flex;                 /* Кнопки в ряд */
+    gap: 20px;                     /* Расстояние между кнопками */
+    margin-left: auto;             /* Прижимает меню к правому краю */
+}
+
+/* ГЛАВНАЯ, О НАС, КОНТАКТЫ */
+.menu a {
+    /* настройка кнопок */
+    background-color: #5F9EA0;         /* Цвет фона кнопок */
+    text-decoration: none;               /* Убираем подчеркивание у ссылок */
+    color: #2c3e50; 
+    width: clamp(80px, 10vw, 150px);     /* мин 80px, идеально 10% от ширины окна, макс 150px */
+    height: clamp(40px, 5vw, 75px);      /* мин 40px, идеально 5% от ширины окна, макс 75px */ 
+    border-radius: 15px;                 /* Скругление углов - 5 пикселей */
+
+    /* расположение */
+    display: flex;                       /* Кнопки в ряд, но можно задавать размеры */
+    align-items: center;                 /* Вертикальное выравнивание по центру */
+    justify-content: center;             /* Горизонтальное выравнивание по центру */
+
+    /* настройка текста */
+    font-family: 'Tobi';                 /* Шрифт для кнопок */
+    font-size: clamp(14px, 2vw, 25px);   /* Размер шрифта — плавно уменьшается */
+    font-weight: normal;
+    transition: 0.3s;                    /* Плавный переход при наведении */
+}
+
+/* КНОПКА ПРОФИЛЯ */
+.panel .profile {
+    background-color: #5F9EA0;
+    width: 78px;                   /* Ширина */
+    height: 78px;                  /* Высота */
+    border-radius: 50%;            /* Скругление 50% = круг */
+
+    /* Выравнивание содержимого */
+    margin-left: 20px;             /* Отступ между меню и профилем */ 
+    display: flex;
+    align-items: center;           /* Центрируем иконку по вертикали */
+    justify-content: center;       /* Центрируем иконку по горизонтали */
+    overflow: hidden;              /* Обрезаем всё, что выходит за пределы круга */
+    flex-shrink: 0;                /* Запрещаем сжатие */
+    transition: 0.3s;
+}
+
+/* КАРТИНКА ПРОФИЛЯ */
+.panel .profile img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;            /* Обрезаем по кругу */
+    object-fit: cover;             /* Сохраняем пропорции */
+    border: 3px solid #4b8082;   /* обводка */
+    box-sizing: border-box;        /* чтобы рамка не увеличивала размер */
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КНОПКИ МЕНЮ */
+.menu a:hover {
+    background-color: #4b8082;   /* Цвет фона при наведении */
+    color: #1d2935;              /* Цвет текста при наведении */
+    transform: scale(1.1);
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КНОПКУ ПРОФИЛЯ */
+.panel .profile:hover {
+    background-color: #4b8082;
+    transform: scale(1.1);
+}
+
+/* ФУТЕР */
+.footer {
+    background-color: #ADD8E6;
+    margin-top: 60px;              /* Отступ сверху */
+    padding: 40px 20px 20px;
+    width: 100%;
+}
+
+/* СТИЛИ СОДЕРЖИМОГО ФУТЕРА */
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+/* СТИЛИ ДЛЯ КОЛОНОК */
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* СТИЛИ ДЛЯ ЗАГОЛОВКОВ ВНУТРИ ФУТЕРА */
+.footer-section h3 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-family: 'Tobi';
+    font-weight: normal;
+}
+
+/* СТИЛИ ДЛЯ ОПИСАНИЯ ВНУТРИ ФУТЕРА */
+.footer-section p {
+    color: #2c3e50;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: 'Tobi';
+}
+
+/* СТИЛИ ДЛЯ КОНТЕЙНЕРА НА СОЦСЕТИ */
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* СТИЛИ НА ССЫЛКИ ДЛЯ СОЦСЕТЕЙ */
+.social-links a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+    font-family: 'Tobi';
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА ССЫЛКИ СОЦСЕТЕЙ */
+.social-links a:hover {
+    color: #f99039;
+    transform: translateX(5px);
+}
+
+/* СТИЛЬ ДЛЯ КОПИРАЙТА */
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    margin-top: 30px;
+    border-top: 1px solid #5F9EA0;
+}
+
+/* СТИЛЬ ДЛЯ ТЕКСТА КОПИРАЙТА */
+.footer-bottom p {
+    color: #2c3e50;
+    font-size: 12px;
+    font-family: 'Tobi';
+}

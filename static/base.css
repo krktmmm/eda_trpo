@@ -1,0 +1,31 @@
+@charset "UTF-8";
+
+/* ШРИФТ */
+@font-face {
+    font-family: 'Tobi';
+    src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ОБНУЛЕНИЕ ВСЕХ ОТСТУПОВ */
+* {                                /* (*) - все элементы на странице*/
+    margin: 0;                     /* Убираем внешние отступы у всех элементов */
+    padding: 0;                    /* Убираем внутренние отступы у всех элементов */
+    box-sizing: border-box;        /* Ширина элемента включает padding и border */
+}
+
+/* ЗАЩИТА ОТ КОПИРОВАНИЯ КАРТИНОК */
+img {
+    pointer-events: none;          /* Отключает правый клик на картинке */
+    user-select: none;             /* Запрет выделения */
+    -webkit-user-drag: none;       /* Запрет перетаскивания */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ФОН И ШРИФТ ДЛЯ СТРАНИЦЫ */
+body {
+    background-color: #fefcfc;   /* Цвет фона страницы */
+    font-family: 'Tobi';           /* Шрифт для всего текста на странице */
+    overflow-x: hidden;            /* Запрещаем горизонтальный скролл */
+}

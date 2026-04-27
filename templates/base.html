@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <title>{% block title %}СытГУТИ 🍔{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link rel="stylesheet" href="{% static 'header_and_footer.css' %}">
+    <link rel="stylesheet" href="{% static 'greeting.css' %}">
+    <link rel="stylesheet" href="{% static 'main_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'panels_and_map.css' %}">
+    <link rel="stylesheet" href="{% static 'responsive.css' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     {% block extra_css %}{% endblock %}
 </head>

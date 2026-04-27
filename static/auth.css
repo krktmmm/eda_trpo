@@ -1,9 +1,4 @@
 @charset "UTF-8";
-/* #fefcfc*/
-/* ADD8E6 */
-/* 5F9EA0 */
-/* 4b8082 */
-/* f99039 */
 
 @font-face {
     font-family: 'Tobi';
@@ -12,18 +7,18 @@
     font-style: normal;
 }
 
-* {                                     /* (*) - все элементы на странице */
-    margin: 0;                          /* Убираем внешние отступы у всех элементов */
-    padding: 0;                         /* Убираем внутренние отступы у всех элементов */
-    box-sizing: border-box;             /* Ширина элемента включает padding и border */
+* {                                /* (*) - все элементы на странице */
+    margin: 0;                     /* Убираем внешние отступы у всех элементов */
+    padding: 0;                    /* Убираем внутренние отступы у всех элементов */
+    box-sizing: border-box;        /* Ширина элемента включает padding и border */
 }
 
 body {
     background: rgb(173, 216, 230);
     display: flex;
-    justify-content: center;            /* Центрирование по горизонтали */
-    align-items: center;                /* Центрирование по вертикали */
-    font-family: 'Tobi';     /* Шрифт для всего текста на странице */
+    justify-content: center;       /* Центрирование по горизонтали */
+    align-items: center;           /* Центрирование по вертикали */
+    font-family: 'Tobi';           /* Шрифт для всего текста на странице */
     height: 100vh;
 }
 
@@ -72,7 +67,6 @@ h2 {
     border-bottom: 2px solid #4b8082;
     transition: 0.4s;
     background-color: transparent;
-
 }
 
 .input-box input:focus {

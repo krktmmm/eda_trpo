@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+/* КОНТЕЙНЕР ДЛЯ КАРТОЧЕК */
+.main-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    min-height: 60vh;
+    flex-wrap: wrap;
+}
+
+/* ТЕКСТ ВНУТРИ КАРТОЧЕК */
+.menu-card {
+    text-decoration: none;
+    text-align: center;
+}
+
+/* КАРТОЧКА ЗАВЕДЕНИЙ */
+.menu-card-inner {
+    background: #5F9EA0;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px #0000001a; /* тень */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* КАРТОЧКА РУЛЕТКА */
+.menu-card-inner.roulette {
+    background: #f99039;
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+.menu-card-inner:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px #00000033;
+}
+
+/* ИКОНКИ В КАРТОЧКАХ */
+.menu-icon {
+    font-size: 64px;
+}
+
+/* ЗАГОЛОВОК В КАРТОЧКАХ */
+.menu-card h2 {
+    color: white;
+    margin-top: 20px;
+    font-family: 'Tobi';
+    font-weight: normal;
+}
+
+/* ОПИСАНИЕ КАРТОЧКИ */
+.menu-card p {
+    color: white;
+    font-family: 'Tobi';
+    font-size: 14px;
+}

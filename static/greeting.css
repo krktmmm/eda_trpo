@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+/* СТИЛИ ДЛЯ ПРИВЕТСТВИЯ */
+.greeting {
+    max-width: 1200px;             /* Максимальная ширина как у шапки */
+    margin: 0 auto;                /* Центрируем на странице */
+    padding: 10px;                 /* Внутренние отступы */
+    text-align: start;             /* Текст по центру */
+}
+
+/* СТИЛЬ ДЛЯ ЗАГОЛОВКА ВНУТРИ ПРИВЕТСТВИЯ */
+.greeting h1 {
+    color: #2c3e50;
+    font-size: 66px;
+    margin-bottom: 18px;
+    margin-top: 20px;
+}
+
+/* СТИЛЬ ДЛЯ ПРИВЕТСТВИЯ ПОЛЬЗОВАТЕЛЯ */
+.greeting p {
+    color: #2c3e50;
+    font-size: 36px;
+    line-height: 1.5;
+    margin-top: 5px;
+}
