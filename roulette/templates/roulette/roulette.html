@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Обед-рулетка | СытГУТИ{% endblock %}
+
+{% block content %}
+
+<div class="roulette-container">
+    <h1>🎲 Обед-рулетка</h1>
+    
+    <div class="roulette-buttons">
+        <button id="solo-btn" class="roulette-mode-btn">👤 Найти собеседника</button>
+        <button id="group-btn" class="roulette-mode-btn">👥 Найти компанию</button>
+    </div>
+
+    <!-- ФОРМА ДЛЯ СОЛО-РЕЖИМА -->
+    <div id="solo-form" class="roulette-form hidden">
+        <h2>Настройки поиска собеседника</h2>
+        <form id="create-solo-form">
+            {% csrf_token %}
+            <select name="building" required>
+                <option value="1">Корпус №1</option>
+                <option value="3">Корпус №3</option>
+                <option value="5">Корпус №5</option>
+            </select>
+            <select name="budget">
+                <option value="economy">До 200 ₽</option>
+                <option value="medium">200-400 ₽</option>
+                <option value="high">От 400 ₽</option>
+                <option value="any">Не важно</option>
+            </select>
+            <button type="submit" id="start-solo">🎲 Начать поиск</button>
+        </form>
+    </div>
+
+    <!-- ФОРМА ДЛЯ ГРУППОВОГО РЕЖИМА -->
+    <div id="group-form" class="roulette-form hidden">
+        <h2>Настройки поиска компании</h2>
+        <form id="create-group-form">
+            {% csrf_token %}
+            <select name="building" required>
+                <option value="1">Корпус №1</option>
+                <option value="3">Корпус №3</option>
+                <option value="5">Корпус №5</option>
+            </select>
+            <select name="budget">
+                <option value="economy">До 200 ₽</option>
+                <option value="medium">200-400 ₽</option>
+                <option value="high">От 400 ₽</option>
+                <option value="any">Не важно</option>
+            </select>
+            <input type="number" name="needed_people" placeholder="Сколько человек нужно" min="2" max="10">
+            <button type="submit" id="start-group">🎲 Начать поиск</button>
+        </form>
+    </div>
+
+    <!-- РЕЗУЛЬТАТ ПОИСКА -->
+    <div id="result" class="roulette-result hidden">
+        <div class="result-card">
+            <h3>🍽️ Вам выпал(а):</h3>
+            <p><strong>Имя:</strong> <span id="result-username"></span></p>
+            <p><strong>Корпус:</strong> <span id="result-building"></span></p>
+            <p><strong>Бюджет:</strong> <span id="result-budget"></span></p>
+            <p><strong>Telegram:</strong> <span id="result-telegram"></span></p>
+            <p><strong>VK:</strong> <span id="result-vk"></span></p>
+            <div id="group-more-info"></div>
+            <button id="close-result">Закрыть</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const soloBtn = document.getElementById('solo-btn');
+    const groupBtn = document.getElementById('group-btn');
+    const soloForm = document.getElementById('solo-form');
+    const groupForm = document.getElementById('group-form');
+    const resultDiv = document.getElementById('result');
+
+    function showForm(formToShow) {
+        soloForm.classList.add('hidden');
+        groupForm.classList.add('hidden');
+        formToShow.classList.remove('hidden');
+    }
+
+    soloBtn.onclick = () => showForm(soloForm);
+    groupBtn.onclick = () => showForm(groupForm);
+
+    async function sendRequest(url, data) {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify(data)
+        });
+        return response.json();
+    }
+
+    async function startSolo(e) {
+        e.preventDefault();
+        const form = document.getElementById('create-solo-form');
+        const data = {
+            building: form.building.value,
+            budget: form.budget.value,
+        };
+        await sendRequest('/roulette/api/solo/create/', data);
+        const findResponse = await fetch('/roulette/api/solo/find/');
+        const match = await findResponse.json();
+        if (match.status === 'found') {
+            document.getElementById('result-username').innerText = match.username;
+            document.getElementById('result-building').innerText = match.building;
+            document.getElementById('result-budget').innerText = match.budget;
+            document.getElementById('result-telegram').innerText = match.telegram || '—';
+            document.getElementById('result-vk').innerText = match.vk || '—';
+            resultDiv.classList.remove('hidden');
+        } else {
+            alert('Не найдено подходящих собеседников');
+        }
+    }
+
+    async function startGroup(e) {
+        e.preventDefault();
+        const form = document.getElementById('create-group-form');
+        const data = {
+            building: form.building.value,
+            budget: form.budget.value,
+            needed_people: form.needed_people.value,
+        };
+        await sendRequest('/roulette/api/group/create/', data);
+        const findResponse = await fetch('/roulette/api/group/find/');
+        const match = await findResponse.json();
+        if (match.status === 'found') {
+            document.getElementById('result-username').innerText = match.username;
+            document.getElementById('result-building').innerText = match.building;
+            document.getElementById('result-budget').innerText = match.budget;
+            document.getElementById('result-telegram').innerText = match.telegram || '—';
+            document.getElementById('result-vk').innerText = match.vk || '—';
+            document.getElementById('group-more-info').innerHTML = `<p><strong>Ищет:</strong> ${match.needed_people} чел.</p>`;
+            resultDiv.classList.remove('hidden');
+        } else {
+            alert('Не найдено подходящих компаний');
+        }
+    }
+
+    document.getElementById('create-solo-form').onsubmit = startSolo;
+    document.getElementById('create-group-form').onsubmit = startGroup;
+    document.getElementById('close-result').onclick = () => resultDiv.classList.add('hidden');
+</script>
+
+{% endblock %}

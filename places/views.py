@@ -54,5 +54,5 @@ def add_review(request, place_id):
     return redirect('place_detail', place_id=place.id)
 
 def roulette(request):
-    """Страница обед-рулетки (пока заглушка)"""
-    return render(request, 'places/roulette.html')
+    """Страница обед-рулетки"""
+    return render(request, 'roulette/roulette.html')

@@ -28,4 +28,10 @@ body {
     background-color: #fefcfc;   /* Цвет фона страницы */
     font-family: 'Tobi';           /* Шрифт для всего текста на странице */
     overflow-x: hidden;            /* Запрещаем горизонтальный скролл */
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    min-height: 60vh;
 }

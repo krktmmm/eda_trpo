@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Вход и Регистрация | СытГУТИ 🍔</title>
-    <link rel="stylesheet" href="/static/auth.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'auth.css' %}">
     <style>
         .error-message {
             color: red;

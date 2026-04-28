@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'places',
     'users',
+    'roulette',
 ]
 
 MIDDLEWARE = [

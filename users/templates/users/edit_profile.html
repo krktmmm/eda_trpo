@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактировать профиль | СытГУТИ{% endblock %}
+
+{% block content %}
+<div class="greeting">
+    <h1>Настройки профиля</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+    <p><a href="/profile/">← Назад в профиль</a></p>
+</div>
+{% endblock %}
