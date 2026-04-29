@@ -47,6 +47,19 @@
     font-size: 100px;
 }
 
+/* Анимированные иконки в карточках */
+.menu-icon.lottie-icon {
+    width: 140px !important;
+    height: 140px !important;
+    margin: 0 auto 25px auto;
+    overflow: hidden;
+}
+
+.menu-icon.lottie-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+}
+
 /* ЗАГОЛОВОК В КАРТОЧКАХ */
 .menu-card h2 {
     color: white;
