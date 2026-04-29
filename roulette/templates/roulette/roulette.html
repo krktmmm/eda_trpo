@@ -5,12 +5,30 @@
 
 {% block content %}
 
+<div class="greeting">
+    <h1>🎲 Обед - рулетка</h1>
+    {% if user.is_authenticated %}
+            <p>Малышочек, {{ user.username }}! выбери себе компанию для ням-нямки</p>
+        {% endif %}
+</div>
+
+
 <div class="roulette-container">
-    <h1>🎲 Обед-рулетка</h1>
-    
     <div class="roulette-buttons">
-        <button id="solo-btn" class="roulette-mode-btn">👤 Найти собеседника</button>
-        <button id="group-btn" class="roulette-mode-btn">👥 Найти компанию</button>
+        <button id="solo-btn" class="roulette-mode-btn">
+            <div class="btn-inner">
+                <span class="btn-icon">👤</span>
+                <h2>Найти собеседника</h2>
+                <p>Обед вдвоём</p>
+            </div>
+        </button>
+        <button id="group-btn" class="roulette-mode-btn">
+            <div class="btn-inner">
+                <span class="btn-icon">👥</span>
+                <h2>Найти компанию</h2>
+                <p>Обед с друзьями</p>
+            </div>
+        </button>
     </div>
 
     <!-- ФОРМА ДЛЯ СОЛО-РЕЖИМА -->
