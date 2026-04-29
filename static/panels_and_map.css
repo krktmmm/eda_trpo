@@ -46,6 +46,7 @@
 /* КНОПКИ ВЫБОРА ВРЕМЕНИ */
 .time-btn {
     background: #f5f5f5;
+    color: #2c3e50;
     border: none;
     border-radius: 15px;
     padding: 18px 20px;
@@ -67,6 +68,18 @@
     background: #f99039;
     color: white;
     box-shadow: 0 0 15px #f9903980;   /* Оранжевое свечение вокруг */
+}
+
+/* КНОПКА НАЗАД */
+.back-text {
+    margin-top: 30px; /* отступ сверху */
+    text-align: center;
+    font-size: 18px;
+    font-family: 'Tobi';
+    color: #2c3e50;
+    cursor: pointer; /* меняет курсор */
+    display: inline-block;
+    width: 100%;
 }
 
 /* ПРАВАЯ ПАНЕЛЬ (СПИСОК ЗАВЕДЕНИЙ) */
@@ -179,4 +192,30 @@
     text-align: center;
     color: #999;
     padding: 40px;
+}
+
+/* СТИЛИ ДЛЯ СКРОЛЛБАРА */
+
+/* Для Chrome, Safari, Edge */
+.places-panel::-webkit-scrollbar {
+    width: 20px;  /* Ширина скроллбара */
+    height: 20px
+}
+
+/* Дорожка */
+.places-panel::-webkit-scrollbar-track {
+    background: transparent; /* прозрачный фон */
+    border-radius: 10px;
+}
+
+/* Ползунок */
+.places-panel::-webkit-scrollbar-thumb {
+    background: #f99039;
+    border-radius: 10px;
+}
+
+/* Для Firefox */
+.places-panel {
+    scrollbar-width: thin;
+    scrollbar-color: #f99039 transparent;  /* (ползунок) (дорожка прозрачная) */
 }

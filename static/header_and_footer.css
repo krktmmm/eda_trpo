@@ -11,13 +11,14 @@
 }
 
 /* ЛОГОТИП */
-.logo {
+a.logo {
     position: relative;
     height: 160px;        /*  высота как у шапки */
     overflow: hidden;     /* обрезает логотип */
     display: flex;
     align-items: center;
     z-index: 1;
+    text-decoration: none;
 }
 
 .logo img {
@@ -279,7 +280,6 @@
     text-decoration: none;
     display: block;
     font-family: 'Tobi';
-    transition: 0.2s;
 }
 
 .dropdown-content a:hover {
