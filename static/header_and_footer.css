@@ -3,7 +3,7 @@
 /* ШАПКА САЙТА */
 .navigation {
     background-color: #ADD8E6;   /* Цвет фона шапки */
-    padding: 1%;                   /* вертикальные отступы */
+    padding: 0px 15px;                   /* вертикальные отступы */
     width: 100%;                   /* На всю ширину окна */
     overflow: visible;             /* Запрещаем горизонтальную прокрутку */
     position: relative;
@@ -13,6 +13,10 @@
 /* ЛОГОТИП */
 .logo {
     position: relative;
+    height: 160px;        /*  высота как у шапки */
+    overflow: hidden;     /* обрезает логотип */
+    display: flex;
+    align-items: center;
     z-index: 1;
 }
 
@@ -27,8 +31,10 @@
     display: flex;                    /* В ряд */
     justify-content: space-between;   /* Раздвигает элементы */
     align-items: center;              /* Вертикальное выравнивание по центру */
-    height: 132px;                    /* Высота панели */
-    margin: 0 auto;                   /* Центрирование по горизонтали */
+    height: 160px;    /* Минимальная высота */
+    margin: 0 auto;
+    gap: 30px;
+     overflow: visible;
 }
 
 /* ПОИСКОВАЯ СТРОКА */
@@ -106,7 +112,7 @@
     border-radius: 50%;            /* Скругление 50% = круг */
 
     /* Выравнивание содержимого */
-    margin-left: 20px;             /* Отступ между меню и профилем */ 
+    /* margin-left: 20px;             Отступ между меню и профилем  */
     display: flex;
     align-items: center;           /* Центрируем иконку по вертикали */
     justify-content: center;       /* Центрируем иконку по горизонтали */
@@ -220,6 +226,8 @@
 .profile-dropdown {
     position: relative;
     display: inline-block;
+    overflow: visible;
+    z-index: 1000; 
 }
 
 .profile-icon {
@@ -232,6 +240,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 1001;
     transition: 0.3s;
 }
 
@@ -253,12 +263,14 @@
     display: none;
     position: absolute;
     right: 0;
+    top: 100%;
     background-color: white;
     min-width: 160px;
+    margin-top: 10px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 10000;
-    border-radius: 10px;
-    overflow: hidden;
+    border-radius: 15px;
+    overflow: visible;
 }
 
 .dropdown-content a {
@@ -273,6 +285,7 @@
 .dropdown-content a:hover {
     background-color: #f99039;
     color: white;
+    border-radius: 15px;
 }
 
 .show {
@@ -295,4 +308,5 @@
 .dropdown-content form .dropdown-link:hover {
     background-color: #f99039;
     color: white;
+    border-radius: 15px;
 }
