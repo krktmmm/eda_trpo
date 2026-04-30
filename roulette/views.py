@@ -55,12 +55,15 @@ def find_solo_match(request):
     if not user_request:
         return JsonResponse({'error': 'У вас нет активной заявки'}, status=404)
     
-    # 1. Идеальное совпадение: корпус + бюджет
-    perfect = list(SoloRequest.objects.filter(
-        building=user_request.building,
-        budget=user_request.budget,
-        is_active=True
-    ).exclude(user=request.user))
+    # Базовый запрос: активные заявки, не свои
+    base_queryset = SoloRequest.objects.filter(is_active=True).exclude(user=request.user)
+    
+    # Фильтрация по бюджету (только если не "any")
+    if user_request.budget != 'any':
+        base_queryset = base_queryset.filter(budget=user_request.budget)
+    
+    # 1. Идеальное совпадение: тот же корпус
+    perfect = list(base_queryset.filter(building=user_request.building))
     
     if perfect:
         match = random.choice(perfect)
@@ -74,13 +77,9 @@ def find_solo_match(request):
             'match_type': 'perfect'
         })
     
-    # 2. Соседний корпус + тот же бюджет
+    # 2. Соседний корпус
     nearby_buildings = get_nearby_buildings(user_request.building)
-    nearby = list(SoloRequest.objects.filter(
-        building__in=nearby_buildings,
-        budget=user_request.budget,
-        is_active=True
-    ).exclude(user=request.user))
+    nearby = list(base_queryset.filter(building__in=nearby_buildings))
     
     if nearby:
         match = random.choice(nearby)
@@ -94,11 +93,8 @@ def find_solo_match(request):
             'match_type': 'nearby'
         })
     
-    # 3. Любой корпус + тот же бюджет
-    any_building = list(SoloRequest.objects.filter(
-        budget=user_request.budget,
-        is_active=True
-    ).exclude(user=request.user))
+    # 3. Любой корпус
+    any_building = list(base_queryset)
     
     if any_building:
         match = random.choice(any_building)
@@ -158,13 +154,18 @@ def find_group_match(request):
     if not user_group:
         return JsonResponse({'error': 'У вас нет активной заявки'}, status=404)
     
-    # 1. Идеальное совпадение: корпус + бюджет + есть места
-    perfect = list(GroupRequest.objects.filter(
-        building=user_group.building,
-        budget=user_group.budget,
+    # Базовый запрос
+    base_queryset = GroupRequest.objects.filter(
         is_active=True,
         current_members__lt=models.F('needed_people')
-    ).exclude(user=request.user))
+    ).exclude(user=request.user)
+    
+    # Фильтр по бюджету
+    if user_group.budget != 'any':
+        base_queryset = base_queryset.filter(budget=user_group.budget)
+    
+    # Идеальное совпадение: корпус
+    perfect = list(base_queryset.filter(building=user_group.building))
     
     if perfect:
         match = random.choice(perfect)
