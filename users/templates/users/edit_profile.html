@@ -1,15 +1,97 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Редактировать профиль | СытГУТИ{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'edit-profile.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="greeting">
-    <h1>Настройки профиля</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Сохранить</button>
-    </form>
-    <p><a href="/profile/">← Назад в профиль</a></p>
+
+<div class="edit-profile-container">
+    <!-- ЛЕВАЯ КОЛОНКА: АВАТАР -->
+    <div class="edit-profile-left">
+        <div class="profile-avatar">
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="Аватар">
+            {% else %}
+                <img src="{% static 'images/avatar.jpg' %}" alt="Аватар">
+            {% endif %}
+        </div>
+        
+        <div class="edit-profile-info">
+            <p><strong>📅 На сайте с:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+            <p><strong>🆔 ID:</strong> {{ user.id }}</p>
+        </div>
+        
+        <p class="future-feature">⭐ Функция смены аватара будет позже</p>
+    </div>
+
+    <!-- ПРАВАЯ КОЛОНКА: ФОРМА НАСТРОЕК -->
+    <div class="edit-profile-right">
+        <h2>⚙️ Редактирование профиля</h2>
+        
+        <form method="post" class="edit-profile-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label>👤 Имя пользователя</label>
+                {{ form.username }}
+            </div>
+            
+            <div class="form-group">
+                <label>📧 Email</label>
+                {{ form.email }}
+            </div>
+            
+            <div class="form-group">
+                <label>📱 Telegram</label>
+                {{ form.telegram }}
+            </div>
+            
+            <div class="form-group">
+                <label>📘 VK</label>
+                {{ form.vk }}
+            </div>
+            
+            <!-- КУРС -->
+            <div class="form-group">
+                <label>🎓 Курс</label>
+                <select name="course" class="form-control">
+                    <option value="">— Выберите курс —</option>
+                    <option value="1" {% if user.profile.course == 1 %}selected{% endif %}>1 курс</option>
+                    <option value="2" {% if user.profile.course == 2 %}selected{% endif %}>2 курс</option>
+                    <option value="3" {% if user.profile.course == 3 %}selected{% endif %}>3 курс</option>
+                    <option value="4" {% if user.profile.course == 4 %}selected{% endif %}>4 курс</option>
+                    <option value="5" {% if user.profile.course == 5 %}selected{% endif %}>5 курс</option>
+                    <option value="6" {% if user.profile.course == 6 %}selected{% endif %}>6 курс</option>
+                </select>
+            </div>
+            
+            <!-- ГРУППА -->
+            <div class="form-group">
+                <label>👥 Группа</label>
+                <input type="text" name="group" class="form-control" placeholder="Например: ИС-21" value="{{ user.profile.group|default:'' }}">
+            </div>
+            
+            <!-- ЛЮБИМАЯ КУХНЯ -->
+            <div class="form-group">
+                <label>🍽️ Любимая кухня</label>
+                <input type="text" name="favorite_cuisine" class="form-control" placeholder="Например: Итальянская, Японская..." value="{{ user.profile.favorite_cuisine|default:'' }}">
+            </div>
+
+            <!-- О СЕБЕ -->
+            <div class="form-group">
+                <label>📝 О себе</label>
+                <textarea name="bio" rows="4" class="form-control" placeholder="Расскажите немного о себе...">{{ user.profile.bio|default:'' }}</textarea>
+            </div>
+            
+            <button type="submit" class="save-btn">💾 Сохранить изменения</button>
+        </form>
+        
+        <a href="{% url 'profile' %}" class="back-link">← Назад в профиль</a>
+    </div>
 </div>
+
 {% endblock %}

@@ -70,3 +70,13 @@
         margin-left: 10px;
     }
 }
+
+/* Адаптивность */
+@media (max-width: 900px) {
+    .edit-profile-container {
+        flex-direction: column;
+    }
+    .edit-profile-right {
+        min-width: auto;
+    }
+}
