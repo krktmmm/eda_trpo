@@ -7,10 +7,22 @@ def main_menu(request):
     """Стартовая страница с выбором: заведения или рулетка"""
     return render(request, 'places/main_menu.html')
 
+def about(request):
+    """Страница 'О нас'"""
+    return render(request, 'places/about.html')
+
+def contacts(request):
+    """Страница 'Контакты'"""
+    return render(request, 'places/contacts.html')
+
 def place_list(request):
     """Страница со списком всех заведений (выбор корпуса и времени)"""
     places = Place.objects.all().order_by('name')
     return render(request, 'places/place_list.html', {'places': places})
+
+def roulette(request):
+    """Страница обед-рулетки"""
+    return render(request, 'roulette/roulette.html')
 
 def place_detail(request, place_id):
     """Детальная страница заведения с отзывами"""
@@ -52,7 +64,3 @@ def add_review(request, place_id):
         return redirect('place_detail', place_id=place.id)
     
     return redirect('place_detail', place_id=place.id)
-
-def roulette(request):
-    """Страница обед-рулетки"""
-    return render(request, 'roulette/roulette.html')
