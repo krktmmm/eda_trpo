@@ -1,28 +1,91 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Профиль | СытГУТИ{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'profile.css' %}">
+{% endblock %}
+
 {% block content %}
-    
-    <!-- ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ -->
-    <div class="greeting">
-        <h1>Мой профиль</h1>
-        <p><strong>{{ user.username }}</strong></p>
-        <p>Telegram: {{ user.profile.telegram|default:"—" }}</p>
-        <p>VK: {{ user.profile.vk|default:"—" }}</p>
+
+<div class="profile-container">
+    <!-- ЛЕВАЯ КОЛОНКА: АВАТАР -->
+    <div class="profile-left">
+        <div class="profile-avatar">
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="Аватар">
+            {% else %}
+                <img src="{% static 'images/avatar.jpg' %}" alt="Аватар">
+            {% endif %}
+        </div>
+        
+        <div class="profile-left-info">
+            <p><strong>📅 На сайте с:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+            <p><strong>🆔 ID:</strong> {{ user.id }}</p>
+        </div>
+        
+        <a href="{% url 'edit_profile' %}" class="edit-profile-btn">
+            ✏️ Редактировать профиль
+        </a>
     </div>
-    
-    <!-- ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ -->
-    <h2 style="text-align:center;">Мои отзывы</h2>
-    
-    {% for review in reviews %}
-    <div style="border: 1px solid #ddd; margin: 10px auto; padding: 10px; width: 80%;">
-        <p><strong>{{ review.place.name }}</strong> — ⭐ {{ review.rating }}/5</p>
-        <p>{{ review.text }}</p>
-        <small>{{ review.created_at|date:"d.m.Y H:i" }}</small>
+
+    <!-- ПРАВАЯ КОЛОНКА: ДАННЫЕ ПОЛЬЗОВАТЕЛЯ -->
+    <div class="profile-right">
+        <h2>👤 Личная информация</h2>
+        
+        <table class="info-table">
+            <tr>
+                <td>👤 Имя пользователя:</td>
+                <td><strong>{{ user.username }}</strong></td>
+            </tr>
+            <tr>
+                <td>📧 Email:</td>
+                <td>{{ user.email|default:"Не указан" }}</td>
+            </tr>
+            <tr>
+                <td>📱 Telegram:</td>
+                <td>{{ user.profile.telegram|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>📘 VK:</td>
+                <td>{{ user.profile.vk|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>📝 О себе:</td>
+                <td>{{ user.profile.bio|default:"—"|linebreaksbr }}</td>
+            </tr>
+            <tr>
+                <td>🎓 Курс:</td>
+                <td>{{ user.profile.course|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>👥 Группа:</td>
+                <td>{{ user.profile.group|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>🍽️ Любимая кухня:</td>
+                <td>{{ user.profile.favorite_cuisine|default:"—" }}</td>
+            </tr>
+        </table>
     </div>
-    {% empty %}
-    <p style="text-align:center;">Вы ещё не оставили ни одного отзыва.</p>
-    {% endfor %}
+</div>
+
+<!-- ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ -->
+<div class="reviews-section">
+    <h2>📝 Мои отзывы</h2>
+    <div class="reviews-grid">
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-place">{{ review.place.name }}</div>
+            <div class="review-rating">⭐ {{ review.rating }}/5</div>
+            <div class="review-text">{{ review.text }}</div>
+            <div class="review-date">{{ review.created_at|date:"d.m.Y H:i" }}</div>
+        </div>
+        {% empty %}
+        <div class="empty-reviews">📭 Вы ещё не оставили ни одного отзыва.</div>
+        {% endfor %}
+    </div>
+</div>
 
 {% endblock %}
