@@ -12,7 +12,7 @@ class Place(models.Model):
     
     nearest_building = models.CharField(max_length=5, blank=True, verbose_name="Ближайший корпус", help_text="Например: №1, №3 или №5")
     
-    cuisine_type = models.CharField(max_length=100, blank=True, verbose_name="Тип кухни")
+    cuisine_type = models.CharField(max_length=100, blank=True, verbose_name="Вид заведения")
     avg_price = models.IntegerField(blank=True, null=True, verbose_name="Средний чек (₽)")
     opening_hours = models.CharField(max_length=200, blank=True, verbose_name="Часы работы")
     

@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
 from places.models import Review
 from .forms import ProfileForm
 from .models import Profile
@@ -45,6 +46,8 @@ def edit_profile(request):
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
+            if 'password' in form.changed_data:
+                update_session_auth_hash(request, request.user)
             return redirect('profile')
     else:
         form = ProfileForm(instance=profile)
