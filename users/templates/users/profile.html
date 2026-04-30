@@ -8,10 +8,8 @@
     <div class="greeting">
         <h1>Мой профиль</h1>
         <p><strong>{{ user.username }}</strong></p>
-        <p>Email: {{ user.email|default:"Не указан" }}</p>
         <p>Telegram: {{ user.profile.telegram|default:"—" }}</p>
         <p>VK: {{ user.profile.vk|default:"—" }}</p>
-        <p>Дата регистрации: {{ user.date_joined|date:"d.m.Y" }}</p>
     </div>
     
     <!-- ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ -->
