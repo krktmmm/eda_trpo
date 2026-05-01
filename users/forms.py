@@ -39,13 +39,13 @@ class ProfileForm(forms.ModelForm):
 
     def save(self, commit=True):
         profile = super().save(commit=False)
+        course_value = self.cleaned_data.get('course')
+        profile.course = int(course_value) if course_value else None
+        profile.group = self.cleaned_data.get('group') or ''
+        profile.favorite_cuisine = self.cleaned_data.get('favorite_cuisine') or ''
+        profile.bio = self.cleaned_data.get('bio') or ''
         if commit:
-            profile.course = self.cleaned_data.get('course')
-            profile.group = self.cleaned_data.get('group')
-            profile.favorite_cuisine = self.cleaned_data.get('favorite_cuisine')
-            profile.bio = self.cleaned_data.get('bio')
             profile.save()
-            
             user = profile.user
             user.username = self.cleaned_data['username']
             user.email = self.cleaned_data.get('email', '')
