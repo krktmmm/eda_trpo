@@ -41,6 +41,28 @@
                 <a href="/contacts/">Контакты</a>
             </div>
 
+            <!-- КОЛОКОЛЬЧИК С УВЕДОМЛЕНИЯМИ -->
+            <div class="notifications-dropdown">
+                <div class="notifications-icon" id="notifIcon">
+                    🔔
+                    <span class="notif-badge" id="notifBadge" style="display: none;"></span>
+                </div>
+                <div class="notifications-content" id="notificationsMenu">
+                    <div class="notifications-header">📢 Уведомления</div>
+                    <div class="notifications-list" id="notificationsList">
+                        <div class="notification-empty">Нет новых уведомлений</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- НОВАЯ КНОПКА СООБЩЕНИЙ -->
+            <div class="messages-dropdown">
+                <a href="/roulette/messages/" class="messages-icon" id="messagesIcon">
+                    💬
+                    <span class="messages-badge" id="messagesBadge" style="display: none;"></span>
+                </a>
+            </div>
+
             <!-- ПРОФИЛЬ (ВЫПАДАЮЩЕЕ МЕНЮ) -->
             <div class="profile-dropdown">
                 {% if user.is_authenticated %}

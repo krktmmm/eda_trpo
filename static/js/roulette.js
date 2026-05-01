@@ -2,7 +2,8 @@ const soloBtn = document.getElementById('solo-btn');
 const groupBtn = document.getElementById('group-btn');
 const soloForm = document.getElementById('solo-form');
 const groupForm = document.getElementById('group-form');
-const modal = document.getElementById('matchModal');
+const matchModal = document.getElementById('matchModal');
+const confirmModal = document.getElementById('confirmModal');
 
 let currentMatchData = null;
 
@@ -15,7 +16,15 @@ function showForm(formToShow) {
 soloBtn.onclick = () => showForm(soloForm);
 groupBtn.onclick = () => showForm(groupForm);
 
-function showModal(match) {
+function hideMatchModal() {
+    matchModal.style.display = 'none';
+}
+
+function hideConfirmModal() {
+    confirmModal.style.display = 'none';
+}
+
+function showMatchModal(match) {
     const title = match.needed_people ? '🍽️ Найдена компания!' : '🍽️ Найден собеседник!';
     document.querySelector('#matchModal h3').innerText = title;
     document.getElementById('modal-username').innerText = match.username;
@@ -23,11 +32,12 @@ function showModal(match) {
     document.getElementById('modal-budget').innerText = match.budget;
     document.getElementById('modal-telegram').innerText = match.telegram || '—';
     document.getElementById('modal-vk').innerText = match.vk || '—';
-    modal.style.display = 'flex';
+    matchModal.style.display = 'flex';
 }
 
-function hideModal() {
-    modal.style.display = 'none';
+function showConfirmModal(username) {
+    document.getElementById('confirm-username').innerText = username;
+    confirmModal.style.display = 'flex';
 }
 
 async function startSolo(e) {
@@ -51,7 +61,17 @@ async function startSolo(e) {
         
     if (match.status === 'found') {
         currentMatchData = match;
-        showModal(match);
+        showMatchModal(match);
+        
+        // Уведомление в колокольчик
+        if (window.addNotification) {
+            window.addNotification(
+                `🎉 Найден собеседник: ${match.username}!`,
+                () => {
+                    window.location.href = '/roulette/';
+                }
+            );
+        }
     } else {
         alert('Не найдено подходящих собеседников');
     }
@@ -59,6 +79,7 @@ async function startSolo(e) {
 
 document.getElementById('create-solo-form').onsubmit = startSolo;
 
+// КНОПКА "ПОЙДУ" — закрывает первое модальное окно, открывает второе
 document.getElementById('acceptMatch').onclick = async () => {
     if (currentMatchData && currentMatchData.group_id) {
         await fetch(`/roulette/api/group/join/${currentMatchData.group_id}/`, {
@@ -67,22 +88,39 @@ document.getElementById('acceptMatch').onclick = async () => {
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
             }
         });
-        alert(`Вы присоединились к компании ${currentMatchData.username}!`);
-    } else if (currentMatchData) {
-        alert(`Вы договорились об обеде с ${currentMatchData.username}!`);
     }
-    hideModal();
-    location.href = '/roulette/';
-};
-document.getElementById('searchAgain').onclick = () => {
-    hideModal();
-    document.getElementById('create-solo-form').dispatchEvent(new Event('submit'));
-};
-document.getElementById('cancelMatch').onclick = () => {
-    hideModal();
-    location.href = '/roulette/';
+    
+    // Закрываем первое окно, открываем второе
+    hideMatchModal();
+    showConfirmModal(currentMatchData.username);
 };
 
+// КНОПКА "НАПИСАТЬ В ЧАТ" во втором окне
+document.getElementById('goToChatBtn').onclick = () => {
+    if (currentMatchData && currentMatchData.dialog_id) {
+        window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`;
+    } else {
+        alert('Ошибка: диалог не найден');
+    }
+};
+
+// КНОПКА "ПОЗЖЕ" — закрывает второе окно и возвращает на главную рулетки
+document.getElementById('laterBtn').onclick = () => {
+    hideConfirmModal();
+    window.location.href = '/roulette/';
+};
+
+document.getElementById('searchAgain').onclick = () => {
+    hideMatchModal();
+    document.getElementById('create-solo-form').dispatchEvent(new Event('submit'));
+};
+
+document.getElementById('cancelMatch').onclick = () => {
+    hideMatchModal();
+    window.location.href = '/roulette/';
+};
+
+// ГРУППОВОЙ РЕЖИМ
 async function startGroup(e) {
     e.preventDefault();
     const form = document.getElementById('create-group-form');
@@ -105,7 +143,16 @@ async function startGroup(e) {
         
     if (match.status === 'found') {
         currentMatchData = match;
-        showModal(match);
+        showMatchModal(match);
+        
+        if (window.addNotification) {
+            window.addNotification(
+                `🎉 Найдена компания от ${match.username}!`,
+                () => {
+                    window.location.href = '/roulette/';
+                }
+            );
+        }
     } else {
         alert('Не найдено подходящих компаний');
     }
@@ -113,7 +160,7 @@ async function startGroup(e) {
 
 document.getElementById('create-group-form').onsubmit = startGroup;
 
-// Автоскролл к форме после её появления
+// Автоскролл к форме
 function scrollToForm(formElement) {
     if (formElement && !formElement.classList.contains('hidden')) {
         setTimeout(() => {
@@ -122,7 +169,6 @@ function scrollToForm(formElement) {
     }
 }
 
-// Переопределяем показ формы с автоскроллом
 const originalSoloShow = () => showForm(soloForm);
 const originalGroupShow = () => showForm(groupForm);
 

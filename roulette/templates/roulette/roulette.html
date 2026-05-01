@@ -84,7 +84,7 @@
         </form>
     </div>
     
-    <!-- МОДАЛЬНОЕ ОКНО -->
+    <!-- ПЕРВОЕ МОДАЛЬНОЕ ОКНО (результат поиска) -->
     <div id="matchModal" class="modal">
         <div class="modal-content">
             <h3>🍽️ Найден собеседник!</h3>
@@ -100,7 +100,19 @@
             </div>
         </div>
     </div>
-</div>
+    
+    <!-- ВТОРОЕ МОДАЛЬНОЕ ОКНО (после нажатия "Пойду") -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>🎉 Отлично!</h3>
+            <p>Вы договорились об обеде с <strong id="confirm-username"></strong>!</p>
+            <p>Теперь вы можете написать собеседнику или вернуться на страницу рулетки.</p>
+            <div class="modal-buttons">
+                <button id="goToChatBtn">💬 Написать в чат</button>
+                <button id="laterBtn">⏰ Позже</button>
+            </div>
+        </div>
+    </div>
 
 <script src="{% static 'js/roulette.js' %}"></script>
 
