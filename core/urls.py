@@ -19,7 +19,7 @@ from django.conf import settings
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-from users.views import login_view, register_view, profile, edit_profile, delete_avatar, settings_view
+from users.views import login_view, register_view, profile, edit_profile, delete_avatar, settings_view, change_password
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,7 @@ urlpatterns = [
     path('profile/', profile, name='profile'),
     path('profile/edit/', edit_profile, name='edit_profile'),
     path('profile/delete-avatar/', delete_avatar, name='delete_avatar'),
+    path('profile/change-password/', change_password, name='change_password'),
     path('profile/settings/', settings_view, name='settings'),
     path('', include('places.urls')),
     path('roulette/', include('roulette.urls')),
