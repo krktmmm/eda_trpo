@@ -1,84 +1,99 @@
 // Функция проверки, включены ли анимации
 function areAnimationsEnabled() {
-    // Сначала проверяем localStorage (для мгновенного применения без перезагрузки)
     const localSetting = localStorage.getItem('animations');
     if (localSetting !== null) {
         return localSetting !== 'off';
     }
-    
-    // Если в localStorage нет — смотрим, что в БД (через атрибут на body)
     const body = document.body;
     if (body && body.classList) {
-        // Если на body есть класс animations-off — значит анимации выключены
         return !body.classList.contains('animations-off');
     }
-    
-    return true; // по умолчанию включены
+    return true;
 }
 
-// Загрузка анимаций только если они включены
-function loadAnimationsIfEnabled() {
-    if (!areAnimationsEnabled()) {
-        // Анимации выключены — показываем статичные эмодзи
-        const plateIcon = document.getElementById('plate-animation');
-        const diceIcon = document.getElementById('dice-animation');
-        
-        if (plateIcon) {
-            plateIcon.innerHTML = '🍽️';
-            plateIcon.classList.add('static-icon');
+// Загрузка статичного Lottie (замороженного на определённом кадре)
+function loadStaticLottie(container, path, frame = 0) {
+    container.innerHTML = '';
+    
+    const animation = lottie.loadAnimation({
+        container: container,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: path
+    });
+    
+    animation.addEventListener('DOMLoaded', () => {
+        // Останавливаем на нужном кадре (0 - первый, totalFrames-1 - последний)
+        if (frame === 'last') {
+            animation.goToAndStop(animation.totalFrames - 1, true);
+        } else {
+            animation.goToAndStop(frame, true);
         }
-        if (diceIcon) {
-            diceIcon.innerHTML = '🎲';
-            diceIcon.classList.add('static-icon');
+        container.style.pointerEvents = 'none';
+    });
+    
+    return animation;
+}
+
+// Загрузка анимаций
+function loadAnimationsIfEnabled() {
+    const plateContainer = document.getElementById('plate-animation');
+    const diceContainer = document.getElementById('dice-animation');
+    
+    if (!areAnimationsEnabled()) {
+        // Анимации выключены — показываем статичные Lottie
+        // Хинкали — первый кадр, Кубик — последний кадр
+        if (plateContainer) {
+            loadStaticLottie(plateContainer, '/static/animations/chpic.su_-_unkib2w_005.json', 0);
+        }
+        if (diceContainer) {
+            loadStaticLottie(diceContainer, '/static/animations/chpic.su_-_DiceCubeEmoji_001.json', 'last');
         }
         return;
     }
     
-    // Анимации включены — грузим Lottie
-    const plate = document.getElementById('plate-animation');
-    const dice = document.getElementById('dice-animation');
-    
-    if (plate && !plate.hasAttribute('data-lottie-loaded')) {
+    // Анимации включены — грузим с возможностью проигрыша
+    if (plateContainer && !plateContainer.hasAttribute('data-lottie-loaded')) {
         const plateAnimation = lottie.loadAnimation({
-            container: plate,
+            container: plateContainer,
             renderer: 'svg',
             loop: false,
             autoplay: false,
             path: '/static/animations/chpic.su_-_unkib2w_005.json'
         });
         
-        const plateCard = plate.closest('.menu-card');
+        const plateCard = plateContainer.closest('.menu-card');
         if (plateCard) {
             plateCard.addEventListener('mouseenter', () => {
                 plateAnimation.goToAndPlay(0, true);
             });
         }
-        plate.setAttribute('data-lottie-loaded', 'true');
+        plateContainer.setAttribute('data-lottie-loaded', 'true');
     }
     
-    if (dice && !dice.hasAttribute('data-lottie-loaded')) {
+    if (diceContainer && !diceContainer.hasAttribute('data-lottie-loaded')) {
         const diceAnimation = lottie.loadAnimation({
-            container: dice,
+            container: diceContainer,
             renderer: 'svg',
             loop: false,
             autoplay: false,
             path: '/static/animations/chpic.su_-_DiceCubeEmoji_001.json'
         });
         
-        // Ставим на последний кадр (чтобы кубик был виден)
+        // Ставим на последний кадр (чтобы кубик был виден в нормальном положении)
         diceAnimation.addEventListener('DOMLoaded', () => {
             diceAnimation.goToAndStop(diceAnimation.totalFrames - 1, true);
         });
         
-        const diceCard = dice.closest('.menu-card');
+        const diceCard = diceContainer.closest('.menu-card');
         if (diceCard) {
             diceCard.addEventListener('mouseenter', () => {
                 diceAnimation.goToAndPlay(0, true);
             });
         }
-        dice.setAttribute('data-lottie-loaded', 'true');
+        diceContainer.setAttribute('data-lottie-loaded', 'true');
     }
 }
 
-// Запускаем загрузку анимаций после загрузки страницы
 document.addEventListener('DOMContentLoaded', loadAnimationsIfEnabled);
