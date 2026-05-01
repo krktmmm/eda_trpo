@@ -24,8 +24,6 @@
             <button type="button" id="delete-avatar" class="avatar-delete-btn" style="background: #e74c3c; color: white; padding: 8px 20px; border-radius: 30px; cursor: pointer; border: none; font-family: 'Tobi'; transition: 0.3s;">🗑️ Удалить</button>
         </div>
         
-        <input type="file" name="avatar" id="avatar-upload" accept="image/*" style="display: none;">
-        
         <div class="edit-profile-info">
             <p><strong>📅 На сайте с:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
             <p><strong>🆔 ID:</strong> {{ user.id }}</p>
@@ -38,9 +36,8 @@
         
         <form method="post" class="edit-profile-form" enctype="multipart/form-data" id="profile-form">
             {% csrf_token %}
-            
-            <!-- Скрытое поле для аватарки (без стандартного input) -->
-            <input type="file" name="avatar" id="avatar-field" accept="image/*" style="display: none;">
+
+            <input type="file" name="avatar" id="avatar-upload" accept="image/*" style="display: none;">
             
             <div class="form-group">
                 <label>👤 Имя пользователя</label>
