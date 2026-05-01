@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Настройки | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'settings.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    <h2>⚙️ Настройки интерфейса</h2>
+    
+    <form method="post" id="settings-form">
+        {% csrf_token %}
+        
+        <div class="settings-section">
+            <h3>📱 Внешний вид</h3>
+            
+            <div class="setting-item">
+                <span class="setting-label">🌓 Тёмная тема</span>
+                <select name="theme" id="theme-select">
+                    <option value="light" {% if user.profile.theme == 'light' %}selected{% endif %}>Светлая</option>
+                    <option value="dark" {% if user.profile.theme == 'dark' %}selected{% endif %}>Тёмная</option>
+                </select>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label">🔤 Размер шрифта</span>
+                <select name="font_size" id="font-size-select">
+                    <option value="small" {% if user.profile.font_size == 'small' %}selected{% endif %}>Маленький</option>
+                    <option value="medium" {% if user.profile.font_size == 'medium' %}selected{% endif %}>Средний</option>
+                    <option value="large" {% if user.profile.font_size == 'large' %}selected{% endif %}>Большой</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3>💬 Обращение</h3>
+            
+            <div class="setting-item">
+                <span class="setting-label">👋 Как к тебе обращаться</span>
+                <select name="greeting_style" id="greeting-select">
+                    <option value="sweet" {% if user.profile.greeting_style == 'sweet' %}selected{% endif %}>Малышочек (по умолчанию)</option>
+                    <option value="formal" {% if user.profile.greeting_style == 'formal' %}selected{% endif %}>Уважаемый студент</option>
+                    <option value="friend" {% if user.profile.greeting_style == 'friend' %}selected{% endif %}>Друн</option>
+                    <option value="comrade" {% if user.profile.greeting_style == 'comrade' %}selected{% endif %}>Товарищ</option>
+                    <option value="none" {% if user.profile.greeting_style == 'none' %}selected{% endif %}>Без обращения</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3>🎬 Анимации</h3>
+            
+            <div class="setting-item">
+                <span class="setting-label">✨ Включить анимации</span>
+                <select name="animations" id="animations-select">
+                    <option value="on" {% if user.profile.animations != 'off' %}selected{% endif %}>Вкл</option>
+                    <option value="off" {% if user.profile.animations == 'off' %}selected{% endif %}>Выкл</option>
+                </select>
+            </div>
+        </div>
+        
+        <button type="submit" class="save-btn">💾 Сохранить настройки</button>
+    </form>
+</div>
+
+<script src="{% static 'settings.js' %}"></script>
+
+{% endblock %}

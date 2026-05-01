@@ -8,8 +8,20 @@
 <div class="greeting">
     <h1>🎲 Обед - рулетка</h1>
     {% if user.is_authenticated %}
-            <p>Малышочек, {{ user.username }}! выбери себе компанию для ням-нямки</p>
-        {% endif %}
+        <p>
+            {% if user.profile.greeting_style == 'sweet' %}
+                Малышочек, {{ user.username }}! выбери себе компанию для ням-нямки
+            {% elif user.profile.greeting_style == 'formal' %}
+                Уважаемый студент {{ user.username }}, выберите себе компанию для обеда
+            {% elif user.profile.greeting_style == 'friend' %}
+                Друн {{ user.username }}, найди себе кого-нибудь уже
+            {% elif user.profile.greeting_style == 'comrade' %}
+                Товарищ {{ user.username }}, вы должны выбрать компанию для обеда
+            {% else %}
+                {{ user.username }}, выбери себе компанию для обеда
+            {% endif %}
+        </p>
+    {% endif %}
 </div>
 
 

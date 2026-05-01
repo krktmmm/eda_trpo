@@ -174,3 +174,14 @@
     color: #f99039;
     transform: translateX(-3px);
 }
+
+                                   /* ВИКА ЭТО КАТЯ ДОБАВИЛА */
+.avatar-upload-label:hover {
+    background: #f99039 !important;
+    transform: scale(1.02);
+}
+
+.avatar-delete-btn:hover {
+    background: #c0392b !important;
+    transform: scale(1.02);
+}

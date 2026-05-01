@@ -9,7 +9,21 @@
     <div class="greeting">
         <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
         {% if user.is_authenticated %}
-            <p>Привет, сладенький-вкусненький малышочек {{ user.username }}!</p>
+            <p>
+                {% if user.is_authenticated %}
+                    {% if user.profile.greeting_style == 'sweet' %}
+                        Привет, сладенький-вкусненький малышочек {{ user.username }}!
+                    {% elif user.profile.greeting_style == 'formal' %}
+                        Здравствуйте, уважаемый студент {{ user.username }}.
+                    {% elif user.profile.greeting_style == 'friend' %}
+                        що ти, друн {{ user.username }}?
+                    {% elif user.profile.greeting_style == 'comrade' %}
+                        Здравия желаю, товарищ {{ user.username }}!
+                    {% else %}
+                        Привет, {{ user.username }}!
+                    {% endif %}
+                {% endif %}
+            </p>
         {% endif %}
     </div>
     

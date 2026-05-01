@@ -17,15 +17,15 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body>
+<body class="{% if user.is_authenticated and user.profile.theme == 'dark' %}dark-theme{% endif %} {% if user.is_authenticated %}font-{{ user.profile.font_size|default:'medium' }}{% else %}font-medium{% endif %} {% if user.is_authenticated and user.profile.animations == 'off' %}animations-off{% endif %}">
     <!-- ШАПКА САЙТА -->
     <div class="navigation">
-        <!-- КНОПКИ -->
         <div class="panel">
             <!-- ЛОГОТИП -->
-            <a href="/" class="logo">
+            <a href="#" class="logo">
                 <img src="{% static 'images/log.png' %}" alt="Логотип">
             </a>
+            
             <!-- ПОИСКОВАЯ СТРОКА -->
             <div class="search">
                 <input type="text" placeholder="Нямка...">
@@ -41,15 +41,19 @@
                 <a href="/contacts/">Контакты</a>
             </div>
 
-            <!-- ПРОФИЛЬ -->
+            <!-- ПРОФИЛЬ (ВЫПАДАЮЩЕЕ МЕНЮ) -->
             <div class="profile-dropdown">
                 {% if user.is_authenticated %}
                     <div class="profile-icon" id="profileBtn">
-                        <img src="{% static 'images/avatar.jpg' %}" alt="Профиль">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="Аватар">
+                        {% else %}
+                            <img src="{% static 'images/default_avatar.jpg' %}" alt="Профиль">
+                        {% endif %}
                     </div>
                     <div class="dropdown-content" id="dropdownMenu">
                         <a href="/profile/">Профиль</a>
-                        <a href="/profile/edit/">Настройки</a>
+                        <a href="/profile/settings/">Настройки</a>
                         <form action="/accounts/logout/" method="post">
                             {% csrf_token %}
                             <button type="submit" class="dropdown-link">Выход</button>
@@ -57,7 +61,7 @@
                     </div>
                 {% else %}
                     <a href="/accounts/login/" class="profile">
-                        <img src="{% static 'images/avatar.jpg' %}" alt="Войти">
+                        <img src="{% static 'images/default_avatar.jpg' %}" alt="Войти">
                     </a>
                 {% endif %}
             </div>

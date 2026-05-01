@@ -74,3 +74,12 @@
     font-family: 'Tobi';
     font-size: 20px;
 }
+
+                                                   /* ВИКА ЭТО КАТЯ СДЕЛАЛА */
+/* Статичные иконки (когда анимации выключены) */
+.static-icon {
+    font-size: 100px !important;
+    line-height: 1 !important;
+    margin: 0 auto 25px auto !important;
+    text-align: center !important;
+}
