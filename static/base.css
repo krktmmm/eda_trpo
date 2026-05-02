@@ -450,6 +450,31 @@ body.dark-theme .notification-empty {
     color: #888;
 }
 
+/* Фиолетовые кнопки в тёмной теме */
+body.dark-theme .menu a,
+body.dark-theme .panel .profile,
+body.dark-theme .profile-icon,
+body.dark-theme .messages-icon,
+body.dark-theme .notifications-icon {
+    background-color: #4c3d63 !important;
+    color: white !important;
+}
+
+body.dark-theme .menu a:hover,
+body.dark-theme .panel .profile:hover,
+body.dark-theme .profile-icon:hover,
+body.dark-theme .messages-icon:hover,
+body.dark-theme .notifications-icon:hover {
+    background-color: #4c3d63 !important;
+    transform: scale(1.1);
+}
+
+/* Рамка аватара профиля */
+body.dark-theme .panel .profile img,
+body.dark-theme .profile-icon img {
+    border-color: #6a5a9c !important;
+}
+
 /* Адаптивность при тёмной теме */
 @media (max-width: 700px) {
     body.dark-theme .menu {
