@@ -146,37 +146,37 @@ body {
 
 /* ===== ТЁМНАЯ ТЕМА ===== */
 body.dark-theme {
-    background-color: #1a1a2e !important;
+    background-color: #151515 !important;
     color: #e0e0e0 !important;
 }
 
 /* Шапка и футер */
 body.dark-theme .navigation,
 body.dark-theme .footer {
-    background-color: #16213e !important;
+    background-color: #222222 !important;
 }
 
 body.dark-theme .panel .profile,
 body.dark-theme .menu a {
-    background-color: #0f3460 !important;
-    color: #e94560 !important;
+    background-color: #151515 !important;
+    color: #4c3d63 !important;
 }
 
 body.dark-theme .menu a:hover {
-    background-color: #e94560 !important;
+    background-color: #4c3d63 !important;
     color: white !important;
 }
 
 /* Поиск */
 body.dark-theme .search input {
     background-color: #0f3460 !important;
-    border-color: #e94560 !important;
-    color: white !important;
+    border-color: #4c3d63 !important;
+    color: #e0e0e0 !important;
 }
 
 body.dark-theme .search button {
-    background-color: #e94560 !important;
-    border-color: #e94560 !important;
+    background-color: #4c3d63 !important;
+    border-color: #4c3d63 !important;
 }
 
 /* Приветствие */
@@ -191,7 +191,7 @@ body.dark-theme .menu-card-inner {
 }
 
 body.dark-theme .menu-card-inner.roulette {
-    background-color: #e94560 !important;
+    background-color: #4c3d63 !important;
 }
 
 body.dark-theme .menu-card h2,
@@ -215,7 +215,7 @@ body.dark-theme .time-btn {
 
 body.dark-theme .time-btn:hover,
 body.dark-theme .time-btn.active {
-    background-color: #e94560 !important;
+    background-color: #3f3252 !important;
     color: white !important;
 }
 
@@ -227,12 +227,12 @@ body.dark-theme .places-panel {
 
 body.dark-theme .places-panel h2 {
     color: #e0e0e0 !important;
-    border-bottom-color: #e94560 !important;
+    border-bottom-color: #4c3d63 !important;
 }
 
 body.dark-theme .place-card {
     background-color: #0f3460 !important;
-    border-bottom-color: #e94560 !important;
+    border-bottom-color: #4c3d63 !important;
 }
 
 body.dark-theme .place-card:hover {
@@ -240,7 +240,7 @@ body.dark-theme .place-card:hover {
 }
 
 body.dark-theme .place-name {
-    color: #e94560 !important;
+    color: #4c3d63 !important;
 }
 
 body.dark-theme .place-address {
@@ -257,7 +257,7 @@ body.dark-theme .roulette-mode-btn .btn-inner {
 }
 
 body.dark-theme .roulette-mode-btn:last-child .btn-inner {
-    background-color: #e94560 !important;
+    background-color: #4c3d63 !important;
 }
 
 body.dark-theme .roulette-form {
@@ -311,7 +311,7 @@ body.dark-theme .edit-profile-form input,
 body.dark-theme .edit-profile-form textarea,
 body.dark-theme .edit-profile-form select {
     background-color: #0f3460 !important;
-    color: white !important;
+    color: #e0e0e0 !important;
     border-color: #e94560 !important;
 }
 
