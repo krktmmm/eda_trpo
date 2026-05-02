@@ -355,7 +355,7 @@ body.dark-theme .back-link {
 
 body.dark-theme a:hover,
 body.dark-theme .back-link:hover {
-    color: #ff6b6b !important;
+    color: #7e008b !important;
 }
 
 /* Модальное окно */
@@ -473,6 +473,31 @@ body.dark-theme .notifications-icon:hover {
 body.dark-theme .panel .profile img,
 body.dark-theme .profile-icon img {
     border-color: #6a5a9c !important;
+}
+
+body.dark-theme .footer-section h3 {
+    color: #cccccc !important;
+}
+
+body.dark-theme .footer-section p {
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .social-links a {
+    color: #8a7bb5 !important;
+}
+
+body.dark-theme .social-links a:hover {
+    color: #6a5a9c !important;
+}
+
+body.dark-theme .footer-bottom p {
+    color: #aaaaaa !important;
+}
+
+/* Разделительная линия в футере для тёмной темы */
+body.dark-theme .footer-bottom {
+    border-top: 1px solid #413454 !important; /* Фиолетовый, как остальные акценты */
 }
 
 /* Адаптивность при тёмной теме */
