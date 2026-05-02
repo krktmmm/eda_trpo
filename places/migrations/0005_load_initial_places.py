@@ -19,7 +19,7 @@ def create_places(apps, schema_editor):
             'longitude': 82.949439,
         },
         {
-            'name': 'All week 2',
+            'name': 'All week',
             'address': 'ул. Кирова, 29',
             'time_from_building_1': 10,
             'time_from_building_3': 7,
