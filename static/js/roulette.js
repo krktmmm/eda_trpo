@@ -180,3 +180,51 @@ groupBtn.onclick = () => {
     originalGroupShow();
     scrollToForm(groupForm);
 };
+
+// Анимации для кнопок рулетки
+const onepersonIcon = document.getElementById('oneperson-animation');
+const twopersonIcon = document.getElementById('twoperson-animation');
+
+if (onepersonIcon && twopersonIcon) {
+    const onepersonAnimation = lottie.loadAnimation({
+        container: onepersonIcon,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: '/static/animations/obed-ruletka/oneperson.json'
+    });
+
+    const twopersonAnimation = lottie.loadAnimation({
+        container: twopersonIcon,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: '/static/animations/obed-ruletka/twoperson.json'
+    });
+
+   onepersonAnimation.addEventListener('DOMLoaded', () => {
+    onepersonAnimation.goToAndStop(0, true);
+    });
+
+    twopersonAnimation.addEventListener('DOMLoaded', () => {
+        twopersonAnimation.goToAndStop(0, true);
+    });
+
+    soloBtn.addEventListener('mouseenter', () => {
+        onepersonAnimation.stop();
+        onepersonAnimation.goToAndPlay(0, true);
+    });
+
+    groupBtn.addEventListener('mouseenter', () => {
+        twopersonAnimation.stop();
+        twopersonAnimation.goToAndPlay(0, true);
+    });
+
+    soloBtn.addEventListener('mouseleave', () => {
+        onepersonAnimation.goToAndStop(0, true);
+    });
+
+    groupBtn.addEventListener('mouseleave', () => {
+        twopersonAnimation.goToAndStop(0, true);
+    });
+}

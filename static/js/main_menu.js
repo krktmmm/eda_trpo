@@ -45,10 +45,10 @@ function loadAnimationsIfEnabled() {
         // Анимации выключены — показываем статичные Lottie
         // Хинкали — первый кадр, Кубик — последний кадр
         if (plateContainer) {
-            loadStaticLottie(plateContainer, '/static/animations/chpic.su_-_unkib2w_005.json', 0);
+            loadStaticLottie(plateContainer, '/static/animations/glavnaya/chpic.su_-_unkib2w_005.json', 0);
         }
         if (diceContainer) {
-            loadStaticLottie(diceContainer, '/static/animations/chpic.su_-_DiceCubeEmoji_001.json', 'last');
+            loadStaticLottie(diceContainer, '/static/animations/glavnaya/chpic.su_-_DiceCubeEmoji_001.json', 'last');
         }
         return;
     }
@@ -60,7 +60,7 @@ function loadAnimationsIfEnabled() {
             renderer: 'svg',
             loop: false,
             autoplay: false,
-            path: '/static/animations/chpic.su_-_unkib2w_005.json'
+            path: '/static/animations/glavnaya/chpic.su_-_unkib2w_005.json'
         });
         
         const plateCard = plateContainer.closest('.menu-card');
@@ -78,7 +78,7 @@ function loadAnimationsIfEnabled() {
             renderer: 'svg',
             loop: false,
             autoplay: false,
-            path: '/static/animations/chpic.su_-_DiceCubeEmoji_001.json'
+            path: '/static/animations/glavnaya/chpic.su_-_DiceCubeEmoji_001.json'
         });
         
         // Ставим на последний кадр (чтобы кубик был виден в нормальном положении)
