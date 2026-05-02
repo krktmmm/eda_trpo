@@ -273,7 +273,7 @@ body.dark-theme .roulette-form select,
 body.dark-theme .roulette-form input {
     background-color: #0f3460 !important;
     color: white !important;
-    border-color: #e94560 !important;
+    border-color: #4c3d63 !important;
 }
 
 /* Профиль */
@@ -291,7 +291,7 @@ body.dark-theme .profile-right h2,
 body.dark-theme .edit-profile-right h2,
 body.dark-theme .settings-container h2 {
     color: #e0e0e0 !important;
-    border-bottom-color: #e94560 !important;
+    border-bottom-color: #4c3d63 !important;
 }
 
 body.dark-theme .profile-left-info p,
@@ -300,7 +300,7 @@ body.dark-theme .info-table td {
 }
 
 body.dark-theme .info-table td:first-child {
-    color: #e94560 !important;
+    color: #4c3d63 !important;
 }
 
 body.dark-theme .edit-profile-form .form-group label {
@@ -312,17 +312,17 @@ body.dark-theme .edit-profile-form textarea,
 body.dark-theme .edit-profile-form select {
     background-color: #0f3460 !important;
     color: #e0e0e0 !important;
-    border-color: #e94560 !important;
+    border-color: #4c3d63 !important;
 }
 
 /* Отзывы */
 body.dark-theme .review-card {
     background-color: #0f3460 !important;
-    border-color: #e94560 !important;
+    border-color: #4c3d63 !important;
 }
 
 body.dark-theme .review-place {
-    color: #e94560 !important;
+    color: #4c3d63 !important;
 }
 
 body.dark-theme .review-text,
@@ -336,7 +336,7 @@ body.dark-theme .submit-bin,
 body.dark-theme .save-btn,
 body.dark-theme .avatar-upload-label,
 body.dark-theme .avatar-delete-btn {
-    background-color: #e94560 !important;
+    background-color: #4c3d63 !important;
     color: white !important;
 }
 
@@ -350,7 +350,7 @@ body.dark-theme .save-btn:hover {
 /* Ссылки */
 body.dark-theme a,
 body.dark-theme .back-link {
-    color: #e94560 !important;
+    color: #4c3d63 !important;
 }
 
 body.dark-theme a:hover,
@@ -365,7 +365,7 @@ body.dark-theme .modal-content {
 }
 
 body.dark-theme .modal-content button {
-    background-color: #e94560 !important;
+    background-color: #4c3d63 !important;
 }
 
 /* Карта-заглушка */
@@ -381,18 +381,21 @@ body.dark-theme .map-hint {
 /* Выпадающее меню профиля в тёмной теме */
 body.dark-theme .dropdown-content {
     background-color: #16213e !important;
-    border: 1px solid #e94560 !important;
+    border: 1px solid #4c3d63 !important;  /* рамка списка */
 }
 
 body.dark-theme .dropdown-content a,
 body.dark-theme .dropdown-content form .dropdown-link {
     color: #e0e0e0 !important;
+    background: transparent !important; /* Убираем дефолтный фон кнопки */
 }
 
 body.dark-theme .dropdown-content a:hover,
 body.dark-theme .dropdown-content form .dropdown-link:hover {
-    background-color: #e94560 !important;
+    background-color: #4c3d63 !important;
     color: white !important;
+    transform: scale(1.0);
+    border-radius: 15px;
 }
 
 /* Контакты */
@@ -402,7 +405,7 @@ body.dark-theme .contacts-card {
 }
 
 body.dark-theme .contacts-card h2 {
-    color: #e94560 !important;
+    color: #4c3d63 !important;
 }
 
 body.dark-theme .contacts-card p,
@@ -411,13 +414,13 @@ body.dark-theme .contacts-card a {
 }
 
 body.dark-theme .contacts-card a:hover {
-    color: #e94560 !important;
+    color: #4c3d63 !important;
 }
 
 /* Тёмная тема для уведомлений */
 body.dark-theme .notifications-content {
     background-color: #16213e;
-    border: 1px solid #e94560;
+    border: 1px solid #4c3d63;
 }
 
 body.dark-theme .notifications-header {
@@ -436,7 +439,7 @@ body.dark-theme .notification-item:hover {
 
 body.dark-theme .notification-item.unread {
     background-color: #1a1a2e;
-    border-left-color: #e94560;
+    border-left-color: #4c3d63;
 }
 
 body.dark-theme .notification-time {
