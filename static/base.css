@@ -169,9 +169,9 @@ body.dark-theme .menu a:hover {
 
 /* Поиск */
 body.dark-theme .search input {
-    background-color: #0f3460 !important;
+    background-color: #e0e0e0 !important;
     border-color: #4c3d63 !important;
-    color: #e0e0e0 !important;
+    color: #151515 !important;
 }
 
 body.dark-theme .search button {
@@ -343,8 +343,8 @@ body.dark-theme .avatar-delete-btn {
 body.dark-theme button:hover,
 body.dark-theme .submit-bin:hover,
 body.dark-theme .save-btn:hover {
-    background-color: #ff6b6b !important;
-    transform: scale(1.02);
+    background-color: #4c3d63 !important;
+
 }
 
 /* Ссылки */
