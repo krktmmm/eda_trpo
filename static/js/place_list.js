@@ -76,3 +76,35 @@ backBtn.addEventListener('click', function () {
         card.style.display = 'block';
     });
 });
+
+// Кнопки избранного в списке заведений
+document.querySelectorAll('.favorite-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const placeId = this.dataset.placeId;
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch(`/favorites/toggle/${placeId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.is_favorited) {
+                this.innerHTML = '❤️';
+                this.classList.add('active');
+            } else {
+                this.innerHTML = '🤍';
+                this.classList.remove('active');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+    });
+});

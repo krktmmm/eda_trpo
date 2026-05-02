@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 class Place(models.Model):
@@ -55,3 +56,17 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
+
+class Favorite(models.Model):
+    """Избранные заведения пользователя"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='favorited_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'place')  # чтобы нельзя было добавить одно заведение дважды
+        verbose_name = "Избранное"
+        verbose_name_plural = "Избранное"
+
+    def __str__(self):
+        return f"{self.user.username} - {self.place.name}"
