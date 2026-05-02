@@ -16,12 +16,17 @@ cd trpo_project
 ```
 
 ### 2. Создать виртуальное окружение:
+**Windows:**
 ```bash
 python -m venv venv
 ```
+**Mac/Linux:**
+```bash
+python3 -m venv venv
+```
 
 ### 3. Активировать окружение:
-**Windows:**
+**Windows (Git Bash):**
 ```bash
 source venv/Scripts/activate
 ```
@@ -30,27 +35,29 @@ source venv/Scripts/activate
 source venv/bin/activate
 ```
 
-### 4. Установить Django:
+### 4. Установить зависимости:
 ```bash
-pip install django
+pip install -r requirements.txt
 ```
 
-### 5. Применить миграции:
+### 5. Вставить актуальный файл db.sqlite3
+
+### 6. Применить миграции (на всякий случай):
 ```bash
 python manage.py migrate
 ```
 
-### 6. Создать суперпользователя:
+### 7. Создать суперпользователя (если нет):
 ```bash
 python manage.py createsuperuser
 ```
 
-### 7. Запустить сервер:
+### 8. Запустить сервер:
 ```bash
 python manage.py runserver
 ```
 
-### 8. Открыть в браузере:
+### 9. Открыть в браузере:
 * Сайт: <http://127.0.0.1:8000>
 * Админка: <http://127.0.0.1:8000/admin>
 

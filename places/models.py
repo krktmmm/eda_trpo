@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 class Place(models.Model):
@@ -5,14 +6,14 @@ class Place(models.Model):
     
     name = models.CharField(max_length=100, verbose_name="Название")
     address = models.CharField(max_length=200, verbose_name="Адрес")
-    
+
     time_from_building_1 = models.IntegerField(default=100, verbose_name="Время от корпуса №1 (мин)")
     time_from_building_3 = models.IntegerField(default=100, verbose_name="Время от корпуса №3 (мин)")
     time_from_building_5 = models.IntegerField(default=100, verbose_name="Время от корпуса №5 (мин)")
     
     nearest_building = models.CharField(max_length=5, blank=True, verbose_name="Ближайший корпус", help_text="Например: №1, №3 или №5")
     
-    cuisine_type = models.CharField(max_length=100, blank=True, verbose_name="Тип кухни")
+    cuisine_type = models.CharField(max_length=100, blank=True, verbose_name="Вид заведения")
     avg_price = models.IntegerField(blank=True, null=True, verbose_name="Средний чек (₽)")
     opening_hours = models.CharField(max_length=200, blank=True, verbose_name="Часы работы")
     
@@ -55,3 +56,17 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
+
+class Favorite(models.Model):
+    """Избранные заведения пользователя"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='favorited_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'place')  # чтобы нельзя было добавить одно заведение дважды
+        verbose_name = "Избранное"
+        verbose_name_plural = "Избранное"
+
+    def __str__(self):
+        return f"{self.user.username} - {self.place.name}"

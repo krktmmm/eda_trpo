@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+/* АДАПТИВНОСТЬ */
+@media (max-width: 900px) {        /* Ширина меньше 900px */
+    .main-container {              /* Панели в столбик */
+        flex-direction: column;
+    }
+    .time-panel {
+        min-height: auto;
+    }
+    .time-buttons {                /* Кнопки времени в строку */
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .time-btn {
+        flex: 1;
+        font-size: 16px;
+        padding: 15px 10px;
+        width: auto; 
+    }
+    .menu a:last-child {           /* Скрыть кнопку "Контакты" в меню */
+        display: none;
+    }
+}
+
+@media (max-width: 700px) {        /* Ширина меньше 700px */
+    .footer-content {              /* Футер в столбик */
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+    .social-links {
+        align-items: center;
+    }
+    .social-links a:hover {
+        transform: scale(1.1);
+    }
+    .menu {                        /* Скрыть всё меню */
+        display: none;
+    }
+}
+
+@media (max-width: 550px) {        /* Ширина меньше 550px */
+    .logo {                        /* Скрыть логотип */
+        display: none;
+    }
+    .search {                      /* Поиск на всю ширину */
+        max-width: 100%;
+        margin: 0 10px;
+    }
+    .navigation {                  /* Уменьшить отступы шапки */
+        padding: 10px;
+    }
+}
+
+@media (max-width: 450px) {        /* Ширина меньше 450px */
+    .search input {                /* Уменьшить поиск */
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    .search button {
+        padding: 10px 16px;
+    }
+    .search button span {
+        font-size: 14px;
+    }
+    .panel .profile {              /* Уменьшить профиль */
+        width: 50px;
+        height: 50px;
+        margin-left: 10px;
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 900px) {
+    .edit-profile-container {
+        flex-direction: column;
+    }
+    .edit-profile-right {
+        min-width: auto;
+    }
+}

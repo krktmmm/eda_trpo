@@ -1,46 +1,113 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <title>{{ place.name }} | СытГУТИ 🍔</title>
-</head>
-<body>
-    <h1>{{ place.name }}</h1>
-    <p>📍 {{ place.address }}</p>
-    <p>💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}</p>
-    
-    <h2>Отзывы</h2>
-    {% for review in reviews %}
-        <div>
-            <strong>{{ review.user.username }}</strong> (⭐ {{ review.rating }}) 
-            <small>{{ review.created_at|date:"d.m.Y" }}</small>
-            <p>{{ review.text }}</p>
-            {% if review.photo_url %}
-                <img src="{{ review.photo_url }}" width="200">
-            {% endif %}
+{% extends 'base.html' %}
+
+{% block title %}{{ place.name }} | СытГУТИ{% endblock %}
+
+{% block content %}
+
+<style>
+.place-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.favorite-detail-btn {
+    background: none;
+    border: none;
+    font-size: 36px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.favorite-detail-btn:hover {
+    transform: scale(1.1);
+}
+
+.favorite-detail-btn.active {
+    color: #e74c3c;
+}
+</style>
+
+    <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
+    <div style="max-width: 800px; margin: 40px auto; padding: 20px;">
+        <div class="place-header">
+            <h1>{{ place.name }}</h1>
+            <button id="favorite-detail-btn" class="favorite-detail-btn {% if is_favorited %}active{% endif %}" data-place-id="{{ place.id }}">
+                {% if is_favorited %}❤️{% else %}🤍{% endif %}
+            </button>
         </div>
-    {% empty %}
-        <p>Пока нет отзывов.</p>
-    {% endfor %}
+        <p>📍 {{ place.address }}</p>
+        <p>💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}</p>
+        
+        <h2>Отзывы</h2>
+        {% for review in reviews %}
+            <div style="border: 1px solid #ddd; margin: 10px 0; padding: 10px; border-radius: 8px;">
+                <strong>{{ review.user.username }}</strong> (⭐ {{ review.rating }}) 
+                <small>{{ review.created_at|date:"d.m.Y" }}</small>
+                <p>{{ review.text }}</p>
+                {% if review.photo_url %}
+                    <img src="{{ review.photo_url }}" width="200" style="border-radius: 8px;">
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>Пока нет отзывов.</p>
+        {% endfor %}
+        
+        {% if user.is_authenticated %}
+            <h3>Добавить отзыв</h3>
+            <form method="post" action="{% url 'add_review' place.id %}" style="margin-top: 20px;">
+                {% csrf_token %}
+                <select name="rating" required style="padding: 8px; margin-bottom: 10px;">
+                    <option value="5">5 ★</option>
+                    <option value="4">4 ★</option>
+                    <option value="3">3 ★</option>
+                    <option value="2">2 ★</option>
+                    <option value="1">1 ★</option>
+                </select><br>
+                <textarea name="text" rows="3" placeholder="Ваш отзыв..." required style="width: 100%; padding: 8px; margin-bottom: 10px;"></textarea><br>
+                <input type="url" name="photo_url" placeholder="Ссылка на фото (необязательно)" style="width: 100%; padding: 8px; margin-bottom: 10px;"><br>
+                <button type="submit" style="background-color: #5F9EA0; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Отправить</button>
+            </form>
+        {% else %}
+            <p><a href="/accounts/login/">Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв</p>
+        {% endif %}
+        
+        <p style="margin-top: 30px;"><a href="/places/">← Назад</a></p>
+    </div>
     
-    {% if user.is_authenticated %}
-        <h3>Добавить отзыв</h3>
-        <form method="post" action="{% url 'add_review' place.id %}">
-            {% csrf_token %}
-            <select name="rating" required>
-                <option value="5">5 ★</option>
-                <option value="4">4 ★</option>
-                <option value="3">3 ★</option>
-                <option value="2">2 ★</option>
-                <option value="1">1 ★</option>
-            </select>
-            <textarea name="text" rows="3" placeholder="Ваш отзыв..." required></textarea>
-            <input type="url" name="photo_url" placeholder="Ссылка на фото (необязательно)">
-            <button type="submit">Отправить</button>
-        </form>
-    {% else %}
-        <p><a href="/accounts/login/">Войдите</a>, чтобы оставить отзыв</p>
-    {% endif %}
-    
-    <p><a href="/">← На главную</a></p>
-</body>
-</html>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const favBtn = document.getElementById('favorite-detail-btn');
+    if (favBtn) {
+        favBtn.addEventListener('click', function() {
+            const placeId = this.dataset.placeId;
+            const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            fetch(`/favorites/toggle/${placeId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_favorited) {
+                    this.innerHTML = '❤️';
+                    this.classList.add('active');
+                } else {
+                    this.innerHTML = '🤍';
+                    this.classList.remove('active');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+        });
+    }
+});
+</script>
+
+{% endblock %}

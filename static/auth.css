@@ -1,0 +1,140 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: 'Tobi';
+    src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url("/static/images/1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Tobi';
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ФОРМЫ */
+.auth-form {
+    background: #fefcfc;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 85px #5F9EA0;
+    width: 320px;
+    text-align: center;
+}
+
+.auth-form.hidden {
+    display: none;
+}
+
+/* Заголовок */
+h2 {
+    margin-bottom: 30px;
+    color: #5a9a9c;
+    font-size: 28px;
+    -webkit-text-stroke: 0.5px #2c3e50;
+    font-weight: bold;
+}
+
+/* Блок с полем ввода */
+.input-box {
+    position: relative;
+    margin: 20px 0;
+}
+
+/* Подпись над полем */
+.input-box span {
+    display: block;
+    margin-bottom: 8px;
+    color: #0f3333;
+    font-weight: bold;
+    width: 100%;
+}
+
+/* Поля ввода */
+.input-box input {
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 18px;
+    border-bottom: 2px solid #4b8082;
+    transition: 0.4s;
+    background-color: transparent;
+}
+
+.input-box input:focus {
+    outline: none;
+    border-color: #4b8082;
+}
+
+/* Кнопка */
+.submit-bin {
+    width: 100%;
+    padding: 12px;
+    font-family: 'Tobi';
+    background: #4b8082;
+    color: #0f3333;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.submit-bin:hover {
+    background: #f99039;
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px #0000004d;
+}
+
+/* Текст и ссылки */
+p {
+    margin-top: 20px;
+    color: #787371;
+}
+
+a {
+    color: #787371;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.input-box.error input {
+    border-color: red;
+    background-color: #fff0f0;
+}
+
+.switch-link {
+    color: #f99039;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.switch-link:hover {
+    text-decoration: underline;
+}

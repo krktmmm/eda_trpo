@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Обед-рулетка | СытГУТИ{% endblock %}
+
+{% block content %}
+
+<div class="greeting">
+    <h1>🎲 Обед - рулетка</h1>
+    {% if user.is_authenticated %}
+        <p>
+            {% if user.profile.greeting_style == 'sweet' %}
+                Малышочек, {{ user.username }}! выбери себе компанию для ням-нямки
+            {% elif user.profile.greeting_style == 'formal' %}
+                Уважаемый студент {{ user.username }}, выберите себе компанию для обеда
+            {% elif user.profile.greeting_style == 'friend' %}
+                Друн {{ user.username }}, найди себе кого-нибудь уже
+            {% elif user.profile.greeting_style == 'comrade' %}
+                Товарищ {{ user.username }}, вы должны выбрать компанию для обеда
+            {% else %}
+                {{ user.username }}, выбери себе компанию для обеда
+            {% endif %}
+        </p>
+    {% endif %}
+</div>
+
+
+<div class="roulette-container">
+    <div class="roulette-buttons">
+        <button id="solo-btn" class="roulette-mode-btn">
+            <div class="btn-inner">
+                <div class="btn-icon lottie-roulette-icon" id="oneperson-animation"></div>
+                <h2>Найти собеседника</h2>
+                <p>Обед вдвоём</p>
+            </div>
+        </button>
+        <button id="group-btn" class="roulette-mode-btn">
+            <div class="btn-inner">
+                <div class="btn-icon lottie-roulette-icon" id="twoperson-animation"></div>
+                <h2>Найти компанию</h2>
+                <p>Обед с друзьями</p>
+            </div>
+        </button>
+    </div>
+
+    <!-- ФОРМА ДЛЯ СОЛО-РЕЖИМА -->
+    <div id="solo-form" class="roulette-form hidden">
+        <h2>Настройки поиска собеседника</h2>
+        <form id="create-solo-form">
+            {% csrf_token %}
+            <select name="building" required>
+                <option value="1">Корпус №1</option>
+                <option value="3">Корпус №3</option>
+                <option value="5">Корпус №5</option>
+            </select>
+            <select name="budget">
+                <option value="economy">До 200 ₽</option>
+                <option value="medium">200-400 ₽</option>
+                <option value="high">От 400 ₽</option>
+                <option value="any">Не важно</option>
+            </select>
+            <button type="submit" id="start-solo">🎲 Начать поиск</button>
+        </form>
+    </div>
+
+    <!-- ФОРМА ДЛЯ ГРУППОВОГО РЕЖИМА -->
+    <div id="group-form" class="roulette-form hidden">
+        <h2>Настройки поиска компании</h2>
+        <form id="create-group-form">
+            {% csrf_token %}
+            <select name="building" required>
+                <option value="1">Корпус №1</option>
+                <option value="3">Корпус №3</option>
+                <option value="5">Корпус №5</option>
+            </select>
+            <select name="budget">
+                <option value="economy">До 200 ₽</option>
+                <option value="medium">200-400 ₽</option>
+                <option value="high">От 400 ₽</option>
+                <option value="any">Не важно</option>
+            </select>
+            <input type="number" name="needed_people" placeholder="Сколько человек нужно" min="2" max="10">
+            <button type="submit" id="start-group">🎲 Начать поиск</button>
+        </form>
+    </div>
+    
+    <!-- ПЕРВОЕ МОДАЛЬНОЕ ОКНО (результат поиска) -->
+    <div id="matchModal" class="modal">
+        <div class="modal-content">
+            <h3>🍽️ Найден собеседник!</h3>
+            <p><strong>Имя:</strong> <span id="modal-username"></span></p>
+            <p><strong>Корпус:</strong> <span id="modal-building"></span></p>
+            <p><strong>Бюджет:</strong> <span id="modal-budget"></span></p>
+            <p><strong>Telegram:</strong> <span id="modal-telegram"></span></p>
+            <p><strong>VK:</strong> <span id="modal-vk"></span></p>
+            <div class="modal-buttons">
+                <button id="acceptMatch">✅ Пойду</button>
+                <button id="searchAgain">🔄 Искать другого</button>
+                <button id="cancelMatch">❌ Не пойду</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ВТОРОЕ МОДАЛЬНОЕ ОКНО (после нажатия "Пойду") -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>🎉 Отлично!</h3>
+            <p>Вы договорились об обеде с <strong id="confirm-username"></strong>!</p>
+            <p>Теперь вы можете написать собеседнику или вернуться на страницу рулетки.</p>
+            <div class="modal-buttons">
+                <button id="goToChatBtn">💬 Написать в чат</button>
+                <button id="laterBtn">⏰ Позже</button>
+            </div>
+        </div>
+    </div>
+
+<script src="{% static 'js/roulette.js' %}"></script>
+
+{% endblock %}

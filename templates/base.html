@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}СытГУТИ 🍔{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link rel="stylesheet" href="{% static 'header_and_footer.css' %}">
+    <link rel="stylesheet" href="{% static 'greeting.css' %}">
+    <link rel="stylesheet" href="{% static 'main_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'panels_and_map.css' %}">
+    <link rel="stylesheet" href="{% static 'responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'roulette.css' %}">
+    <!-- Скрипт для анимации в главном меню -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="{% if user.is_authenticated and user.profile.theme == 'dark' %}dark-theme{% endif %} {% if user.is_authenticated %}font-{{ user.profile.font_size|default:'medium' }}{% else %}font-medium{% endif %} {% if user.is_authenticated and user.profile.animations == 'off' %}animations-off{% endif %}">
+    <!-- ШАПКА САЙТА -->
+    <div class="navigation">
+        <div class="panel">
+            <!-- ЛОГОТИП -->
+            <a href="#" class="logo">
+                <img src="{% static 'images/log.png' %}" alt="Логотип">
+            </a>
+            
+            <!-- ПОИСКОВАЯ СТРОКА -->
+            <div class="search">
+                <input type="text" placeholder="Нямка...">
+                <button>
+                    <span>🔍</span>
+                </button>
+            </div>
+
+            <!-- МЕНЮ -->
+            <div class="menu">
+                <a href="/">Главная</a>
+                <a href="/about/">О нас</a>
+                <a href="/contacts/">Контакты</a>
+            </div>
+
+            <!-- КОЛОКОЛЬЧИК С УВЕДОМЛЕНИЯМИ -->
+            <div class="notifications-dropdown">
+                <div class="notifications-icon" id="notifIcon">
+                    🔔
+                    <span class="notif-badge" id="notifBadge" style="display: none;"></span>
+                </div>
+                <div class="notifications-content" id="notificationsMenu">
+                    <div class="notifications-header">📢 Уведомления</div>
+                    <div class="notifications-list" id="notificationsList">
+                        <div class="notification-empty">Нет новых уведомлений</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- НОВАЯ КНОПКА СООБЩЕНИЙ -->
+            <div class="messages-dropdown">
+                <a href="/roulette/messages/" class="messages-icon" id="messagesIcon">
+                    💬
+                    <span class="messages-badge" id="messagesBadge" style="display: none;"></span>
+                </a>
+            </div>
+
+            <!-- ПРОФИЛЬ (ВЫПАДАЮЩЕЕ МЕНЮ) -->
+            <div class="profile-dropdown">
+                {% if user.is_authenticated %}
+                    <div class="profile-icon" id="profileBtn">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="Аватар">
+                        {% else %}
+                            <img src="{% static 'images/default_avatar.jpg' %}" alt="Профиль">
+                        {% endif %}
+                    </div>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <a href="/profile/">Профиль</a>
+                        <a href="/favorites/">Избранное</a>
+                        <a href="/profile/settings/">Настройки</a>
+                        <form action="/accounts/logout/" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-link">Выход</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <a href="/accounts/login/" class="profile">
+                        <img src="{% static 'images/default_avatar.jpg' %}" alt="Войти">
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ОСНОВНОЕ СОДЕРЖИМОЕ -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- ФУТЕР -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>🍽️ СытГУТИ</h3>
+                <p>Умный поиск заведений<br>рядом с учебными корпусами</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>О нас</h3>
+                <p>Мы помогаем студентам быстро найти<br>место для перекуса между парами.<br>Подбираем заведения под твой перерыв!</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Соцсети</h3>
+                <div class="social-links">
+                    <a href="#">📘 VK</a>
+                    <a href="#">📱 Telegram</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>📧 info@sytguti.ru<br>📞 ************</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 СытГУТИ. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/base.js' %}"></script>
+
+</body>
+</html>

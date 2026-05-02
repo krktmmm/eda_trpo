@@ -1,65 +1,94 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Мой профиль | СытГУТИ 🍔</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
-<!-- ШАПКА -->
-<div class="navigation">
-    <div class="logo">
-        <img src="/static/images/log.png" alt="Логотип">
-    </div>
-    <div class="panel">
-        <div class="search">
-            <input type="text" placeholder="Поиск...">
-            <button><span>🔍</span></button>
+{% block title %}Профиль | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'profile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-container">
+    <!-- ЛЕВАЯ КОЛОНКА: АВАТАР -->
+    <div class="profile-left">
+        <div class="profile-avatar">
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="Аватар">
+            {% else %}
+                <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
+            {% endif %}
         </div>
-        <div class="menu">
-            <a href="/">Главная</a>
-            <a href="#">О нас</a>
-            <a href="#">Контакты</a>
+        
+        <div class="profile-left-info">
+            <p><strong>📅 На сайте с:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+            <p><strong>🆔 ID:</strong> {{ user.id }}</p>
         </div>
-        <a href="/register/profile/" class="profile">
-            <img src="/static/images/avatar.jpg" alt="Профиль">
+        
+        <a href="{% url 'edit_profile' %}" class="edit-profile-btn">
+            ✏️ Редактировать профиль
+        </a>
+        <a href="{% url 'change_password' %}" class="edit-profile-btn">
+            🔐 Сменить пароль
         </a>
     </div>
-</div>
 
-<!-- ПРОФИЛЬ -->
-<div class="greeting">
-    <h1>Мой профиль</h1>
-    <p><strong>{{ user.username }}</strong></p>
-    <p>Email: {{ user.email|default:"Не указан" }}</p>
-    <p>Дата регистрации: {{ user.date_joined|date:"d.m.Y" }}</p>
+    <!-- ПРАВАЯ КОЛОНКА: ДАННЫЕ ПОЛЬЗОВАТЕЛЯ -->
+    <div class="profile-right">
+        <h2>👤 Личная информация</h2>
+        
+        <table class="info-table">
+            <tr>
+                <td>👤 Имя пользователя:</td>
+                <td><strong>{{ user.username }}</strong></td>
+            </tr>
+            <tr>
+                <td>📧 Email:</td>
+                <td>{{ user.email|default:"Не указан" }}</td>
+            </tr>
+            <tr>
+                <td>📱 Telegram:</td>
+                <td>{{ user.profile.telegram|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>📘 VK:</td>
+                <td>{{ user.profile.vk|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>📝 О себе:</td>
+                <td>{{ user.profile.bio|default:"—"|linebreaksbr }}</td>
+            </tr>
+            <tr>
+                <td>🎓 Курс:</td>
+                <td>{{ user.profile.course|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>👥 Группа:</td>
+                <td>{{ user.profile.group|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>🍽️ Любимая кухня:</td>
+                <td>{{ user.profile.favorite_cuisine|default:"—" }}</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <!-- ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ -->
-<h2 style="text-align:center;">Мои отзывы</h2>
-
-{% for review in reviews %}
-    <div style="border: 1px solid #ddd; margin: 10px auto; padding: 10px; width: 80%;">
-        <p><strong>{{ review.place.name }}</strong> — ⭐ {{ review.rating }}/5</p>
-        <p>{{ review.text }}</p>
-        <small>{{ review.created_at|date:"d.m.Y H:i" }}</small>
+<div class="reviews-section">
+    <h2>📝 Мои отзывы</h2>
+    <div class="reviews-grid">
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-place">{{ review.place.name }}</div>
+            <div class="review-rating">⭐ {{ review.rating }}/5</div>
+            <div class="review-text">{{ review.text }}</div>
+            <div class="review-date">{{ review.created_at|date:"d.m.Y H:i" }}</div>
+        </div>
+        {% empty %}
+        <div class="empty-reviews">📭 Вы ещё не оставили ни одного отзыва.</div>
+        {% endfor %}
     </div>
-{% empty %}
-    <p style="text-align:center;">Вы ещё не оставили ни одного отзыва.</p>
-{% endfor %}
-
-<!-- КНОПКА ВЫХОДА -->
-<div style="text-align: center; margin: 20px;">
-    <form action="/accounts/logout/" method="post" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit" class="logout-btn">Выйти из аккаунта</button>
-    </form>
 </div>
 
-<div style="text-align: center; margin-top: 30px;">
-    <a href="/">На главную</a>
-</div>
-
-</body>
-</html>
+{% endblock %}

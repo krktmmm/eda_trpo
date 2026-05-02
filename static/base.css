@@ -1,0 +1,455 @@
+@charset "UTF-8";
+
+/* ШРИФТ */
+@font-face {
+    font-family: 'Tobi';
+    src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ОБНУЛЕНИЕ ВСЕХ ОТСТУПОВ */
+* {                                /* (*) - все элементы на странице*/
+    margin: 0;                     /* Убираем внешние отступы у всех элементов */
+    padding: 0;                    /* Убираем внутренние отступы у всех элементов */
+    box-sizing: border-box;        /* Ширина элемента включает padding и border */
+}
+
+/* ЗАЩИТА ОТ КОПИРОВАНИЯ КАРТИНОК */
+img {
+    pointer-events: none;          /* Отключает правый клик на картинке */
+    user-select: none;             /* Запрет выделения */
+    -webkit-user-drag: none;       /* Запрет перетаскивания */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ФОН И ШРИФТ ДЛЯ СТРАНИЦЫ */
+body {
+    background-color: #fefcfc;   /* Цвет фона страницы */
+    font-family: 'Tobi';           /* Шрифт для всего текста на странице */
+    overflow-x: hidden;            /* Запрещаем горизонтальный скролл */
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    min-height: 60vh;
+}
+
+                                      /* ВИКА ЭТО КАТЯ ДОБАВИЛА */
+/* ===== РАЗМЕРЫ ШРИФТА ===== */
+.font-small {
+    font-size: 14px;
+}
+
+.font-small h1 {
+    font-size: 36px !important;
+}
+
+.font-small h2 {
+    font-size: 24px !important;
+}
+
+.font-small .greeting h1 {
+    font-size: 48px !important;
+}
+
+.font-small .greeting p {
+    font-size: 20px !important;
+}
+
+.font-small .menu-card h2 {
+    font-size: 28px !important;
+}
+
+.font-small .menu-card p {
+    font-size: 16px !important;
+}
+
+.font-small .time-btn {
+    font-size: 18px !important;
+}
+
+/* Средний шрифт (по умолчанию) */
+.font-medium {
+    font-size: 16px;
+}
+
+.font-medium h1 {
+    font-size: 48px !important;
+}
+
+.font-medium h2 {
+    font-size: 28px !important;
+}
+
+.font-medium .greeting h1 {
+    font-size: 66px !important;
+}
+
+.font-medium .greeting p {
+    font-size: 28px !important;
+}
+
+.font-medium .menu-card h2 {
+    font-size: 32px !important;
+}
+
+.font-medium .menu-card p {
+    font-size: 20px !important;
+}
+
+.font-medium .time-btn {
+    font-size: 22px !important;
+}
+
+/* Крупный шрифт */
+.font-large {
+    font-size: 18px;
+}
+
+.font-large h1 {
+    font-size: 58px !important;
+}
+
+.font-large h2 {
+    font-size: 34px !important;
+}
+
+.font-large .greeting h1 {
+    font-size: 80px !important;
+}
+
+.font-large .greeting p {
+    font-size: 36px !important;
+}
+
+.font-large .menu-card h2 {
+    font-size: 38px !important;
+}
+
+.font-large .menu-card p {
+    font-size: 24px !important;
+}
+
+.font-large .time-btn {
+    font-size: 26px !important;
+}
+
+.font-large .place-name {
+    font-size: 1.5em !important;
+}
+
+.font-large .place-info {
+    font-size: 16px !important;
+}
+
+/* ===== ТЁМНАЯ ТЕМА ===== */
+body.dark-theme {
+    background-color: #1a1a2e !important;
+    color: #e0e0e0 !important;
+}
+
+/* Шапка и футер */
+body.dark-theme .navigation,
+body.dark-theme .footer {
+    background-color: #16213e !important;
+}
+
+body.dark-theme .panel .profile,
+body.dark-theme .menu a {
+    background-color: #0f3460 !important;
+    color: #e94560 !important;
+}
+
+body.dark-theme .menu a:hover {
+    background-color: #e94560 !important;
+    color: white !important;
+}
+
+/* Поиск */
+body.dark-theme .search input {
+    background-color: #0f3460 !important;
+    border-color: #e94560 !important;
+    color: white !important;
+}
+
+body.dark-theme .search button {
+    background-color: #e94560 !important;
+    border-color: #e94560 !important;
+}
+
+/* Приветствие */
+body.dark-theme .greeting h1,
+body.dark-theme .greeting p {
+    color: #e0e0e0 !important;
+}
+
+/* Карточки меню */
+body.dark-theme .menu-card-inner {
+    background-color: #0f3460 !important;
+}
+
+body.dark-theme .menu-card-inner.roulette {
+    background-color: #e94560 !important;
+}
+
+body.dark-theme .menu-card h2,
+body.dark-theme .menu-card p {
+    color: white !important;
+}
+
+/* Панели (выбор корпуса и времени) */
+body.dark-theme .time-panel {
+    background-color: #16213e !important;
+}
+
+body.dark-theme .time-panel h2 {
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .time-btn {
+    background-color: #0f3460 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .time-btn:hover,
+body.dark-theme .time-btn.active {
+    background-color: #e94560 !important;
+    color: white !important;
+}
+
+/* Правая панель со списком заведений */
+body.dark-theme .places-panel {
+    background-color: #16213e !important;
+    border-color: #0f3460 !important;
+}
+
+body.dark-theme .places-panel h2 {
+    color: #e0e0e0 !important;
+    border-bottom-color: #e94560 !important;
+}
+
+body.dark-theme .place-card {
+    background-color: #0f3460 !important;
+    border-bottom-color: #e94560 !important;
+}
+
+body.dark-theme .place-card:hover {
+    background-color: #1a3a5c !important;
+}
+
+body.dark-theme .place-name {
+    color: #e94560 !important;
+}
+
+body.dark-theme .place-address {
+    color: #aaa !important;
+}
+
+body.dark-theme .place-info span {
+    color: #e0e0e0 !important;
+}
+
+/* Рулетка */
+body.dark-theme .roulette-mode-btn .btn-inner {
+    background-color: #0f3460 !important;
+}
+
+body.dark-theme .roulette-mode-btn:last-child .btn-inner {
+    background-color: #e94560 !important;
+}
+
+body.dark-theme .roulette-form {
+    background-color: #16213e !important;
+}
+
+body.dark-theme .roulette-form h2,
+body.dark-theme .roulette-form label {
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .roulette-form select,
+body.dark-theme .roulette-form input {
+    background-color: #0f3460 !important;
+    color: white !important;
+    border-color: #e94560 !important;
+}
+
+/* Профиль */
+body.dark-theme .profile-left,
+body.dark-theme .profile-right,
+body.dark-theme .edit-profile-left,
+body.dark-theme .edit-profile-right,
+body.dark-theme .settings-container {
+    background-color: #16213e !important;
+    border-color: #0f3460 !important;
+}
+
+body.dark-theme .profile-left h2,
+body.dark-theme .profile-right h2,
+body.dark-theme .edit-profile-right h2,
+body.dark-theme .settings-container h2 {
+    color: #e0e0e0 !important;
+    border-bottom-color: #e94560 !important;
+}
+
+body.dark-theme .profile-left-info p,
+body.dark-theme .info-table td {
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .info-table td:first-child {
+    color: #e94560 !important;
+}
+
+body.dark-theme .edit-profile-form .form-group label {
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .edit-profile-form input,
+body.dark-theme .edit-profile-form textarea,
+body.dark-theme .edit-profile-form select {
+    background-color: #0f3460 !important;
+    color: white !important;
+    border-color: #e94560 !important;
+}
+
+/* Отзывы */
+body.dark-theme .review-card {
+    background-color: #0f3460 !important;
+    border-color: #e94560 !important;
+}
+
+body.dark-theme .review-place {
+    color: #e94560 !important;
+}
+
+body.dark-theme .review-text,
+body.dark-theme .review-date {
+    color: #e0e0e0 !important;
+}
+
+/* Кнопки */
+body.dark-theme button,
+body.dark-theme .submit-bin,
+body.dark-theme .save-btn,
+body.dark-theme .avatar-upload-label,
+body.dark-theme .avatar-delete-btn {
+    background-color: #e94560 !important;
+    color: white !important;
+}
+
+body.dark-theme button:hover,
+body.dark-theme .submit-bin:hover,
+body.dark-theme .save-btn:hover {
+    background-color: #ff6b6b !important;
+    transform: scale(1.02);
+}
+
+/* Ссылки */
+body.dark-theme a,
+body.dark-theme .back-link {
+    color: #e94560 !important;
+}
+
+body.dark-theme a:hover,
+body.dark-theme .back-link:hover {
+    color: #ff6b6b !important;
+}
+
+/* Модальное окно */
+body.dark-theme .modal-content {
+    background-color: #16213e !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .modal-content button {
+    background-color: #e94560 !important;
+}
+
+/* Карта-заглушка */
+body.dark-theme .map-placeholder-inner {
+    background-color: #0f3460 !important;
+}
+
+body.dark-theme .map-placeholder-inner p,
+body.dark-theme .map-hint {
+    color: #aaa !important;
+}
+
+/* Выпадающее меню профиля в тёмной теме */
+body.dark-theme .dropdown-content {
+    background-color: #16213e !important;
+    border: 1px solid #e94560 !important;
+}
+
+body.dark-theme .dropdown-content a,
+body.dark-theme .dropdown-content form .dropdown-link {
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .dropdown-content a:hover,
+body.dark-theme .dropdown-content form .dropdown-link:hover {
+    background-color: #e94560 !important;
+    color: white !important;
+}
+
+/* Контакты */
+body.dark-theme .contacts-card {
+    background-color: #16213e !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .contacts-card h2 {
+    color: #e94560 !important;
+}
+
+body.dark-theme .contacts-card p,
+body.dark-theme .contacts-card a {
+    color: #e0e0e0 !important;
+}
+
+body.dark-theme .contacts-card a:hover {
+    color: #e94560 !important;
+}
+
+/* Тёмная тема для уведомлений */
+body.dark-theme .notifications-content {
+    background-color: #16213e;
+    border: 1px solid #e94560;
+}
+
+body.dark-theme .notifications-header {
+    background-color: #0f3460;
+    color: #e0e0e0;
+}
+
+body.dark-theme .notification-item {
+    border-bottom-color: #0f3460;
+    color: #e0e0e0;
+}
+
+body.dark-theme .notification-item:hover {
+    background-color: #0f3460;
+}
+
+body.dark-theme .notification-item.unread {
+    background-color: #1a1a2e;
+    border-left-color: #e94560;
+}
+
+body.dark-theme .notification-time {
+    color: #888;
+}
+
+body.dark-theme .notification-empty {
+    color: #888;
+}
+
+/* Адаптивность при тёмной теме */
+@media (max-width: 700px) {
+    body.dark-theme .menu {
+        background-color: #16213e !important;
+    }
+}

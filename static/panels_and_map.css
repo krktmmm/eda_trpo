@@ -1,0 +1,244 @@
+@charset "UTF-8";
+
+/* ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА */
+.main-container {
+    display: flex;
+    gap: 60px;                     /* Расстояние между левой и правой панелью */
+    max-width: 1400px;             /* Максимальная ширина контейнера */
+    margin: 18px auto;             /* Отступ сверху, центрирование по горизонтали */
+    padding: 0 20px;               /* Отступы по бокам */
+    min-height: 500px;             /* Минимальная высота */
+}
+
+/* ЛЕВАЯ ПАНЕЛЬ (ВЫБОР ВРЕМЕНИ) */
+.time-panel {
+    flex: 1;
+    background: #5F9EA0;
+    border-radius: 15px;
+    padding: 30px 20px;
+    box-shadow: 0 10px 30px #0000001a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* ЗАГОЛОВОК В ЛЕВОЙ ПАНЕЛИ */
+.time-panel h2 {
+    color: #2c3e50; 
+    text-align: center;
+    margin-bottom: 30px;           /* Отступ снизу */
+    font-size: 28px;               /* Размер шрифта */
+    font-weight: normal;
+}
+
+/* СКРЫВАЕТ ЭКРАН ВЫБОРА ВРЕМЕНИ */
+.hidden {
+    display: none;
+}
+
+/* КОНТЕЙНЕР ДЛЯ КНОПОК */
+.time-buttons {
+    display: flex;
+    flex-direction: column;        /* Кнопки располагаются в колонку */
+    gap: 15px;                     /* Расстояние между кнопками */
+}
+
+/* КНОПКИ ВЫБОРА ВРЕМЕНИ */
+.time-btn {
+    background: #f5f5f5;
+    color: #2c3e50;
+    border: none;
+    border-radius: 15px;
+    padding: 18px 20px;
+    font-size: 22px;
+    font-family: 'Tobi';
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+.time-btn:hover {
+    transform: scale(1.05);        /* Увеличивается */
+    background: #f99039;
+    color: white;
+}
+
+/* АКТИВНАЯ КНОПКА */
+.time-btn.active {
+    background: #f99039;
+    color: white;
+    box-shadow: 0 0 15px #f9903980;   /* Оранжевое свечение вокруг */
+}
+
+/* КНОПКА НАЗАД */
+.back-text {
+    margin-top: 30px; /* отступ сверху */
+    text-align: center;
+    font-size: 18px;
+    font-family: 'Tobi';
+    color: #2c3e50;
+    cursor: pointer; /* меняет курсор */
+    display: inline-block;
+    width: 100%;
+}
+
+/* ПРАВАЯ ПАНЕЛЬ (СПИСОК ЗАВЕДЕНИЙ) */
+.places-panel {
+    flex: 1.5;
+    background: #fefcfc;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px #0000001a;   /* Тень — мягкая, полупрозрачная */
+    border: 1px solid #e0e0e0;           /* Тонкая серая рамка */
+    overflow-y: auto;                      /* Вертикальная прокрутка, если заведений много */
+    max-height: 600px;                     /* Максимальная высота, дальше скролл */
+}
+
+/* ЗАГОЛОВОК В ПРАВОЙ ПАНЕЛИ */
+.places-panel h2 {
+    color: #2c3f51;
+    margin-bottom: 20px;                  /* Отступ снизу */
+    font-size: 24px;
+    font-weight: normal;
+    font-family: 'Tobi';
+    border-bottom: 3px solid #f99039;   /* Оранжевая полоска снизу */
+    display: inline-block;                /* Полоска занимает только ширину текста */
+    padding-bottom: 10px;                 /* Отступ от текста до оранжевой полоски */
+}
+
+/* КОНТЕЙНЕР КАРТЫ */
+.map-placeholder-inner {
+    background: #e0e0e0;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    margin: 20px 0;
+}
+
+/* ТЕКСТ ВНУТРИ КАРТЫ */
+.map-placeholder-inner p {
+    color: #666;
+}
+
+/* ТЕКСТ ПОД КАРТОЙ */
+.map-hint {
+    text-align: center;
+    color: #666;
+}
+
+/* КАРТОЧКА ОДНОГО ЗАВЕДЕНИЯ */
+.place-card {
+    border-bottom: 1px solid #eee;   /* Серая линия-разделитель между заведениями */
+    padding: 15px;                     /* Внутренний отступ 15px */
+    transition: 0.3s;
+    border-radius: 15px;
+    margin-bottom: 10px;               /* Отступ снизу */
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КАРТОЧКУ ЗАВЕДЕНИЯ */
+.place-card:hover {
+    background: #f8f9fa;
+    transform: translateX(5px);
+}
+
+/* СКРЫТАЯ КАРТОЧКА */
+.place-card.hidden {
+    display: none;                 /* Полностью скрываем элемент */
+}
+
+/* НАЗВАНИЕ ЗАВЕДЕНИЯ */
+.place-name {
+    font-size: 1.3em;              /* Размер шрифта — 130% от обычного */
+    text-decoration: none;         /* Убираем подчёркивание у ссылки */
+    color: #2c3e50;
+    display: block;                /* Занимает всю ширину */
+    margin-bottom: 8px;            /* Отступ снизу */
+}
+
+/* АДРЕС ЗАВЕДЕНИЯ */
+.place-address {
+    color: #666;                 /* Серый цвет */
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+/* КОНТЕЙНЕР ДЛЯ ИНФОРМАЦИИ (цена, рейтинг, время) */
+.place-info {
+    display: flex;
+    gap: 20px;                     /* Расстояние между элементами */
+    flex-wrap: wrap;               /* Если не влезают — переносятся на новую строку */
+}
+
+/* ЦЕНА */
+.price {
+    color: #2ecc71;
+    font-weight: normal;
+}
+
+/* РЕЙТИНГ */
+.rating {
+    color: #f39c12;
+}
+
+/* ВРЕМЯ, НУЖНОЕ ДЛЯ ПОСЕЩЕНИЯ */
+.time-needed {
+    color: #e74c3c;
+}
+
+/* СООБЩЕНИЕ, ЕСЛИ ЗАВЕДЕНИЙ НЕТ */
+.empty-message {
+    text-align: center;
+    color: #999;
+    padding: 40px;
+}
+
+/* СТИЛИ ДЛЯ СКРОЛЛБАРА */
+
+/* Для Chrome, Safari, Edge */
+.places-panel::-webkit-scrollbar {
+    width: 20px;  /* Ширина скроллбара */
+    height: 20px
+}
+
+/* Дорожка */
+.places-panel::-webkit-scrollbar-track {
+    background: transparent; /* прозрачный фон */
+    border-radius: 10px;
+}
+
+/* Ползунок */
+.places-panel::-webkit-scrollbar-thumb {
+    background: #f99039;
+    border-radius: 10px;
+}
+
+/* Для Firefox */
+.places-panel {
+    scrollbar-width: thin;
+    scrollbar-color: #f99039 transparent;  /* (ползунок) (дорожка прозрачная) */
+}
+
+                         /* ВИКА ЭТО КАТЯ ДОБАВИЛА */
+.place-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.place-header .place-name {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 5px;
+}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Сообщения | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'messages.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="messages-container">
+    <h1>💬 Сообщения</h1>
+    
+    <div class="dialogs-list">
+        {% for d in dialogs %}
+        <a href="{% url 'dialog_detail' d.dialog.id %}" class="dialog-card">
+            <div class="dialog-avatar">
+                {% if d.other_user.profile.avatar %}
+                    <img src="{{ d.other_user.profile.avatar.url }}" alt="{{ d.other_user.username }}">
+                {% else %}
+                    <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
+                {% endif %}
+            </div>
+            <div class="dialog-info">
+                <div class="dialog-name">{{ d.other_user.username }}</div>
+                <div class="dialog-last-message">
+                    {% if d.last_message %}
+                        {{ d.last_message.sender.username }}: {{ d.last_message.text|truncatechars:50 }}
+                    {% else %}
+                        Начните диалог
+                    {% endif %}
+                </div>
+            </div>
+            {% if d.unread_count > 0 %}
+            <div class="dialog-unread">{{ d.unread_count }}</div>
+            {% endif %}
+        </a>
+        {% empty %}
+        <div class="empty-messages">
+            📭 У вас пока нет диалогов<br>
+            Найдите собеседника в <a href="/roulette/">Обед-рулетке</a>!
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
