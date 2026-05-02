@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Чат с {{ other_user.username }} | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'dialog.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <a href="{% url 'messages_list' %}" class="back-link">← Назад</a>
+        <h2>💬 {{ other_user.username }}</h2>
+    </div>
+    
+    <div class="chat-messages" id="chat-messages">
+        {% for msg in messages %}
+        <div class="message {% if msg.sender == user %}message-mine{% else %}message-other{% endif %}" data-id="{{ msg.id }}">
+            <div class="message-text">{{ msg.text }}</div>
+            {% load tz %}
+            <div class="message-time">{{ msg.created_at|localtime|date:"H:i" }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="chat-input">
+        <textarea id="message-input" placeholder="Введите сообщение..." rows="2"></textarea>
+        <button id="send-btn">📤 Отправить</button>
+    </div>
+</div>
+
+<script src="{% static 'dialog.js' %}"></script>
+
+{% endblock %}

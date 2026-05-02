@@ -1,12 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
+from .models import SoloRequest, GroupRequest, GroupMember, Dialog, Message
 from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse, HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 from django.db import models
-import json
 import random
-from .models import SoloRequest, GroupRequest, GroupMember
+import json
 
 # Вспомогательная функция для соседних корпусов
 def get_nearby_buildings(building):
@@ -16,6 +17,22 @@ def get_nearby_buildings(building):
         '5': ['3']
     }
     return nearby_map.get(building, [])
+
+
+# ==================== ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ДИАЛОГА ====================
+
+def get_or_create_dialog(user1, user2):
+    """Найти или создать диалог между двумя пользователями"""
+    # Ищем существующий диалог
+    existing = Dialog.objects.filter(participants=user1).filter(participants=user2).first()
+    if existing:
+        return existing
+    
+    # Создаём новый
+    dialog = Dialog.objects.create()
+    dialog.participants.add(user1, user2)
+    return dialog
+
 
 # ==================== СОЛО (поиск 1 собеседника) ====================
 
@@ -67,6 +84,8 @@ def find_solo_match(request):
     
     if perfect:
         match = random.choice(perfect)
+        # СОЗДАЁМ ДИАЛОГ ПЕРЕД ОТВЕТОМ
+        dialog = get_or_create_dialog(request.user, match.user)
         return JsonResponse({
             'status': 'found',
             'username': match.user.username,
@@ -74,7 +93,9 @@ def find_solo_match(request):
             'vk': match.vk,
             'building': match.get_building_display(),
             'budget': match.get_budget_display(),
-            'match_type': 'perfect'
+            'match_type': 'perfect',
+            'dialog_id': dialog.id,
+            'group_id': None,
         })
     
     # 2. Соседний корпус
@@ -83,6 +104,8 @@ def find_solo_match(request):
     
     if nearby:
         match = random.choice(nearby)
+        # СОЗДАЁМ ДИАЛОГ ПЕРЕД ОТВЕТОМ
+        dialog = get_or_create_dialog(request.user, match.user)
         return JsonResponse({
             'status': 'found',
             'username': match.user.username,
@@ -90,7 +113,9 @@ def find_solo_match(request):
             'vk': match.vk,
             'building': match.get_building_display(),
             'budget': match.get_budget_display(),
-            'match_type': 'nearby'
+            'match_type': 'nearby',
+            'dialog_id': dialog.id,
+            'group_id': None,
         })
     
     # 3. Любой корпус
@@ -98,6 +123,8 @@ def find_solo_match(request):
     
     if any_building:
         match = random.choice(any_building)
+        # СОЗДАЁМ ДИАЛОГ ПЕРЕД ОТВЕТОМ
+        dialog = get_or_create_dialog(request.user, match.user)
         return JsonResponse({
             'status': 'found',
             'username': match.user.username,
@@ -105,7 +132,9 @@ def find_solo_match(request):
             'vk': match.vk,
             'building': match.get_building_display(),
             'budget': match.get_budget_display(),
-            'match_type': 'any_building'
+            'match_type': 'any_building',
+            'dialog_id': dialog.id,
+            'group_id': None,
         })
     
     return JsonResponse({'status': 'not_found', 'message': 'Никого не найдено'}, status=404)
@@ -204,3 +233,146 @@ def join_group(request, group_id):
         group.save()
     
     return JsonResponse({'status': 'ok', 'current_members': group.current_members})
+
+
+# ==================== ЛИЧНЫЕ СООБЩЕНИЯ ====================
+
+@login_required
+def messages_list(request):
+    """Список диалогов пользователя"""
+    dialogs = request.user.dialogs.all().order_by('-messages__created_at')
+    
+    dialogs_data = []
+    for dialog in dialogs:
+        last_message = dialog.messages.last()
+        unread_count = dialog.messages.filter(is_read=False).exclude(sender=request.user).count()
+        other_user = dialog.participants.exclude(id=request.user.id).first()
+        if other_user:  # только если есть другой участник
+            dialogs_data.append({
+                'dialog': dialog,
+                'last_message': last_message,
+                'unread_count': unread_count,
+                'other_user': other_user,
+            })
+    
+    return render(request, 'roulette/messages.html', {'dialogs': dialogs_data})
+
+
+@login_required
+def dialog_detail(request, dialog_id):
+    """Страница конкретного диалога"""
+    dialog = get_object_or_404(Dialog, id=dialog_id)
+    
+    # Проверяем, что пользователь участник диалога
+    if request.user not in dialog.participants.all():
+        return HttpResponseForbidden("Вы не участник этого диалога")
+    
+    # Помечаем все сообщения как прочитанные
+    dialog.messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
+    
+    # Пагинация сообщений (по 20 на страницу)
+    messages_list = dialog.messages.all()
+    paginator = Paginator(messages_list, 20)
+    page_number = request.GET.get('page', 1)
+    messages = paginator.get_page(page_number)
+    
+    # Получаем собеседника
+    other_user = dialog.participants.exclude(id=request.user.id).first()
+    
+    return render(request, 'roulette/dialog.html', {
+        'dialog': dialog,
+        'messages': messages,
+        'other_user': other_user,
+    })
+
+
+@login_required
+@csrf_exempt
+@require_http_methods(["POST"])
+def send_message(request, dialog_id):
+    """API: отправка сообщения"""
+    try:
+        data = json.loads(request.body)
+        text = data.get('text', '').strip()
+        
+        if not text:
+            return JsonResponse({'error': 'Пустое сообщение'}, status=400)
+        
+        dialog = get_object_or_404(Dialog, id=dialog_id)
+        
+        if request.user not in dialog.participants.all():
+            return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+        
+        message = Message.objects.create(
+            dialog=dialog,
+            sender=request.user,
+            text=text
+        )
+        
+        # Отправляем уведомление другому пользователю (через addNotification)
+        other_user = dialog.participants.exclude(id=request.user.id).first()
+        # Уведомление будет обработано на клиенте
+        
+        return JsonResponse({
+            'status': 'ok',
+            'message_id': message.id,
+            'text': message.text,
+            'created_at': message.created_at.strftime('%d.%m.%Y %H:%M'),
+            'sender': request.user.username
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_unread_count(request):
+    """API: количество непрочитанных сообщений"""
+    dialogs = request.user.dialogs.all()
+    unread_total = 0
+    for dialog in dialogs:
+        unread_total += dialog.messages.filter(is_read=False).exclude(sender=request.user).count()
+    return JsonResponse({'unread_count': unread_total})
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_new_messages(request, dialog_id):
+    """API: получить новые сообщения (для polling)"""
+    after_id = request.GET.get('after_id')
+    dialog = get_object_or_404(Dialog, id=dialog_id)
+    
+    if request.user not in dialog.participants.all():
+        return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+    
+    messages = dialog.messages.all()
+    if after_id:
+        messages = messages.filter(id__gt=after_id)
+    
+    # Помечаем новые сообщения как прочитанные
+    messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
+    
+    data = [{
+        'id': m.id,
+        'sender': m.sender.username,
+        'text': m.text,
+        'created_at': m.created_at.strftime('%H:%M'),
+        'is_mine': m.sender == request.user
+    } for m in messages]
+    
+    return JsonResponse({'messages': data})
+
+
+# ==================== ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ДИАЛОГА ====================
+
+def get_or_create_dialog(user1, user2):
+    """Найти или создать диалог между двумя пользователями"""
+    # Ищем существующий диалог
+    existing = Dialog.objects.filter(participants=user1).filter(participants=user2).first()
+    if existing:
+        return existing
+    
+    # Создаём новый
+    dialog = Dialog.objects.create()
+    dialog.participants.add(user1, user2)
+    return dialog

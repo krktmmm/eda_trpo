@@ -77,3 +77,33 @@ class GroupMember(models.Model):
         verbose_name = "Участник группы"
         verbose_name_plural = "Участники группы"
         unique_together = ('group', 'user')
+
+
+class Dialog(models.Model):
+    """Диалог между пользователями"""
+    participants = models.ManyToManyField(User, related_name='dialogs')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "Диалог"
+        verbose_name_plural = "Диалоги"
+    
+    def __str__(self):
+        return f"Dialog {self.id}"
+
+
+class Message(models.Model):
+    """Сообщение в диалоге"""
+    dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    text = models.TextField(max_length=2000)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['created_at']
+        verbose_name = "Сообщение"
+        verbose_name_plural = "Сообщения"
+    
+    def __str__(self):
+        return f"{self.sender.username}: {self.text[:30]}"
