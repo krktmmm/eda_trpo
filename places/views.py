@@ -53,6 +53,11 @@ def place_detail(request, place_id):
 def add_review(request, place_id):
     """Добавление отзыва (только для авторизованных)"""
     place = get_object_or_404(Place, id=place_id)
+
+    # Проверка: не оставлял ли пользователь уже отзыв
+    if Review.objects.filter(place=place, user=request.user).exists():
+        messages.error(request, 'Вы уже оставляли отзыв к этому заведению!')
+        return redirect('place_detail', place_id=place.id)
     
     if request.method == 'POST':
         rating = request.POST.get('rating')
