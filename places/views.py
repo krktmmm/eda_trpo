@@ -54,39 +54,52 @@ def add_review(request, place_id):
     """Добавление отзыва (только для авторизованных)"""
     place = get_object_or_404(Place, id=place_id)
 
-    # Проверка: не оставлял ли пользователь уже отзыв
+    # 1. Проверка: не оставлял ли пользователь уже отзыв
     if Review.objects.filter(place=place, user=request.user).exists():
-        messages.error(request, 'Вы уже оставляли отзыв к этому заведению!')
+        messages.warning(
+            request, 
+            'Вы уже оставляли отзыв к этому заведению. '
+            'Вы можете изменить его в личном кабинете.'
+        )
         return redirect('place_detail', place_id=place.id)
     
     if request.method == 'POST':
         rating = request.POST.get('rating')
-        text = request.POST.get('text')
-        photo_url = request.POST.get('photo_url', '')
+        text = request.POST.get('text', '').strip()
+        photo_url = request.POST.get('photo_url', '').strip()
         
-        if rating and text:
-            # Создаём отзыв
-            review = Review.objects.create(
-                place=place,
-                user=request.user,
-                rating=int(rating),
-                text=text,
-                photo_url=photo_url
-                )
+        if not rating or not text:
+            messages.error(request, 'Заполните все обязательные поля')
+            return redirect('place_detail', place_id=place.id)
             
-            # Обновляем рейтинг заведения
-            all_reviews = place.reviews.all()
-            total_rating = sum(r.rating for r in all_reviews)
-            place.rating = total_rating / all_reviews.count()
-            place.rating_count = all_reviews.count()
-            place.save()
-            
-            messages.success(request, 'Отзыв добавлен!')
-        else:
-            messages.error(request, 'Заполните все поля')
+        try:
+            rating_val = int(rating)
+        except ValueError:
+            messages.error(request, 'Рейтинг должен быть числом')
+            return redirect('place_detail', place_id=place.id)
+
+        # 2. Создаём отзыв
+        Review.objects.create(
+            place=place,
+            user=request.user,
+            rating=rating_val,
+            text=text,
+            photo_url=photo_url
+        )
         
+        # 3. Оптимизированный пересчёт рейтинга через ORM (1 запрос вместо N+1)
+        stats = place.reviews.aggregate(
+            avg_rating=Avg('rating'),
+            count=Count('id')
+        )
+        place.rating = stats['avg_rating'] or 0
+        place.rating_count = stats['count']
+        place.save()
+        
+        messages.success(request, 'Отзыв успешно добавлен!')
         return redirect('place_detail', place_id=place.id)
     
+    # GET-запрос: если форма открывается на отдельной странице, замените на render()
     return redirect('place_detail', place_id=place.id)
 
 
