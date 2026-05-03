@@ -2,10 +2,10 @@
 
 /* ШАПКА САЙТА */
 .navigation {
-    background-color: #ADD8E6;   /* Цвет фона шапки */
-    padding: 0px 15px;                   /* вертикальные отступы */
-    width: 100%;                   /* На всю ширину окна */
-    overflow: visible;             /* Запрещаем горизонтальную прокрутку */
+    background-color: #ADD8E6;
+    padding: 0px 15px;
+    width: 100%;
+    overflow: visible;
     position: relative;
     z-index: 100;
 }
@@ -13,8 +13,8 @@
 /* ЛОГОТИП */
 a.logo {
     position: relative;
-    height: 160px;        /*  высота как у шапки */
-    overflow: hidden;     /* обрезает логотип */
+    height: 160px;
+    overflow: hidden;
     display: flex;
     align-items: center;
     z-index: 1;
@@ -22,33 +22,32 @@ a.logo {
 }
 
 .logo img {
-    height: clamp(80px, 20vw, 340px);   /* Размер логотипа */
-    width: auto;                        /* Ширина автоматически */
-    object-fit: contain;                /* Сохраняем пропорции */
+    height: clamp(80px, 20vw, 340px);
+    width: auto;
+    object-fit: contain;
 }
 
-/* КНОПКИ В ШАПКЕ*/
+/* КНОПКИ В ШАПКЕ */
 .panel {
-    display: flex;                    /* В ряд */
-    justify-content: space-between;   /* Раздвигает элементы */
-    align-items: center;              /* Вертикальное выравнивание по центру */
-    height: 160px;    /* Минимальная высота */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 160px;
     margin: 0 auto;
     gap: 30px;
-     overflow: visible;
+    overflow: visible;
 }
 
 /* ПОИСКОВАЯ СТРОКА */
 .search {
-    display: flex;                 /* Включаем flex */
-    align-items: center;           /* Вертикальное выравнивание */
-    justify-content: center;       /* Горизонтальное выравнивание */
-    flex: 1 1 auto;                /* Может растягиваться и сжиматься */
-    max-width: 600px;              /* Не шире 600px */
-    margin: 0 20px;                /* Отступы слева и справа по 20px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+    max-width: 600px;
+    margin: 0 20px;
 }
 
-/* СТИЛЬ ПОЛЯ ВВОДА */
 .search input {
     width: 100%;
     padding: 14px 22px;
@@ -60,358 +59,63 @@ a.logo {
     outline: none;
 }
 
-/* КНОПКА ПОИСКА */
 .search button {
     padding: 14px 22px;
     border-radius: 0 15px 15px 0;
-    border: 2px solid #4b8082; 
+    border: 2px solid #4b8082;
     background-color: #4b8082;
     cursor: pointer;
 }
 
-/* СТИЛЬ ИКОНКИ ПОИСКА */
 .search button span {
     color: white;
     font-size: 18px;
     font-weight: bold;
 }
 
-/* КОНТЕЙНЕР ДЛЯ МЕНЮ КНОПОК */
+/* МЕНЮ (Главная, Уведомления, Чат) */
 .menu {
-    display: flex;                 /* Кнопки в ряд */
-    gap: 20px;                     /* Расстояние между кнопками */
-    margin-right: 10px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
 }
 
-/* ГЛАВНАЯ, О НАС, КОНТАКТЫ */
-.menu a {
-    /* настройка кнопок */
-    background-color: #5F9EA0;         /* Цвет фона кнопок */
-    text-decoration: none;               /* Убираем подчеркивание у ссылок */
-    color: #2c3e50; 
-    width: clamp(80px, 10vw, 150px);     /* мин 80px, идеально 10% от ширины окна, макс 150px */
-    height: clamp(40px, 5vw, 75px);      /* мин 40px, идеально 5% от ширины окна, макс 75px */ 
-    border-radius: 15px;                 /* Скругление углов - 5 пикселей */
-
-    /* расположение */
-    display: flex;                       /* Кнопки в ряд, но можно задавать размеры */
-    align-items: center;                 /* Вертикальное выравнивание по центру */
-    justify-content: center;             /* Горизонтальное выравнивание по центру */
-
-    /* настройка текста */
-    font-family: 'Tobi';                 /* Шрифт для кнопок */
-    font-size: clamp(14px, 2vw, 25px);   /* Размер шрифта — плавно уменьшается */
-    font-weight: normal;
-    transition: 0.3s;                    /* Плавный переход при наведении */
-}
-
-/* КНОПКА ПРОФИЛЯ */
-.panel .profile {
+/* Общий стиль для всех кнопок в меню */
+.menu-link {
     background-color: #5F9EA0;
-    width: 78px;                   /* Ширина */
-    height: 78px;                  /* Высота */
-    border-radius: 50%;            /* Скругление 50% = круг */
-
-    /* Выравнивание содержимого */
-    /* margin-left: 20px;             Отступ между меню и профилем  */
-    display: flex;
-    align-items: center;           /* Центрируем иконку по вертикали */
-    justify-content: center;       /* Центрируем иконку по горизонтали */
-    overflow: hidden;              /* Обрезаем всё, что выходит за пределы круга */
-    flex-shrink: 0;                /* Запрещаем сжатие */
-    transition: 0.3s;
-}
-
-/* КАРТИНКА ПРОФИЛЯ */
-.panel .profile img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;            /* Обрезаем по кругу */
-    object-fit: cover;             /* Сохраняем пропорции */
-    border: 3px solid #4b8082;   /* обводка */
-    box-sizing: border-box;        /* чтобы рамка не увеличивала размер */
-}
-
-/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КНОПКИ МЕНЮ */
-.menu a:hover {
-    background-color: #4b8082;   /* Цвет фона при наведении */
-    color: #1d2935;              /* Цвет текста при наведении */
-    transform: scale(1.1);
-}
-
-/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КНОПКУ ПРОФИЛЯ */
-.panel .profile:hover {
-    background-color: #4b8082;
-    transform: scale(1.1);
-}
-
-/* ФУТЕР */
-.footer {
-    background-color: #ADD8E6;
-    margin-top: 60px;              /* Отступ сверху */
-    padding: 40px 20px 20px;
-    width: 100%;
-}
-
-/* СТИЛИ СОДЕРЖИМОГО ФУТЕРА */
-.footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    max-width: 1200px;
-    margin: 0 auto;
-    gap: 40px;
-}
-
-/* СТИЛИ ДЛЯ КОЛОНОК */
-.footer-section {
-    flex: 1;
-    min-width: 200px;
-}
-
-/* СТИЛИ ДЛЯ ЗАГОЛОВКОВ ВНУТРИ ФУТЕРА */
-.footer-section h3 {
-    color: #2c3e50;
-    font-size: 20px;
-    margin-bottom: 15px;
-    font-family: 'Tobi';
-    font-weight: normal;
-}
-
-/* СТИЛИ ДЛЯ ОПИСАНИЯ ВНУТРИ ФУТЕРА */
-.footer-section p {
-    color: #2c3e50;
-    font-size: 14px;
-    line-height: 1.6;
-    font-family: 'Tobi';
-}
-
-/* СТИЛИ ДЛЯ КОНТЕЙНЕРА НА СОЦСЕТИ */
-.social-links {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* СТИЛИ НА ССЫЛКИ ДЛЯ СОЦСЕТЕЙ */
-.social-links a {
-    color: #2c3e50;
     text-decoration: none;
-    font-size: 16px;
-    transition: 0.3s;
-    font-family: 'Tobi';
-}
-
-/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА ССЫЛКИ СОЦСЕТЕЙ */
-.social-links a:hover {
-    color: #f99039;
-    transform: translateX(5px);
-}
-
-/* СТИЛЬ ДЛЯ КОПИРАЙТА */
-.footer-bottom {
-    text-align: center;
-    padding-top: 30px;
-    margin-top: 30px;
-    border-top: 1px solid #5F9EA0;
-}
-
-/* СТИЛЬ ДЛЯ ТЕКСТА КОПИРАЙТА */
-.footer-bottom p {
     color: #2c3e50;
-    font-size: 12px;
-    font-family: 'Tobi';
-}
-
-/* ВЫПАДАЮЩЕЕ МЕНЮ ПРОФИЛЯ */
-.profile-dropdown {
-    position: relative;
-    display: inline-block;
-    overflow: visible;
-    z-index: 1000;
-}
-
-.profile-icon {
-    width: 78px;
-    height: 78px;
-    border-radius: 50%;
-    cursor: pointer;
-    overflow: hidden;
-    background-color: #5F9EA0;
+    width: clamp(80px, 10vw, 150px);
+    height: clamp(40px, 5vw, 75px);
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    z-index: 1001;
-    transition: 0.3s;
-}
-
-.profile-icon img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #4b8082;
-    box-sizing: border-box;
-}
-
-.profile-icon:hover {
-    background-color: #4b8082;
-    transform: scale(1.1);
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: white;
-    min-width: 160px;
-    margin-top: 10px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 10000;
-    border-radius: 15px;
-    overflow: visible;
-}
-
-.dropdown-content a {
-    color: #2c3e50;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
     font-family: 'Tobi';
-}
-
-.dropdown-content a:hover {
-    background-color: #f99039;
-    color: white;
-    border-radius: 15px;
-}
-
-.show {
-    display: block;
-}
-
-.dropdown-content form .dropdown-link {
-    width: 100%;
-    text-align: left;
-    padding: 12px 16px;
-    background: none;
+    font-size: clamp(14px, 2vw, 25px);
+    font-weight: normal;
+    transition: 0.3s;
+    cursor: pointer;
     border: none;
-    font-family: 'Tobi';
-    font-size: 16px;
-    color: #2c3e50;
-    cursor: pointer;
-    display: block;
-}
-
-.dropdown-content form .dropdown-link:hover {
-    background-color: #f99039;
-    color: white;
-    border-radius: 15px;
-}
-
-                                                 /* ВИКА ЭТО КАТЯ ДОБАВИЛА*/
-/* ===== КНОПКА СООБЩЕНИЙ ===== */
-.messages-dropdown {
     position: relative;
-    display: inline-block;
-    overflow: visible;
-    z-index: 1000;
 }
 
-.messages-icon {
-    background-color: #5F9EA0;
-    width: 78px;
-    height: 78px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    cursor: pointer;
-    transition: 0.3s;
-    text-decoration: none;
-    color: white;
-}
-
-.messages-icon:hover {
+.menu-link:hover {
     background-color: #4b8082;
-    transform: scale(1.05);
+    color: #1d2935;
+    transform: scale(1.1);
 }
 
-/* КРАСНЫЙ КРУЖОК-ТОЧКА ДЛЯ НЕПРОЧИТАННЫХ */
-.messages-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background-color: #e74c3c;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    display: none;
-}
-
-/* КРУЖОК С ЦИФРОЙ (если сообщений много) */
-.messages-badge.count {
-    width: auto;
-    min-width: 20px;
-    height: 20px;
-    font-size: 10px;
-    background-color: #e74c3c;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    padding: 0 5px;
-    top: 8px;
-    right: 8px;
-}
-
-/* ===== УВЕДОМЛЕНИЯ (ВЫПАДАЮЩЕЕ ОКНО) ===== */
+/* УВЕДОМЛЕНИЯ (ВЫПАДАЮЩЕЕ ОКНО) */
 .notifications-dropdown {
     position: relative;
     display: inline-block;
-    overflow: visible;
-    z-index: 1000;
 }
 
-.notifications-icon {
-    background-color: #5F9EA0;
-    width: 78px;
-    height: 78px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.notifications-icon:hover {
-    background-color: #4b8082;
-    transform: scale(1.05);
-}
-
-/* КРАСНЫЙ КРУЖОК-ТОЧКА */
-.notif-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background-color: #e74c3c;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    display: none;
-}
-
-/* ВЫПАДАЮЩЕЕ ОКНО */
 .notifications-content {
     display: none;
     position: absolute;
-    right: -65%;
+    right: 0;
     top: 100%;
     background-color: white;
     width: 280px;
@@ -465,7 +169,232 @@ a.logo {
     font-family: 'Tobi';
 }
 
-/* Тёмная тема для уведомлений */
+/* КРАСНЫЙ КРУЖОК-ТОЧКА ДЛЯ УВЕДОМЛЕНИЙ */
+.notif-badge {
+    position: absolute;
+    top: 8px;
+    right: 18px;
+    background-color: #e74c3c;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: none;
+}
+
+/* СООБЩЕНИЯ  */
+.messages-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.messages-badge {
+    position: absolute;
+    top: 8px;
+    right: 18px;
+    background-color: #e74c3c;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: none;
+}
+
+/* КНОПКА ПРОФИЛЯ (КРУГЛАЯ)  */
+.panel .profile {
+    background-color: #5F9EA0;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: 0.3s;
+}
+
+.panel .profile img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4b8082;
+    box-sizing: border-box;
+}
+
+.panel .profile:hover {
+    background-color: #4b8082;
+    transform: scale(1.1);
+}
+
+/* ВЫПАДАЮЩЕЕ МЕНЮ ПРОФИЛЯ  */
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+    z-index: 1000;
+}
+
+.profile-icon {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: #5F9EA0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1001;
+    transition: 0.3s;
+}
+
+.profile-icon img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4b8082;
+    box-sizing: border-box;
+}
+
+.profile-icon:hover {
+    background-color: #4b8082;
+    transform: scale(1.1);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    min-width: 180px;
+    margin-top: 10px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10000;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.dropdown-content a,
+.dropdown-content form .dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    text-decoration: none;
+    font-family: 'Tobi';
+    font-size: 16px;
+    color: #2c3e50;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.dropdown-content form {
+    width: 100%;
+}
+
+.dropdown-content a:hover,
+.dropdown-content form .dropdown-link:hover {
+    background-color: #f99039;
+    color: white;
+}
+
+.show {
+    display: block;
+}
+
+/* ФУТЕР */
+.footer {
+    background-color: #ADD8E6;
+    margin-top: 60px;
+    padding: 40px 20px 20px;
+    width: 100%;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-section h3 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-family: 'Tobi';
+    font-weight: normal;
+}
+
+.footer-section p {
+    color: #2c3e50;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: 'Tobi';
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.social-links a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+    font-family: 'Tobi';
+}
+
+.social-links a:hover {
+    color: #f99039;
+    transform: translateX(5px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    margin-top: 30px;
+    border-top: 1px solid #5F9EA0;
+}
+
+.footer-bottom p {
+    color: #2c3e50;
+    font-size: 12px;
+    font-family: 'Tobi';
+}
+
+/* ТЁМНАЯ ТЕМА */
+body.dark-theme .dropdown-content {
+    background-color: #16213e;
+    border: 1px solid #e94560;
+}
+
+body.dark-theme .dropdown-content a,
+body.dark-theme .dropdown-content form .dropdown-link {
+    color: #e0e0e0;
+}
+
+body.dark-theme .dropdown-content a:hover,
+body.dark-theme .dropdown-content form .dropdown-link:hover {
+    background-color: #e94560;
+    color: white;
+}
+
 body.dark-theme .notifications-content {
     background-color: #16213e;
     border: 1px solid #e94560;
@@ -492,4 +421,40 @@ body.dark-theme .notification-item.unread {
 
 body.dark-theme .notification-empty {
     color: #888;
+}
+
+body.dark-theme .menu-link {
+    background-color: #0f3460;
+    color: #e94560;
+}
+
+body.dark-theme .menu-link:hover {
+    background-color: #e94560;
+    color: white;
+}
+
+body.dark-theme .panel .profile {
+    background-color: #0f3460;
+}
+
+body.dark-theme .profile-icon {
+    background-color: #0f3460;
+}
+
+body.dark-theme .footer {
+    background-color: #16213e;
+}
+
+body.dark-theme .footer-section h3,
+body.dark-theme .footer-section p,
+body.dark-theme .footer-bottom p {
+    color: #e0e0e0;
+}
+
+body.dark-theme .social-links a {
+    color: #e0e0e0;
+}
+
+body.dark-theme .social-links a:hover {
+    color: #e94560;
 }

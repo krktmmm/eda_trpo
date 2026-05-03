@@ -22,7 +22,7 @@
     <div class="navigation">
         <div class="panel">
             <!-- ЛОГОТИП -->
-            <a href="#" class="logo">
+            <a href="/" class="logo">
                 <img src="{% static 'images/log.png' %}" alt="Логотип">
             </a>
             
@@ -34,33 +34,30 @@
                 </button>
             </div>
 
-            <!-- МЕНЮ -->
+            <!-- МЕНЮ (Главная, Уведомления, Чат) -->
             <div class="menu">
-                <a href="/">Главная</a>
-                <a href="/about/">О нас</a>
-                <a href="/contacts/">Контакты</a>
-            </div>
+                <a href="/" class="menu-link">Главная</a>
 
-            <!-- КОЛОКОЛЬЧИК С УВЕДОМЛЕНИЯМИ -->
-            <div class="notifications-dropdown">
-                <div class="notifications-icon" id="notifIcon">
-                    🔔
-                    <span class="notif-badge" id="notifBadge" style="display: none;"></span>
+                <div class="messages-dropdown">
+                    <a href="/roulette/messages/" class="menu-link messages-icon" id="messagesIcon">
+                        Чат💬
+                        <span class="messages-badge" id="messagesBadge" style="display: none;"></span>
+                    </a>
                 </div>
-                <div class="notifications-content" id="notificationsMenu">
-                    <div class="notifications-header">📢 Уведомления</div>
-                    <div class="notifications-list" id="notificationsList">
-                        <div class="notification-empty">Нет новых уведомлений</div>
+
+                <div class="notifications-dropdown">
+                    <div class="menu-link notifications-icon" id="notifIcon">
+                        Бзз🔔
+                        <span class="notif-badge" id="notifBadge" style="display: none;"></span>
+                    </div>
+                    <div class="notifications-content" id="notificationsMenu">
+                        <div class="notifications-header">📢 Уведомления</div>
+                        <div class="notifications-list" id="notificationsList">
+                            <div class="notification-empty">Нет новых уведомлений</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- НОВАЯ КНОПКА СООБЩЕНИЙ -->
-            <div class="messages-dropdown">
-                <a href="/roulette/messages/" class="messages-icon" id="messagesIcon">
-                    💬
-                    <span class="messages-badge" id="messagesBadge" style="display: none;"></span>
-                </a>
+                
             </div>
 
             <!-- ПРОФИЛЬ (ВЫПАДАЮЩЕЕ МЕНЮ) -->
@@ -74,11 +71,15 @@
                         {% endif %}
                     </div>
                     <div class="dropdown-content" id="dropdownMenu">
-                        <a href="/profile/">Профиль</a>
-                        <a href="/profile/settings/">Настройки</a>
+                        <a href="/profile/">👤 Профиль</a>
+                        <a href="/profile/settings/">⚙️ Настройки</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/about/">📖 О нас</a>
+                        <a href="/contacts/">📞 Контакты</a>
+                        <div class="dropdown-divider"></div>
                         <form action="/accounts/logout/" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="dropdown-link">Выход</button>
+                            <button type="submit" class="dropdown-link">🚪 Выход</button>
                         </form>
                     </div>
                 {% else %}
