@@ -57,7 +57,13 @@
                      data-time1="{{ place.time_from_building_1|default:999 }}"
                      data-time3="{{ place.time_from_building_3|default:999 }}"
                      data-time5="{{ place.time_from_building_5|default:999 }}">
-                    <a href="{% url 'place_detail' place.id %}" class="place-name">{{ place.name }}</a>
+                    <div class="place-header">
+                        <a href="{% url 'place_detail' place.id %}" class="place-name">{{ place.name }}</a>
+                        <button class="favorite-btn {% if place.id in favorited_ids %}active{% endif %}" 
+                                data-place-id="{{ place.id }}">
+                            {% if place.id in favorited_ids %}❤️{% else %}🤍{% endif %}
+                        </button>
+                    </div>
                     <div class="place-address">📍 {{ place.address }}</div>
                     <div class="place-info">
                         <span class="price">💰 {{ place.avg_price|default:"—" }} ₽</span>

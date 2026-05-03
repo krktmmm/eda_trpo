@@ -397,16 +397,16 @@ body.dark-theme .dropdown-content form .dropdown-link:hover {
 
 body.dark-theme .notifications-content {
     background-color: #16213e;
-    border: 1px solid #e94560;
+    border: 1px solid #4c3d63;
 }
 
 body.dark-theme .notifications-header {
-    background-color: #0f3460;
+    background-color: #4c3d63;
     color: #e0e0e0;
 }
 
 body.dark-theme .notification-item {
-    border-bottom-color: #0f3460;
+    border-bottom-color: #4c3d63;
     color: #e0e0e0;
 }
 
@@ -416,7 +416,7 @@ body.dark-theme .notification-item:hover {
 
 body.dark-theme .notification-item.unread {
     background-color: #1a1a2e;
-    border-left-color: #e94560;
+    border-left-color: #4c3d63;
 }
 
 body.dark-theme .notification-empty {

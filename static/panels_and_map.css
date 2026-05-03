@@ -219,3 +219,26 @@
     scrollbar-width: thin;
     scrollbar-color: #f99039 transparent;  /* (ползунок) (дорожка прозрачная) */
 }
+
+                         /* ВИКА ЭТО КАТЯ ДОБАВИЛА */
+.place-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.place-header .place-name {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 5px;
+}

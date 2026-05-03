@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
+from django.utils import timezone
 from django.db import models
 import random
 import json
@@ -23,12 +24,12 @@ def get_nearby_buildings(building):
 
 def get_or_create_dialog(user1, user2):
     """Найти или создать диалог между двумя пользователями"""
-    # Ищем существующий диалог
-    existing = Dialog.objects.filter(participants=user1).filter(participants=user2).first()
-    if existing:
-        return existing
+    # Получаем все диалоги user1 и проверяем наличие user2
+    for dialog in Dialog.objects.filter(participants=user1):
+        if user2 in dialog.participants.all():
+            return dialog
     
-    # Создаём новый
+    # Не нашли - создаём новый
     dialog = Dialog.objects.create()
     dialog.participants.add(user1, user2)
     return dialog
@@ -317,7 +318,7 @@ def send_message(request, dialog_id):
             'status': 'ok',
             'message_id': message.id,
             'text': message.text,
-            'created_at': message.created_at.strftime('%d.%m.%Y %H:%M'),
+            'created_at': timezone.localtime(message.created_at).strftime('%H:%M'),
             'sender': request.user.username
         })
     except Exception as e:
@@ -356,23 +357,8 @@ def get_new_messages(request, dialog_id):
         'id': m.id,
         'sender': m.sender.username,
         'text': m.text,
-        'created_at': m.created_at.strftime('%H:%M'),
+        'created_at': timezone.localtime(m.created_at).strftime('%H:%M'),
         'is_mine': m.sender == request.user
     } for m in messages]
     
     return JsonResponse({'messages': data})
-
-
-# ==================== ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ДИАЛОГА ====================
-
-def get_or_create_dialog(user1, user2):
-    """Найти или создать диалог между двумя пользователями"""
-    # Ищем существующий диалог
-    existing = Dialog.objects.filter(participants=user1).filter(participants=user2).first()
-    if existing:
-        return existing
-    
-    # Создаём новый
-    dialog = Dialog.objects.create()
-    dialog.participants.add(user1, user2)
-    return dialog

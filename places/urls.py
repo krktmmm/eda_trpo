@@ -9,4 +9,6 @@ urlpatterns = [
     path('contacts/', views.contacts, name='contacts'),
     path('place/<int:place_id>/', views.place_detail, name='place_detail'),
     path('place/<int:place_id>/review/', views.add_review, name='add_review'),
+    path('favorites/', views.favorites_list, name='favorites_list'),
+    path('favorites/toggle/<int:place_id>/', views.toggle_favorite, name='toggle_favorite'),
 ]

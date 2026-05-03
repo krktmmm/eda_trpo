@@ -4,9 +4,40 @@
 
 {% block content %}
 
+<style>
+.place-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.favorite-detail-btn {
+    background: none;
+    border: none;
+    font-size: 36px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.favorite-detail-btn:hover {
+    transform: scale(1.1);
+}
+
+.favorite-detail-btn.active {
+    color: #e74c3c;
+}
+</style>
+
     <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
     <div style="max-width: 800px; margin: 40px auto; padding: 20px;">
-        <h1>{{ place.name }}</h1>
+        <div class="place-header">
+            <h1>{{ place.name }}</h1>
+            <button id="favorite-detail-btn" class="favorite-detail-btn {% if is_favorited %}active{% endif %}" data-place-id="{{ place.id }}">
+                {% if is_favorited %}❤️{% else %}🤍{% endif %}
+            </button>
+        </div>
         <p>📍 {{ place.address }}</p>
         <p>💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}</p>
         
@@ -43,7 +74,40 @@
             <p><a href="/accounts/login/">Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв</p>
         {% endif %}
         
-        <p style="margin-top: 30px;"><a href="/">← На главную</a></p>
+        <p style="margin-top: 30px;"><a href="/places/">← Назад</a></p>
     </div>
     
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const favBtn = document.getElementById('favorite-detail-btn');
+    if (favBtn) {
+        favBtn.addEventListener('click', function() {
+            const placeId = this.dataset.placeId;
+            const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            fetch(`/favorites/toggle/${placeId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_favorited) {
+                    this.innerHTML = '❤️';
+                    this.classList.add('active');
+                } else {
+                    this.innerHTML = '🤍';
+                    this.classList.remove('active');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+        });
+    }
+});
+</script>
+
 {% endblock %}
