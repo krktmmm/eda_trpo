@@ -97,16 +97,18 @@
         <h1 class="main-title">🎲 Обед - рулетка</h1>
         <h2 class="match-title">Найден собеседник!</h2>
 
-        <div class="match-avatar">
-            <img src="{% static 'images/default_avatar.jpg' %}" alt="avatar">
-        </div>
+        <div class="match-card">
+            <div class="match-avatar">
+                <img src="{% static 'images/default_avatar.jpg' %}" alt="avatar">
+            </div>
 
-        <div class="match-info">
-            <p class="match-username">Ник: <span id="screen-username"></span></p>
-            <p>Корпус: <span id="screen-building"></span></p>
-            <p>Бюджет: <span id="screen-budget"></span></p>
-            <p>Telegram: <span id="screen-telegram"></span></p>
-            <p>VK: <span id="screen-vk"></span></p>
+            <div class="match-info">
+                <p class="match-username"><span id="screen-username"></span></p>
+                <p><strong>Корпус:</strong> <span id="screen-building"></span></p>
+                <p><strong>Бюджет:</strong> <span id="screen-budget"></span></p>
+                <p><strong>Telegram:</strong> <span id="screen-telegram"></span></p>
+                <p><strong>VK:</strong> <span id="screen-vk"></span></p>
+            </div>
         </div>
 
         <div class="match-buttons">
