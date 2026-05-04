@@ -279,6 +279,7 @@ a.logo {
 
 .dropdown-content a,
 .dropdown-content form .dropdown-link {
+    all: unset;
     display: flex;
     align-items: center;
     gap: 12px;
