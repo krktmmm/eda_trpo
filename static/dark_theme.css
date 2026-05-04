@@ -54,15 +54,30 @@ body.dark-theme .panel .profile img {
 }
 
 /* ===== ПОИСК ===== */
+
 body.dark-theme .search input {
     background-color: #334155 !important;
     border-color: #f97316 !important;
     color: #e2e8f0 !important;
+    width: 100%;
+    padding: 14px 22px;
+    border-radius: 15px 0 0 15px;
+    font-size: 18px;
+    font-family: 'Tobi';
+    font-weight: normal;
+    outline: none;
 }
 
 body.dark-theme .search button {
-    background-color: #f97316 !important;
     border-color: #f97316 !important;
+    padding: 14px 22px;
+    border-radius: 0 15px 15px 0;
+    cursor: pointer;
+}
+
+body.dark-theme .search button:hover {
+    background-color: #f97316 !important;
+    transform: none !important;
 }
 
 /* ===== ПРИВЕТСТВИЕ ===== */
@@ -153,7 +168,7 @@ body.dark-theme .time-needed {
     color: #ef4444 !important;
 }
 
-/* ===== КНОПКА ИЗБРАННОГО — УБИРАЕМ ЛЮБЫЕ КВАДРАТЫ И ФОНЫ ===== */
+/* ===== КНОПКА ИЗБРАННОГО ===== */
 body.dark-theme .favorite-btn {
     background: transparent !important;
     border: none !important;
@@ -413,51 +428,74 @@ body.dark-theme .settings-container .back-link:hover {
 }
 
 /* ===== ВЫПАДАЮЩЕЕ МЕНЮ ===== */
+
 body.dark-theme .dropdown-content {
     background-color: #1e293b !important;
-    border: 1px solid #f97316 !important;
     border-radius: 15px !important;
     overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    min-width: 180px;
+    margin-top: 10px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10000;
 }
 
-body.dark-theme .dropdown-content a {
+body.dark-theme .dropdown-content a,
+body.dark-theme .dropdown-content form .dropdown-link {
     color: #e2e8f0 !important;
-    background-color: transparent !important;
     padding: 12px 16px;
-    display: block;
-}
-
-body.dark-theme .dropdown-content a:hover {
-    background-color: #f97316 !important;
-    color: white !important;
+    display: flex;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Tobi';
+    font-size: 16px;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    text-align: left;
+    box-sizing: border-box;
 }
 
 body.dark-theme .dropdown-content form {
-    margin: 0;
-    padding: 0;
+    width: 100%;
 }
 
 body.dark-theme .dropdown-content .dropdown-link {
     background-color: transparent !important;
-    color: #e2e8f0 !important;
-    border: none !important;
-    width: 100%;
-    text-align: left;
-    padding: 12px 16px;
-    cursor: pointer;
-    font-family: 'Tobi';
-    font-size: 16px;
 }
 
-body.dark-theme .dropdown-content .dropdown-link:hover {
+body.dark-theme .dropdown-content a:hover,
+body.dark-theme .dropdown-content form .dropdown-link:hover {
     background-color: #f97316 !important;
     color: white !important;
 }
 
-body.dark-theme .dropdown-divider {
-    height: 1px;
-    background-color: #334155;
-    margin: 5px 0;
+body.dark-theme .dropdown-content button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    width: 100%;
+    color: #e2e8f0 !important;
+    font-family: 'Tobi';
+    font-size: 16px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+body.dark-theme .dropdown-content button:hover {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .show {
+    display: block;
 }
 
 /* ===== УВЕДОМЛЕНИЯ ===== */
