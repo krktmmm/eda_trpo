@@ -112,10 +112,12 @@ body.dark-theme .time-panel h2 {
 body.dark-theme .time-btn {
     background-color: #334155 !important;
     color: #e2e8f0 !important;
+    transition: 0.3s;
 }
 
 body.dark-theme .time-btn:hover,
 body.dark-theme .time-btn.active {
+    transform: scale(1.05);
     background-color: #f97316 !important;
     color: white !important;
 }
@@ -228,6 +230,20 @@ body.dark-theme .map-hint {
 }
 
 /* ===== РУЛЕТКА ===== */
+
+body.dark-theme .roulette-mode-btn {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body.dark-theme .roulette-mode-btn:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    transform: none !important;
+}
+
 body.dark-theme .roulette-mode-btn .btn-inner {
     background-color: #334155 !important;
 }
@@ -249,7 +265,7 @@ body.dark-theme .roulette-form select,
 body.dark-theme .roulette-form input {
     background-color: #334155 !important;
     color: #e2e8f0 !important;
-    border-color: #f97316 !important;
+    border-color: #0f172a !important;
 }
 
 body.dark-theme .roulette-form button {
@@ -300,6 +316,19 @@ body.dark-theme .info-table td:first-child {
     color: #f97316 !important;
 }
 
+body.dark-theme .profile-avatar img {
+    border-color: #475569 !important;
+}
+
+body.dark-theme .profile-left-info strong {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .profile-left-info,
+body.dark-theme .edit-profile-info {
+    border-top-color: #334155 !important;
+}
+
 body.dark-theme .edit-profile-form .form-group label {
     color: #e2e8f0 !important;
 }
@@ -328,7 +357,34 @@ body.dark-theme .edit-profile-btn:hover {
     background-color: #ea580c !important;
 }
 
-/* ===== НАСТРОЙКИ — ДОПОЛНИТЕЛЬНЫЕ ФИКСЫ ===== */
+body.dark-theme .avatar-upload-label {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .avatar-upload-label:hover {
+    background: #ea580c !important;
+}
+
+body.dark-theme .avatar-delete-btn {
+    background: #475569 !important;
+}
+
+body.dark-theme .avatar-delete-btn:hover {
+    background: #3b4657 !important;
+}
+
+/* Подписи "На сайте с:" и "ID:" — оранжевые */
+body.dark-theme .edit-profile-info strong {
+    color: #f97316 !important;
+}
+
+/* Сами значения (дата и число) — белые */
+body.dark-theme .edit-profile-info p {
+    color: #e2e8f0 !important;
+}
+
+/* ===== НАСТРОЙКИ ===== */
 body.dark-theme .settings-section {
     border-bottom-color: #334155 !important;
 }
@@ -501,12 +557,13 @@ body.dark-theme .show {
 /* ===== УВЕДОМЛЕНИЯ ===== */
 body.dark-theme .notifications-content {
     background-color: #1e293b !important;
-    border: 1px solid #f97316 !important;
+
 }
 
 body.dark-theme .notifications-header {
     background-color: #334155 !important;
     color: #e2e8f0 !important;
+    border-bottom: 1px solid #f97316 !important;
 }
 
 body.dark-theme .notification-item {
