@@ -1,34 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ place.name }} | СытГУТИ{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'place_detail.css' %}">
+{% endblock %}
+
 {% block content %}
-
-<style>
-.place-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.favorite-detail-btn {
-    background: none;
-    border: none;
-    font-size: 36px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.favorite-detail-btn:hover {
-    transform: scale(1.1);
-}
-
-.favorite-detail-btn.active {
-    color: #e74c3c;
-}
-</style>
 
     <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
     <div style="max-width: 800px; margin: 40px auto; padding: 20px;">
@@ -76,38 +55,7 @@
         
         <p style="margin-top: 30px;"><a href="/places/">← Назад</a></p>
     </div>
-    
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const favBtn = document.getElementById('favorite-detail-btn');
-    if (favBtn) {
-        favBtn.addEventListener('click', function() {
-            const placeId = this.dataset.placeId;
-            const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            
-            fetch(`/favorites/toggle/${placeId}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrf
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.is_favorited) {
-                    this.innerHTML = '❤️';
-                    this.classList.add('active');
-                } else {
-                    this.innerHTML = '🤍';
-                    this.classList.remove('active');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-            });
-        });
-    }
-});
-</script>
+
+<script src="{% static 'js/place_detail.js' %}"></script>
 
 {% endblock %}

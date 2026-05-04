@@ -114,28 +114,3 @@
 .chat-input button:hover {
     background: #5F9EA0;
 }
-
-/* Тёмная тема */
-body.dark-theme .chat-container {
-    background: #16213e;
-}
-
-body.dark-theme .chat-messages {
-    background: #1a1a2e;
-}
-
-body.dark-theme .message-other {
-    background: #0f3460;
-    color: #e0e0e0;
-}
-
-body.dark-theme .chat-input {
-    background: #16213e;
-    border-top-color: #0f3460;
-}
-
-body.dark-theme .chat-input textarea {
-    background: #0f3460;
-    border-color: #4c3d63;
-    color: #e0e0e0;
-}

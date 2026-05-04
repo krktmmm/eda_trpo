@@ -33,7 +33,11 @@
 
 <script>
     const dialogId = {{ dialog.id }};
-    let lastMessageId = {{ messages.0.id|default:0 }};
+    // Берём максимальный id из уже загруженных сообщений
+    let lastMessageId = Math.max(
+        0,
+        ...Array.from(document.querySelectorAll('.message[data-id]')).map(el => parseInt(el.dataset.id))
+    );
     const messagesContainer = document.getElementById('chat-messages');
     const messageInput = document.getElementById('message-input');
     const sendBtn = document.getElementById('send-btn');
@@ -54,12 +58,20 @@
             .then(data => {
                 if (data.messages && data.messages.length) {
                     data.messages.forEach(msg => {
+                        // Проверяем, нет ли уже такого сообщения в DOM
+                        if (document.querySelector(`.message[data-id="${msg.id}"]`)) {
+                            return; // Пропускаем, уже есть
+                        }
+                            
                         const div = document.createElement('div');
                         div.className = `message ${msg.is_mine ? 'message-mine' : 'message-other'}`;
                         div.setAttribute('data-id', msg.id);
-                        div.innerHTML = `<div class="message-text">${escapeHtml(msg.text)}</div>
-                            <div class="message-time">${msg.created_at}</div>`;
+                        div.innerHTML = `
+                            <div class="message-text">${escapeHtml(msg.text)}</div>
+                            <div class="message-time">${msg.created_at}</div>
+                        `;
                         messagesContainer.appendChild(div);
+                        
                         if (msg.id > lastMessageId) {
                             lastMessageId = msg.id;
                         }
@@ -72,6 +84,9 @@
     function sendMessage() {
         const text = messageInput.value.trim();
         if (!text) return;
+        
+        // Блокируем кнопку, чтобы не отправить дважды
+        sendBtn.disabled = true;
         
         fetch(`/roulette/api/messages/send/${dialogId}/`, {
             method: 'POST',
@@ -87,6 +102,9 @@
                 messageInput.value = '';
                 loadNewMessages();
             }
+        })
+        .finally(() => {
+            sendBtn.disabled = false;
         });
     }
     

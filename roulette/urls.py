@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/messages/send/<int:dialog_id>/', views.send_message, name='send_message'),
     path('api/messages/unread/', views.get_unread_count, name='unread_count'),
     path('api/messages/new/<int:dialog_id>/', views.get_new_messages, name='new_messages'),
+    path('api/dialog/delete/<int:dialog_id>/', views.delete_dialog, name='delete_dialog'),
 ]

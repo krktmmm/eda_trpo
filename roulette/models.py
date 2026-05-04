@@ -90,6 +90,23 @@ class Dialog(models.Model):
     
     def __str__(self):
         return f"Dialog {self.id}"
+    
+    @classmethod
+    def get_or_create_dialog(cls, user1, user2):
+        """Создать или найти существующий диалог"""
+        # Сортируем для консистентности
+        u1, u2 = sorted([user1, user2], key=lambda u: u.id)
+        
+        # Ищем существующий диалог
+        dialog = cls.objects.filter(participants=u1).filter(participants=u2).first()
+        
+        if dialog:
+            return dialog, False
+        
+        # Создаём новый
+        dialog = cls.objects.create()
+        dialog.participants.add(u1, u2)
+        return dialog, True
 
 
 class Message(models.Model):

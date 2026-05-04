@@ -1,0 +1,23 @@
+.place-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.favorite-detail-btn {
+    background: none;
+    border: none;
+    font-size: 36px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.favorite-detail-btn:hover {
+    transform: scale(1.1);
+}
+
+.favorite-detail-btn.active {
+    color: #e74c3c;
+}

@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="{% static 'greeting.css' %}">
     <link rel="stylesheet" href="{% static 'main_menu.css' %}">
     <link rel="stylesheet" href="{% static 'panels_and_map.css' %}">
-    <link rel="stylesheet" href="{% static 'responsive.css' %}">
     <link rel="stylesheet" href="{% static 'roulette.css' %}">
+    <link rel="stylesheet" href="{% static 'dark_theme.css' %}">
+    <link rel="stylesheet" href="{% static 'responsive.css' %}">
     <!-- Скрипт для анимации в главном меню -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
@@ -72,11 +73,8 @@
                     </div>
                     <div class="dropdown-content" id="dropdownMenu">
                         <a href="/profile/">👤 Профиль</a>
-                        <a href="/profile/settings/">⚙️ Настройки</a>
                         <a href="/favorites/">❤️ Избранное</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="/about/">📖 О нас</a>
-                        <a href="/contacts/">📞 Контакты</a>
+                        <a href="/profile/settings/">⚙️ Настройки</a>
                         <div class="dropdown-divider"></div>
                         <form action="/accounts/logout/" method="post">
                             {% csrf_token %}
@@ -91,14 +89,7 @@
             </div>
         </div>
     </div>
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-    {% endif %}
+    
     <!-- ОСНОВНОЕ СОДЕРЖИМОЕ -->
     <div class="content">
         {% block content %}{% endblock %}

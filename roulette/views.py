@@ -24,12 +24,12 @@ def get_nearby_buildings(building):
 
 def get_or_create_dialog(user1, user2):
     """Найти или создать диалог между двумя пользователями"""
-    # Получаем все диалоги user1 и проверяем наличие user2
-    for dialog in Dialog.objects.filter(participants=user1):
-        if user2 in dialog.participants.all():
-            return dialog
+    # Ищем существующий диалог
+    existing = Dialog.objects.filter(participants=user1).filter(participants=user2)
+    if existing.exists():
+        return existing.first()
     
-    # Не нашли - создаём новый
+    # Создаём новый
     dialog = Dialog.objects.create()
     dialog.participants.add(user1, user2)
     return dialog
@@ -85,8 +85,13 @@ def find_solo_match(request):
     
     if perfect:
         match = random.choice(perfect)
-        # СОЗДАЁМ ДИАЛОГ ПЕРЕД ОТВЕТОМ
-        dialog = get_or_create_dialog(request.user, match.user)
+        
+        SoloRequest.objects.filter(user=match.user, is_active=True).update(is_active=False)
+        SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+        
+        # Ищем или создаём диалог
+        dialog, created = Dialog.get_or_create_dialog(request.user, match.user)
+        
         return JsonResponse({
             'status': 'found',
             'username': match.user.username,
@@ -105,8 +110,12 @@ def find_solo_match(request):
     
     if nearby:
         match = random.choice(nearby)
-        # СОЗДАЁМ ДИАЛОГ ПЕРЕД ОТВЕТОМ
-        dialog = get_or_create_dialog(request.user, match.user)
+        
+        SoloRequest.objects.filter(user=match.user, is_active=True).update(is_active=False)
+        SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+        
+        dialog, created = Dialog.get_or_create_dialog(request.user, match.user)
+        
         return JsonResponse({
             'status': 'found',
             'username': match.user.username,
@@ -124,8 +133,12 @@ def find_solo_match(request):
     
     if any_building:
         match = random.choice(any_building)
-        # СОЗДАЁМ ДИАЛОГ ПЕРЕД ОТВЕТОМ
-        dialog = get_or_create_dialog(request.user, match.user)
+        
+        SoloRequest.objects.filter(user=match.user, is_active=True).update(is_active=False)
+        SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+        
+        dialog, created = Dialog.get_or_create_dialog(request.user, match.user)
+        
         return JsonResponse({
             'status': 'found',
             'username': match.user.username,
@@ -240,15 +253,29 @@ def join_group(request, group_id):
 
 @login_required
 def messages_list(request):
-    """Список диалогов пользователя"""
-    dialogs = request.user.dialogs.all().order_by('-messages__created_at')
+    """Список диалогов пользователя (без дубликатов)"""
     
+    # 1. Получаем ВСЕ ID диалогов текущего юзера через сет (автоматически убирает дубли)
+    dialog_ids = set(
+        Dialog.objects.filter(participants=request.user).values_list('id', flat=True)
+    )
+    
+    # 2. Достаём сами объекты по уникальным ID
+    all_dialogs = Dialog.objects.filter(id__in=dialog_ids)
+
+    # 3. Сортируем в Python по последнему сообщению
+    def get_last_message_time(dialog):
+        last_msg = dialog.messages.last()
+        return last_msg.created_at if last_msg else dialog.created_at
+
+    sorted_dialogs = sorted(all_dialogs, key=get_last_message_time, reverse=True)
+
     dialogs_data = []
-    for dialog in dialogs:
+    for dialog in sorted_dialogs:
         last_message = dialog.messages.last()
         unread_count = dialog.messages.filter(is_read=False).exclude(sender=request.user).count()
         other_user = dialog.participants.exclude(id=request.user.id).first()
-        if other_user:  # только если есть другой участник
+        if other_user:
             dialogs_data.append({
                 'dialog': dialog,
                 'last_message': last_message,
@@ -362,3 +389,18 @@ def get_new_messages(request, dialog_id):
     } for m in messages]
     
     return JsonResponse({'messages': data})
+
+
+@login_required
+@require_http_methods(["POST"])
+def delete_dialog(request, dialog_id):
+    """Удаление диалога"""
+    dialog = get_object_or_404(Dialog, id=dialog_id)
+    
+    # Проверяем, что пользователь участник диалога
+    if request.user not in dialog.participants.all():
+        return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+    
+    dialog.delete()
+    
+    return JsonResponse({'status': 'ok'})

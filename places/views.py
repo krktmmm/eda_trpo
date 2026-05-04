@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg, Count
 from django.http import JsonResponse
 from django.contrib import messages
 from .models import Place, Review
@@ -8,14 +9,6 @@ from .models import Favorite
 def main_menu(request):
     """Стартовая страница с выбором: заведения или рулетка"""
     return render(request, 'places/main_menu.html')
-
-def about(request):
-    """Страница 'О нас'"""
-    return render(request, 'places/about.html')
-
-def contacts(request):
-    """Страница 'Контакты'"""
-    return render(request, 'places/contacts.html')
 
 def place_list(request):
     """Страница со списком всех заведений (выбор корпуса и времени)"""
@@ -53,53 +46,35 @@ def place_detail(request, place_id):
 def add_review(request, place_id):
     """Добавление отзыва (только для авторизованных)"""
     place = get_object_or_404(Place, id=place_id)
-
-    # 1. Проверка: не оставлял ли пользователь уже отзыв
-    if Review.objects.filter(place=place, user=request.user).exists():
-        messages.warning(
-            request, 
-            'Вы уже оставляли отзыв к этому заведению. '
-            'Вы можете изменить его в личном кабинете.'
-        )
-        return redirect('place_detail', place_id=place.id)
     
     if request.method == 'POST':
         rating = request.POST.get('rating')
-        text = request.POST.get('text', '').strip()
-        photo_url = request.POST.get('photo_url', '').strip()
+        text = request.POST.get('text')
+        photo_url = request.POST.get('photo_url', '')
         
-        if not rating or not text:
-            messages.error(request, 'Заполните все обязательные поля')
-            return redirect('place_detail', place_id=place.id)
+        if rating and text:
+            # Создаём отзыв
+            review = Review.objects.create(
+                place=place,
+                user=request.user,
+                rating=int(rating),
+                text=text,
+                photo_url=photo_url
+                )
             
-        try:
-            rating_val = int(rating)
-        except ValueError:
-            messages.error(request, 'Рейтинг должен быть числом')
-            return redirect('place_detail', place_id=place.id)
-
-        # 2. Создаём отзыв
-        Review.objects.create(
-            place=place,
-            user=request.user,
-            rating=rating_val,
-            text=text,
-            photo_url=photo_url
-        )
+            # Обновляем рейтинг заведения
+            all_reviews = place.reviews.all()
+            total_rating = sum(r.rating for r in all_reviews)
+            place.rating = total_rating / all_reviews.count()
+            place.rating_count = all_reviews.count()
+            place.save()
+            
+            messages.success(request, 'Отзыв добавлен!')
+        else:
+            messages.error(request, 'Заполните все поля')
         
-        # 3. Оптимизированный пересчёт рейтинга через ORM (1 запрос вместо N+1)
-        stats = place.reviews.aggregate(
-            avg_rating=Avg('rating'),
-            count=Count('id')
-        )
-        place.rating = stats['avg_rating'] or 0
-        place.rating_count = stats['count']
-        place.save()
-        
-        messages.success(request, 'Отзыв успешно добавлен!')
         return redirect('place_detail', place_id=place.id)
     
-    # GET-запрос: если форма открывается на отдельной странице, замените на render()
     return redirect('place_detail', place_id=place.id)
 
 

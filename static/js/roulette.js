@@ -114,50 +114,63 @@ function showMatchScreen(match) {
 
 async function startSolo(e) {
     e.preventDefault();
+    
+    // Блокируем кнопку
+    const submitBtn = document.getElementById('start-solo');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Поиск...';
+    }
+    
     showSearchProcess();
-
-    const form = document.getElementById('create-solo-form');
-
-    await fetch('/roulette/api/solo/create/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        body: JSON.stringify({
-            building: form.building.value,
-            budget: form.budget.value
-        })
-    });
-
-    const res = await fetch('/roulette/api/solo/find/');
-    const match = await res.json();
-
-    if (match.status === 'found') {
-        currentMatchData = match;
-
-        searchTimer = setTimeout(() => {
-            stopSlotOnWin();
-            searchProcessText.innerText = 'Собеседник найден!';
-
-            setTimeout(() => {
-                hideSearchProcess();
-                showMatchScreen(match);
-
-                if (window.addNotification) {
-                    window.addNotification(
-                        `🎉 Найден собеседник: ${match.username}!`,
-                        () => {
-                            window.location.href = '/roulette/';
-                        }
-                    );
-                }
-            }, 1000);
-
-        }, MIN_SEARCH_TIME);
-    } else {
-        hideSearchProcess();
-        alert('Не найдено подходящих собеседников');
+    
+    try {
+        const form = document.getElementById('create-solo-form');
+        
+        await fetch('/roulette/api/solo/create/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                building: form.building.value,
+                budget: form.budget.value
+            })
+        });
+        
+        const res = await fetch('/roulette/api/solo/find/');
+        const match = await res.json();
+        
+        if (match.status === 'found') {
+            currentMatchData = match;
+            
+            searchTimer = setTimeout(() => {
+                stopSlotOnWin();
+                searchProcessText.innerText = 'Собеседник найден!';
+                
+                setTimeout(() => {
+                    hideSearchProcess();
+                    showMatchScreen(match);
+                    
+                    if (window.addNotification) {
+                        window.addNotification(
+                            `🎉 Найден собеседник: ${match.username}!`,
+                            () => { window.location.href = '/roulette/'; }
+                        );
+                    }
+                }, 1000);
+            }, MIN_SEARCH_TIME);
+        } else {
+            hideSearchProcess();
+            alert('Не найдено подходящих собеседников');
+        }
+    } finally {
+        // Разблокировка кнопки в любом случае
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = '🎲 Начать поиск';
+        }
     }
 }
 
