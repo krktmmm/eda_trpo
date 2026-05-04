@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-/* КОНТЕЙНЕР ДЛЯ КАРТОЧЕК */
+/* КОНТЕЙНЕР ДЛЯ КАРТОЧЕК ВЫБОРА РЕЖИМА */
 .roulette-buttons {
     display: flex;
     justify-content: center;
@@ -10,7 +10,7 @@
     flex-wrap: wrap;
 }
 
-/* ТЕКСТ ВНУТРИ КАРТОЧЕК */
+/* ОБЩИЙ СТИЛЬ ДЛЯ КАРТОЧЕК */
 .roulette-mode-btn {
     text-decoration: none;
     text-align: center;
@@ -20,7 +20,7 @@
     padding: 0;
 }
 
-/* КАРТОЧКА СОЛО */
+/* КАРТОЧКА "НАЙТИ СОБЕСЕДНИКА" (СОЛО) */
 .roulette-mode-btn .btn-inner {
     background: #5F9EA0;
     padding: 60px 40px;
@@ -35,23 +35,23 @@
     align-items: center;
 }
 
-/* КАРТОЧКА ГРУППА */
+/* КАРТОЧКА "НАЙТИ КОМПАНИЮ" (ГРУППА) */
 .roulette-mode-btn:last-child .btn-inner {
     background: #f99039;
 }
 
-/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ НА КАРТОЧКУ */
 .roulette-mode-btn .btn-inner:hover {
     transform: scale(1.05);
     box-shadow: 0 15px 40px #00000033;
 }
 
-/* ИКОНКИ В КАРТОЧКАХ */
+/* ИКОНКИ ВНУТРИ КАРТОЧЕК */
 .btn-icon {
     font-size: 100px;
 }
 
-/* ЗАГОЛОВОК В КАРТОЧКАХ */
+/* ЗАГОЛОВОК В КАРТОЧКЕ */
 .roulette-mode-btn h2 {
     color: white;
     margin-top: 20px;
@@ -59,7 +59,7 @@
     font-weight: normal;
 }
 
-/* ОПИСАНИЕ КАРТОЧКИ */
+/* ОПИСАНИЕ ПОД ЗАГОЛОВКОМ */
 .roulette-mode-btn p {
     color: white;
     font-family: 'Tobi';
@@ -97,7 +97,7 @@
     font-family: 'Tobi';
 }
 
-/*  КНОПКА ФОРМЫ */
+/* КНОПКА ОТПРАВКИ ФОРМЫ */
 .roulette-form button {
     background: #f99039;
     color: white;
@@ -117,12 +117,12 @@
     transform: scale(1.02);
 }
 
-/* СКРЫТИЕ ЭЛЕМЕНТОВ */
+/* УНИВЕРСАЛЬНЫЙ КЛАСС ДЛЯ СКРЫТИЯ ЭЛЕМЕНТОВ */
 .hidden {
-    display: none;
+    display: none !important;
 }
 
-/* Модальное окно */
+/* МОДАЛЬНОЕ ОКНО */
 .modal {
     display: none;
     position: fixed;
@@ -164,45 +164,36 @@
     margin-top: 20px;
 }
 
-/* ВИКА НИЖЕ ЭТО АЛИНА ДОБАВИЛА */
-
-/* Анимация для рулетки */
+/* АНИМАЦИЯ ДЛЯ ИКОНОК РУЛЕТКИ */
 .lottie-roulette-icon {
     width: 100px;
     height: 100px;
 }
 
-/* Размер 👥 эмодзи */
+/* РАЗМЕР ДЛЯ ИКОНКИ С ДВУМЯ ЧЕЛОВЕКАМИ */
 #twoperson-animation {
     width: 120px;
     height: 120px;
 }
 
-.hidden {
-    display: none !important;
-}
-
-/* ПРОЦЕСС ПОИСКА */
+/* ЭКРАН ПРОЦЕССА ПОИСКА */
 .search-process {
     min-height: 55vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-
     padding-top: 50px;
     text-align: center;
 }
 
-.search-process.hidden {
-    display: none !important;
-}
-
+/* ИКОНКА-СЛОТ ВО ВРЕМЯ ПОИСКА */
 .slot-search-icon {
     width: 130px;
     height: 130px;
 }
 
+/* ТЕКСТ ВО ВРЕМЯ ПОИСКА */
 .search-process p {
     margin-top: 20px;
     font-size: 32px;
@@ -210,7 +201,7 @@
     font-family: 'Tobi';
 }
 
-/* КНОПКА НАЗАД */
+/* КНОПКА "НАЗАД" */
 .back-btn {
     margin-top: 10px;
     padding: 10px 20px;
@@ -229,6 +220,8 @@
 }
 
 /* ЭКРАН НАЙДЕННОГО СОБЕСЕДНИКА */
+
+/* Контейнер всего экрана */
 #match-screen {
     margin-top: 20px;
     background: white;
@@ -236,102 +229,125 @@
     padding: 40px 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     border: 1px solid #e0e0e0;
-    max-width: 800px;
+    max-width: 850px;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
 }
 
+/* Заголовок "Обед - рулетка" */
+#match-screen .main-title {
+    font-family: 'Tobi';
+    font-size: 64px;
+    color: #2c3f51;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Заголовок "Найден собеседник!" */
 .match-title {
     font-size: 28px !important;
     color: #2c3e50;
     font-family: 'Tobi';
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     border-bottom: 3px solid #f99039;
     display: inline-block;
     padding-bottom: 10px;
 }
 
-/* КАРТОЧКА */
+/* Карточка: аватар слева, информация справа */
 .match-card {
     display: flex;
-    gap: 40px;
+    gap: 50px;
     align-items: center;
     flex-wrap: wrap;
+    text-align: left;
+    margin-bottom: 35px;
 }
 
-/* Аватар */
+/* Блок с аватаром (левая часть) - УВЕЛИЧЕННЫЙ */
 .match-avatar {
     flex-shrink: 0;
-    width: 200px;
+    width: 260px;
     text-align: center;
 }
 
+/* Стиль аватара */
 .match-avatar img {
-    width: 180px;
-    height: 180px;
+    width: 240px;
+    height: 240px;
     border-radius: 50%;
-    border: 4px solid #4b8082;
+    border: 5px solid #4b8082;
     object-fit: cover;
     background-color: #5F9EA0;
+    transition: transform 0.3s, border-color 0.3s;
 }
 
-/* Информация  */
+.match-avatar img:hover {
+    transform: scale(1.02);
+    border-color: #f99039;
+}
+
+/* Блок с информацией о пользователе (правая часть) */
 .match-info {
     flex: 2;
-    min-width: 260px;
+    min-width: 280px;
     text-align: left;
 }
 
+/* Каждая строка с информацией */
 .match-info p {
-    margin: 12px 0;
+    margin: 14px 0;
     color: #2c3e50;
     font-size: 18px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     border-bottom: 1px solid #eee;
-    padding: 8px 10px;
+    padding: 10px 12px;
 }
 
 .match-info p strong {
     color: #4b8082;
     font-weight: bold;
+    min-width: 100px;
 }
 
 .match-info p span {
     color: #2c3e50;
     text-align: right;
     word-break: break-word;
-    max-width: 60%;
 }
 
+/* Строка с именем пользователя */
 .match-username {
-    font-size: 28px !important;
+    font-size: 32px !important;
     font-weight: bold;
     justify-content: center !important;
     border-bottom: none !important;
-    margin-bottom: 15px !important;
+    margin-bottom: 25px !important;
 }
 
 .match-username span {
     color: #f99039;
-    font-size: 28px;
+    font-size: 32px;
 }
 
-/* Кнопки действий */
+/* Блок с кнопками действий */
 .match-buttons {
-    margin-top: 30px;
+    margin-top: 10px;
     display: flex;
-    gap: 20px;
+    gap: 25px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
+/* Кнопки действий */
 .match-buttons button {
     background: #5F9EA0;
     color: white;
     border: none;
-    padding: 14px 24px;
+    padding: 14px 28px;
     border-radius: 15px;
     font-family: 'Tobi';
     font-size: 18px;
