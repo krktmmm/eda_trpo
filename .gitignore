@@ -23,10 +23,6 @@ sqlite3.exe
 *.pyc
 local_settings.py
 
-# Статика и загрузки (если будут)
-/staticfiles/
-/media/
-
 # IDE
 .vscode/
 .idea/
