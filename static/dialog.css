@@ -2,7 +2,7 @@
     max-width: 800px;
     margin: 20px auto;
     background: white;
-    border-radius: 20px;
+    border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     display: flex;
@@ -83,16 +83,21 @@
     background: white;
     border-top: 1px solid #e0e0e0;
     gap: 10px;
+    align-items: center;      /* ← выравниваем элементы по центру */
 }
 
 .chat-input textarea {
     flex: 1;
-    padding: 10px;
+    padding: 0 15px;
     border: 2px solid #e0e0e0;
-    border-radius: 25px;
+    border-radius: 15px;
     resize: none;
     font-family: 'Tobi';
     font-size: 14px;
+    height: 44px;
+    line-height: 44px;
+    overflow-y: hidden;
+    box-sizing: border-box;
 }
 
 .chat-input textarea:focus {
@@ -100,15 +105,24 @@
     border-color: #5F9EA0;
 }
 
+.chat-input textarea::placeholder {
+    line-height: 44px;
+    color: #999;
+    font-family: 'Tobi';
+    font-size: 14px;
+}
+
 .chat-input button {
     background: #f99039;
     color: white;
     border: none;
-    padding: 0 20px;
-    border-radius: 25px;
+    padding: 0 25px;
+    border-radius: 15px; 
     cursor: pointer;
     font-family: 'Tobi';
+    font-size: 16px;
     transition: 0.3s;
+    height: 44px; 
 }
 
 .chat-input button:hover {

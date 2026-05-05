@@ -1,13 +1,11 @@
-/* ============================================
-   ТЁМНАЯ ТЕМА — Тёмно-синий с оранжевым акцентом
-   ============================================ */
+/* ТЁМНАЯ ТЕМА — Тёмно-синий с оранжевым акцентом */
 
 body.dark-theme {
     background-color: #0f172a !important;
     color: #e2e8f0 !important;
 }
 
-/* ===== ШАПКА И ФУТЕР ===== */
+/* ШАПКА И ФУТЕР */
 body.dark-theme .navigation,
 body.dark-theme .footer {
     background-color: #1e293b !important;
@@ -596,7 +594,7 @@ body.dark-theme .chat-messages {
 body.dark-theme .message {
     max-width: 70%;
     padding: 10px 15px;
-    border-radius: 20px;
+    border-radius: 15px;
 }
 
 body.dark-theme .message-mine {
@@ -608,7 +606,6 @@ body.dark-theme .message-mine {
 body.dark-theme .message-other {
     background: #334155 !important;
     color: #e2e8f0 !important;
-    border-bottom-left-radius: 5px;
 }
 
 body.dark-theme .message-time {
@@ -625,7 +622,6 @@ body.dark-theme .chat-input {
 body.dark-theme .chat-input textarea {
     background: #334155 !important;
     border: 2px solid #475569 !important;
-    border-radius: 25px;
     color: #e2e8f0 !important;
 }
 
@@ -805,7 +801,7 @@ body.dark-theme .places-panel::-webkit-scrollbar-track {
 
 body.dark-theme .places-panel::-webkit-scrollbar-thumb {
     background: #f97316 !important;
-    border-radius: 10px !important;
+    border-radius: 15px !important;
 }
 
 body.dark-theme .places-panel {

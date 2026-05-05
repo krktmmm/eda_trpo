@@ -87,8 +87,9 @@
 }
 
 /* ВЫПАДАЮЩИЕ СПИСКИ И ПОЛЯ ВВОДА */
-.roulette-form select,
-.roulette-form input {
+/* Основной стиль для select */
+.roulette-form select, 
+.roulette-form input { 
     width: 100%;
     padding: 10px;
     margin: 10px 0;
