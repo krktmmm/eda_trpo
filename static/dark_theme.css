@@ -52,30 +52,18 @@ body.dark-theme .panel .profile img {
 }
 
 /* ===== ПОИСК ===== */
-
 body.dark-theme .search input {
     background-color: #334155 !important;
     border-color: #f97316 !important;
     color: #e2e8f0 !important;
-    width: 100%;
-    padding: 14px 22px;
-    border-radius: 15px 0 0 15px;
-    font-size: 18px;
-    font-family: 'Tobi';
-    font-weight: normal;
-    outline: none;
 }
 
 body.dark-theme .search button {
     border-color: #f97316 !important;
-    padding: 14px 22px;
-    border-radius: 0 15px 15px 0;
-    cursor: pointer;
 }
 
 body.dark-theme .search button:hover {
     background-color: #f97316 !important;
-    transform: none !important;
 }
 
 /* ===== ПРИВЕТСТВИЕ ===== */
@@ -98,9 +86,10 @@ body.dark-theme .menu-card p {
     color: white !important;
 }
 
-/* ===== ПАНЕЛИ ===== */
+/* ===== ПАНЕЛИ (СТРАНИЦА ЗАВЕДЕНИЙ) ===== */
 body.dark-theme .time-panel {
     background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
 }
 
 body.dark-theme .time-panel h2 {
@@ -110,12 +99,10 @@ body.dark-theme .time-panel h2 {
 body.dark-theme .time-btn {
     background-color: #334155 !important;
     color: #e2e8f0 !important;
-    transition: 0.3s;
 }
 
 body.dark-theme .time-btn:hover,
 body.dark-theme .time-btn.active {
-    transform: scale(1.05);
     background-color: #f97316 !important;
     color: white !important;
 }
@@ -124,7 +111,7 @@ body.dark-theme .back-text {
     color: #e2e8f0 !important;
 }
 
-/* ===== ПРАВАЯ ПАНЕЛЬ ===== */
+/* ПРАВАЯ ПАНЕЛЬ (СПИСОК ЗАВЕДЕНИЙ) */
 body.dark-theme .places-panel {
     background-color: #1e293b !important;
     border-color: #334155 !important;
@@ -138,10 +125,13 @@ body.dark-theme .places-panel h2 {
 body.dark-theme .place-card {
     background-color: #334155 !important;
     border-bottom-color: #475569 !important;
+    border-radius: 15px !important;
+    margin-bottom: 10px !important;
 }
 
 body.dark-theme .place-card:hover {
     background-color: #3b4a60 !important;
+    transform: translateX(5px) !important;
 }
 
 body.dark-theme .place-name {
@@ -150,10 +140,6 @@ body.dark-theme .place-name {
 
 body.dark-theme .place-address {
     color: #94a3b8 !important;
-}
-
-body.dark-theme .place-info span {
-    color: #e2e8f0 !important;
 }
 
 body.dark-theme .price {
@@ -168,56 +154,7 @@ body.dark-theme .time-needed {
     color: #ef4444 !important;
 }
 
-/* ===== КНОПКА ИЗБРАННОГО ===== */
-body.dark-theme .favorite-btn {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    color: #e2e8f0 !important;
-    padding: 5px !important;
-    margin: 0 !important;
-    width: auto !important;
-    height: auto !important;
-}
-
-body.dark-theme .favorite-btn:hover {
-    background: transparent !important;
-    transform: scale(1.1);
-}
-
-body.dark-theme .favorite-btn.active {
-    color: #ef4444 !important;
-    background: transparent !important;
-}
-
-body.dark-theme .favorite-btn:focus {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* Для детальной страницы заведения */
-body.dark-theme .favorite-detail-btn {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
-
-body.dark-theme .favorite-detail-btn.active {
-    color: #ef4444 !important;
-}
-
-body.dark-theme .favorite-detail-btn:focus {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-body.dark-theme .place-header {
-    background: transparent !important;
-}
-
-/* ===== КАРТА-ЗАГЛУШКА ===== */
+/* КАРТА */
 body.dark-theme .map-placeholder-inner {
     background-color: #334155 !important;
 }
@@ -227,35 +164,32 @@ body.dark-theme .map-hint {
     color: #94a3b8 !important;
 }
 
-/* ===== РУЛЕТКА ===== */
-
+/* ===== РУЛЕТКА (СТРАНИЦА ПОИСКА СОБЕСЕДНИКА) ===== */
 body.dark-theme .roulette-mode-btn {
     background: transparent !important;
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-body.dark-theme .roulette-mode-btn:hover {
-    background: transparent !important;
-    background-color: transparent !important;
-    transform: none !important;
 }
 
 body.dark-theme .roulette-mode-btn .btn-inner {
     background-color: #334155 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
 }
 
 body.dark-theme .roulette-mode-btn:last-child .btn-inner {
     background-color: #f97316 !important;
 }
 
-body.dark-theme .roulette-form {
-    background-color: #1e293b !important;
+body.dark-theme .roulette-mode-btn h2,
+body.dark-theme .roulette-mode-btn p {
+    color: white !important;
 }
 
-body.dark-theme .roulette-form h2,
-body.dark-theme .roulette-form label {
+/* ФОРМЫ РУЛЕТКИ */
+body.dark-theme .roulette-form {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+}
+
+body.dark-theme .roulette-form h2 {
     color: #e2e8f0 !important;
 }
 
@@ -263,28 +197,84 @@ body.dark-theme .roulette-form select,
 body.dark-theme .roulette-form input {
     background-color: #334155 !important;
     color: #e2e8f0 !important;
-    border-color: #0f172a !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .roulette-form select:focus,
+body.dark-theme .roulette-form input:focus {
+    border-color: #f97316 !important;
+    outline: none !important;
 }
 
 body.dark-theme .roulette-form button {
     background-color: #f97316 !important;
+    color: white !important;
 }
 
 body.dark-theme .roulette-form button:hover {
     background-color: #ea580c !important;
 }
 
-/* Экран найденного */
+/* ЭКРАН ПОИСКА (СЛОТ) */
+body.dark-theme .search-process {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 10px 30px #0000004d !important;
+}
+
+body.dark-theme .search-title {
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .search-process p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .back-btn {
+    background-color: #334155 !important;
+    color: white !important;
+}
+
+body.dark-theme .back-btn:hover {
+    background-color: #f97316 !important;
+}
+
+/* ЭКРАН НАЙДЕННОГО СОБЕСЕДНИКА */
+body.dark-theme #match-screen {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+}
+
+body.dark-theme .match-title {
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
 body.dark-theme .match-avatar img {
     border-color: #f97316 !important;
 }
 
+body.dark-theme .match-info p {
+    color: #e2e8f0 !important;
+    border-bottom-color: #334155 !important;
+}
+
+body.dark-theme .match-info p strong {
+    color: #f97316 !important;
+}
+
+body.dark-theme .match-username span {
+    color: #f97316 !important;
+}
+
 body.dark-theme .match-buttons button {
-    background-color: #f97316 !important;
+    background-color: #334155 !important;
+    color: white !important;
 }
 
 body.dark-theme .match-buttons button:hover {
-    background-color: #ea580c !important;
+    background-color: #f97316 !important;
 }
 
 /* ===== ПРОФИЛЬ И НАСТРОЙКИ ===== */
@@ -315,35 +305,7 @@ body.dark-theme .info-table td:first-child {
 }
 
 body.dark-theme .profile-avatar img {
-    border-color: #475569 !important;
-}
-
-body.dark-theme .profile-left-info strong {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .profile-left-info,
-body.dark-theme .edit-profile-info {
-    border-top-color: #334155 !important;
-}
-
-body.dark-theme .edit-profile-form .form-group label {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .edit-profile-form input,
-body.dark-theme .edit-profile-form textarea,
-body.dark-theme .edit-profile-form select {
-    background-color: #334155 !important;
-    color: #e2e8f0 !important;
-    border-color: #475569 !important;
-}
-
-body.dark-theme .edit-profile-form input:focus,
-body.dark-theme .edit-profile-form textarea:focus,
-body.dark-theme .edit-profile-form select:focus {
     border-color: #f97316 !important;
-    outline: none !important;
 }
 
 body.dark-theme .edit-profile-btn {
@@ -352,66 +314,6 @@ body.dark-theme .edit-profile-btn {
 }
 
 body.dark-theme .edit-profile-btn:hover {
-    background-color: #ea580c !important;
-}
-
-body.dark-theme .avatar-upload-label {
-    background: #f97316 !important;
-    color: white !important;
-}
-
-body.dark-theme .avatar-upload-label:hover {
-    background: #ea580c !important;
-}
-
-body.dark-theme .avatar-delete-btn {
-    background: #475569 !important;
-}
-
-body.dark-theme .avatar-delete-btn:hover {
-    background: #3b4657 !important;
-}
-
-/* Подписи "На сайте с:" и "ID:" — оранжевые */
-body.dark-theme .edit-profile-info strong {
-    color: #f97316 !important;
-}
-
-/* Сами значения (дата и число) — белые */
-body.dark-theme .edit-profile-info p {
-    color: #e2e8f0 !important;
-}
-
-/* ===== НАСТРОЙКИ ===== */
-body.dark-theme .settings-section {
-    border-bottom-color: #334155 !important;
-}
-
-body.dark-theme .settings-section h3 {
-    color: #f97316 !important;
-}
-
-body.dark-theme .setting-label {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .settings-container select {
-    background-color: #334155 !important;
-    color: #e2e8f0 !important;
-    border-color: #475569 !important;
-}
-
-body.dark-theme .settings-container select:focus {
-    border-color: #f97316 !important;
-    outline: none !important;
-}
-
-body.dark-theme .settings-container .save-btn {
-    background-color: #f97316 !important;
-    color: white !important;
-}
-
-body.dark-theme .settings-container .save-btn:hover {
     background-color: #ea580c !important;
 }
 
@@ -438,10 +340,6 @@ body.dark-theme .review-date {
     color: #e2e8f0 !important;
 }
 
-body.dark-theme .empty-reviews {
-    color: #94a3b8 !important;
-}
-
 /* ===== КНОПКИ ===== */
 body.dark-theme button,
 body.dark-theme .submit-bin,
@@ -454,354 +352,75 @@ body.dark-theme button:hover,
 body.dark-theme .submit-bin:hover,
 body.dark-theme .save-btn:hover {
     background-color: #ea580c !important;
-    transform: scale(1.02);
 }
 
-body.dark-theme .back-btn {
-    background-color: #334155 !important;
-    color: white !important;
-}
-
-body.dark-theme .back-btn:hover {
-    background-color: #f97316 !important;
-}
-
-/* ===== ВСЕ ССЫЛКИ В ТЁМНОЙ ТЕМЕ ===== */
+/* ===== ССЫЛКИ ===== */
 body.dark-theme a,
-body.dark-theme .back-link,
-body.dark-theme .settings-container a,
-body.dark-theme .settings-container .back-link {
+body.dark-theme .back-link {
     color: #f97316 !important;
 }
 
 body.dark-theme a:hover,
-body.dark-theme .back-link:hover,
-body.dark-theme .settings-container a:hover,
-body.dark-theme .settings-container .back-link:hover {
+body.dark-theme .back-link:hover {
     color: #ff8c42 !important;
 }
 
 /* ===== ВЫПАДАЮЩЕЕ МЕНЮ ===== */
-
 body.dark-theme .dropdown-content {
     background-color: #1e293b !important;
-    border-radius: 15px !important;
-    overflow: hidden;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    min-width: 180px;
-    margin-top: 10px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 10000;
 }
 
 body.dark-theme .dropdown-content a,
-body.dark-theme .dropdown-content form .dropdown-link {
-    color: #e2e8f0 !important;
-    padding: 12px 16px;
-    display: flex;
-    width: 100%;
-    background: none;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    font-family: 'Tobi';
-    font-size: 16px;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    text-align: left;
-    box-sizing: border-box;
-}
-
-body.dark-theme .dropdown-content form {
-    width: 100%;
-}
-
 body.dark-theme .dropdown-content .dropdown-link {
-    background-color: transparent !important;
+    color: #e2e8f0 !important;
 }
 
 body.dark-theme .dropdown-content a:hover,
-body.dark-theme .dropdown-content form .dropdown-link:hover {
+body.dark-theme .dropdown-content .dropdown-link:hover {
     background-color: #f97316 !important;
     color: white !important;
-}
-
-body.dark-theme .dropdown-content button {
-    all: unset;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    width: 100%;
-    color: #e2e8f0 !important;
-    font-family: 'Tobi';
-    font-size: 16px;
-    cursor: pointer;
-    box-sizing: border-box;
-}
-
-body.dark-theme .dropdown-content button:hover {
-    background-color: #f97316 !important;
-    color: white !important;
-}
-
-body.dark-theme .show {
-    display: block;
-}
-
-/* ===== УВЕДОМЛЕНИЯ ===== */
-body.dark-theme .notifications-content {
-    background-color: #1e293b !important;
-
-}
-
-body.dark-theme .notifications-header {
-    background-color: #334155 !important;
-    color: #e2e8f0 !important;
-    border-bottom: 1px solid #f97316 !important;
-}
-
-body.dark-theme .notification-item {
-    border-bottom-color: #334155 !important;
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .notification-item:hover {
-    background-color: #334155 !important;
-}
-
-body.dark-theme .notification-item.unread {
-    background-color: #0f172a !important;
-    border-left-color: #f97316 !important;
-}
-
-body.dark-theme .notification-empty {
-    color: #94a3b8 !important;
 }
 
 /* ===== ЧАТ ===== */
 body.dark-theme .chat-container {
-    background: #1e293b !important;
+    background-color: #1e293b !important;
 }
 
 body.dark-theme .chat-messages {
-    background: #0f172a !important;
-}
-
-body.dark-theme .message {
-    max-width: 70%;
-    padding: 10px 15px;
-    border-radius: 15px;
+    background-color: #0f172a !important;
 }
 
 body.dark-theme .message-mine {
-    background: #f97316 !important;
-    color: white !important;
-    border-bottom-right-radius: 5px;
-}
-
-body.dark-theme .message-other {
-    background: #334155 !important;
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .message-time {
-    opacity: 0.7;
-    font-size: 10px;
-    margin-top: 5px;
-}
-
-body.dark-theme .chat-input {
-    background: #1e293b !important;
-    border-top: 1px solid #334155 !important;
-}
-
-body.dark-theme .chat-input textarea {
-    background: #334155 !important;
-    border: 2px solid #475569 !important;
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .chat-input textarea:focus {
-    border-color: #f97316 !important;
-    outline: none !important;
-}
-
-body.dark-theme .chat-input button {
     background-color: #f97316 !important;
     color: white !important;
 }
 
-body.dark-theme .chat-input button:hover {
-    background-color: #ea580c !important;
+body.dark-theme .message-other {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
 }
 
 body.dark-theme .chat-header {
-    background: #334155 !important;
-}
-
-body.dark-theme .chat-header .back-link {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .chat-header .back-link:hover {
-    color: #f97316 !important;
-}
-
-body.dark-theme .chat-header h2 {
-    color: white !important;
-}
-
-/* ===== СТРАНИЦА ИЗБРАННОГО ===== */
-body.dark-theme .favorites-container h1 {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .favorite-card {
     background-color: #334155 !important;
-    border-color: #475569 !important;
 }
 
-body.dark-theme .favorite-card:hover {
-    background-color: #3b4a60 !important;
-}
-
-body.dark-theme .favorite-name {
-    color: #f97316 !important;
-}
-
-body.dark-theme .favorite-name:hover {
-    color: #ff8c42 !important;
-}
-
-body.dark-theme .favorite-address {
-    color: #94a3b8 !important;
-}
-
-body.dark-theme .favorite-price {
-    color: #22c55e !important;
-}
-
-body.dark-theme .remove-favorite {
-    background-color: #ef4444 !important;
-}
-
-body.dark-theme .remove-favorite:hover {
-    background-color: #dc2626 !important;
-}
-
-body.dark-theme .empty-favorites {
-    color: #94a3b8 !important;
-}
-
-/* ===== КОНТАКТЫ ===== */
-body.dark-theme .contacts-card {
+body.dark-theme .chat-input {
     background-color: #1e293b !important;
-    color: #e2e8f0 !important;
-    border: 1px solid #334155 !important;
+    border-top-color: #334155 !important;
 }
 
-body.dark-theme .contacts-card h2 {
-    color: #f97316 !important;
-}
-
-body.dark-theme .contacts-card p,
-body.dark-theme .contacts-card a {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .contacts-card a:hover {
-    color: #f97316 !important;
-}
-
-/* ===== СООБЩЕНИЯ (СПИСОК ДИАЛОГОВ) ===== */
-body.dark-theme .messages-container h1 {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .dialog-card {
+body.dark-theme .chat-input textarea {
     background-color: #334155 !important;
-    border-color: #475569 !important;
+    color: #e2e8f0 !important;
 }
 
-body.dark-theme .dialog-card:hover {
-    background-color: #3b4a60 !important;
-}
-
-body.dark-theme .dialog-name {
-    color: #f97316 !important;
-}
-
-body.dark-theme .dialog-last-message {
-    color: #94a3b8 !important;
-}
-
-body.dark-theme .dialog-unread {
-    background-color: #ef4444 !important;
-    color: white !important;
-}
-
-body.dark-theme .empty-messages {
-    color: #94a3b8 !important;
-}
-
-/* ===== АДАПТИВНОСТЬ ===== */
-@media (max-width: 900px) {
-    body.dark-theme .main-container {
-        flex-direction: column !important;
-    }
-    body.dark-theme .time-buttons {
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-    }
-    body.dark-theme .edit-profile-container {
-        flex-direction: column !important;
-    }
-}
-
-@media (max-width: 700px) {
-    body.dark-theme .menu {
-        display: none !important;
-    }
-    body.dark-theme .footer-content {
-        flex-direction: column !important;
-        text-align: center !important;
-    }
-    body.dark-theme .social-links {
-        align-items: center !important;
-    }
-}
-
-@media (max-width: 550px) {
-    body.dark-theme .logo {
-        display: none !important;
-    }
-    body.dark-theme .search {
-        max-width: 100% !important;
-    }
-}
-
-@media (max-width: 450px) {
-    body.dark-theme .panel .profile,
-    body.dark-theme .profile-icon,
-    body.dark-theme .messages-icon,
-    body.dark-theme .notifications-icon {
-        width: 50px !important;
-        height: 50px !important;
-    }
+body.dark-theme .chat-input button {
+    background-color: #f97316 !important;
 }
 
 /* ===== СКРОЛЛБАР ===== */
-body.dark-theme .places-panel::-webkit-scrollbar-track {
-    background: transparent !important;
-}
-
 body.dark-theme .places-panel::-webkit-scrollbar-thumb {
     background: #f97316 !important;
-    border-radius: 15px !important;
 }
 
 body.dark-theme .places-panel {
