@@ -30,22 +30,22 @@
         <button id="solo-btn" class="roulette-mode-btn">
             <div class="btn-inner">
                 <div class="btn-icon lottie-roulette-icon" id="oneperson-animation"></div>
-                <h2>Найти собеседника</h2>
+                <h2>Найти сообедника</h2>
                 <p>Обед вдвоём</p>
             </div>
         </button>
         <button id="group-btn" class="roulette-mode-btn">
             <div class="btn-inner">
                 <div class="btn-icon lottie-roulette-icon" id="twoperson-animation"></div>
-                <h2>Найти компанию</h2>
-                <p>Обед с друзьями</p>
+                <h2>Найти сообедников</h2>
+                <p>Обед с компанией</p>
             </div>
         </button>
     </div>
 
     <!-- ФОРМА ДЛЯ СОЛО-РЕЖИМА -->
     <div id="solo-form" class="roulette-form hidden">
-        <h2>Настройки поиска собеседника</h2>
+        <h2>Настройки поиска сообедника</h2>
         <form id="create-solo-form">
             {% csrf_token %}
             <select name="building" required>
@@ -87,15 +87,16 @@
     <!-- ПРОЦЕСС ПОИСКА -->
     <div id="search-process" class="search-process hidden">
         <h1 class="main-title">🎲 Обед - рулетка</h1>
+        <h2 class="search-title">Поиск сообедника...</h2>
         <div id="slot-animation" class="slot-search-icon"></div>
-        <p id="search-process-text">Подождите, поиск собеседника...</p>
+        <p id="search-process-text">Подождите, ищем подходящую компанию...</p>
         <button id="cancelSearchBtn" class="back-btn">← Назад</button>
     </div>
 
-    <!-- НАЙДЕН СОБЕСЕДНИК -->
+    <!-- НАЙДЕН СООБЕДНИКА -->
     <div id="match-screen" class="search-process hidden">
         <h1 class="main-title">🎲 Обед - рулетка</h1>
-        <h2 class="match-title">Найден собеседник!</h2>
+        <h2 class="match-title">Найден сообедник!</h2>
 
         <div class="match-card">
             <div class="match-avatar">

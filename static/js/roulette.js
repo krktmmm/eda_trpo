@@ -70,7 +70,7 @@ function showSearchProcess() {
     soloForm.classList.add('hidden');
     groupForm.classList.add('hidden');
 
-    searchProcessText.innerText = 'Подождите, поиск собеседника...';
+    searchProcessText.innerText = 'Подождите, поиск сообедника...';
     searchProcess.classList.remove('hidden');
 
     initSlotAnimation();
