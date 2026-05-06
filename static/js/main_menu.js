@@ -96,4 +96,18 @@ function loadAnimationsIfEnabled() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadAnimationsIfEnabled);
+document.addEventListener('DOMContentLoaded', function() {
+    loadAnimationsIfEnabled();
+    
+    // Проверка авторизации для кнопки "Обед-рулетка" на главной
+    const rouletteLink = document.querySelector('a[href="/roulette/"]');
+    if (rouletteLink) {
+        rouletteLink.addEventListener('click', function(e) {
+            if (document.body.getAttribute('data-user-authenticated') !== 'true') {
+                e.preventDefault();
+                alert('Войдите или зарегистрируйтесь, чтобы найти компанию для обеда');
+                window.location.href = '/accounts/login/';
+            }
+        });
+    }
+});

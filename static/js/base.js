@@ -122,3 +122,19 @@ if (notifIcon) {
 
 // Функция для вызова из рулетки (глобальная)
 window.addNotification = addNotification;
+
+// Очистка настроек при выходе из аккаунта
+document.getElementById('logout-form')?.addEventListener('submit', function() {
+    localStorage.removeItem('theme');
+    localStorage.removeItem('fontSize');
+    localStorage.removeItem('animations');
+});
+
+// Проверка авторизации для кнопки "Чат" в меню
+document.getElementById('messagesIcon')?.addEventListener('click', function(e) {
+    if (document.body.getAttribute('data-user-authenticated') !== 'true') {
+        e.preventDefault();
+        alert('Войдите или зарегистрируйтесь, чтобы открыть чат');
+        window.location.href = '/accounts/login/';
+    }
+});

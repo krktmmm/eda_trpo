@@ -66,6 +66,50 @@
     </form>
 </div>
 
-<script src="{% static 'settings.js' %}"></script>
+<script>
+(function() {
+    const themeSelect = document.getElementById('theme-select');
+    const fontSizeSelect = document.getElementById('font-size-select');
+    
+    if (!themeSelect && !fontSizeSelect) return;
+    
+    // Сохраняем исходные значения
+    const originalTheme = themeSelect.value;
+    const originalFontSize = fontSizeSelect.value;
+    
+    // Предпросмотр темы
+    themeSelect.addEventListener('change', function() {
+        document.body.classList.remove('dark-theme');
+        if (this.value === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    });
+    
+    // Предпросмотр шрифта
+    fontSizeSelect.addEventListener('change', function() {
+        document.body.classList.remove('font-small', 'font-medium', 'font-large');
+        if (this.value === 'small') document.body.classList.add('font-small');
+        else if (this.value === 'large') document.body.classList.add('font-large');
+        else document.body.classList.add('font-medium');
+    });
+    
+    // Восстановление при уходе
+    function restore() {
+        document.body.classList.remove('dark-theme', 'font-small', 'font-medium', 'font-large');
+        if (originalTheme === 'dark') document.body.classList.add('dark-theme');
+        if (originalFontSize === 'small') document.body.classList.add('font-small');
+        else if (originalFontSize === 'large') document.body.classList.add('font-large');
+        else document.body.classList.add('font-medium');
+    }
+    
+    // При уходе со страницы
+    window.onbeforeunload = restore;
+    
+    // При отправке формы — отменяем восстановление
+    document.getElementById('settings-form').onsubmit = function() {
+        window.onbeforeunload = null;
+    };
+})();
+</script>
 
 {% endblock %}

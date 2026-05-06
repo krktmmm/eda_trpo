@@ -18,7 +18,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body class="{% if user.is_authenticated and user.profile.theme == 'dark' %}dark-theme{% endif %} {% if user.is_authenticated %}font-{{ user.profile.font_size|default:'medium' }}{% else %}font-medium{% endif %} {% if user.is_authenticated and user.profile.animations == 'off' %}animations-off{% endif %}">
+<body class="{% if user.is_authenticated and user.profile.theme == 'dark' %}dark-theme{% endif %} {% if user.is_authenticated %}font-{{ user.profile.font_size|default:'medium' }}{% else %}font-medium{% endif %} {% if user.is_authenticated and user.profile.animations == 'off' %}animations-off{% endif %}" data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">
     <!-- ШАПКА САЙТА -->
     <div class="navigation">
         <div class="panel">
@@ -76,7 +76,7 @@
                         <a href="/favorites/">❤️ Избранное</a>
                         <a href="/profile/settings/">⚙️ Настройки</a>
                         <div class="dropdown-divider"></div>
-                        <form action="/accounts/logout/" method="post">
+                        <form action="/accounts/logout/" method="post" id="logout-form">
                             {% csrf_token %}
                             <button type="submit" class="dropdown-link">🚪 Выход</button>
                         </form>

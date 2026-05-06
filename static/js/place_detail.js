@@ -2,6 +2,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const favBtn = document.getElementById('favorite-detail-btn');
     if (favBtn) {
         favBtn.addEventListener('click', function() {
+            const isAuthenticated = document.body.getAttribute('data-user-authenticated') === 'true';
+            if (!isAuthenticated) {
+                alert('Войдите или зарегистрируйтесь, чтобы добавлять в избранное');
+                window.location.href = '/accounts/login/';
+                return;
+            }
+            
             const placeId = this.dataset.placeId;
             const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
@@ -21,9 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.innerHTML = '🤍';
                     this.classList.remove('active');
                 }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
             });
         });
     }

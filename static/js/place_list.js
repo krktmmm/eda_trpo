@@ -83,6 +83,14 @@ document.querySelectorAll('.favorite-btn').forEach(btn => {
         e.preventDefault();
         e.stopPropagation();
         
+        // Проверка на авторизацию
+        const isAuthenticated = document.body.getAttribute('data-user-authenticated') === 'true';
+        if (!isAuthenticated) {
+            alert('Войдите или зарегистрируйтесь, чтобы добавлять в избранное');
+            window.location.href = '/accounts/login/';
+            return;
+        }
+        
         const placeId = this.dataset.placeId;
         const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
         
@@ -102,9 +110,6 @@ document.querySelectorAll('.favorite-btn').forEach(btn => {
                 this.innerHTML = '🤍';
                 this.classList.remove('active');
             }
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
         });
     });
 });
