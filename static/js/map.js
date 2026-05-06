@@ -8,7 +8,7 @@ if (mapContainer) {
 
     // ===== КОРПУСА =====
     // Корпус №1
-    L.marker([55.012836, 82.950580], {
+    L.marker([55.013159, 82.950629], {
         icon: L.divIcon({
             className: 'building-marker',
             html: '<div class="building-label">1</div>',
@@ -17,7 +17,7 @@ if (mapContainer) {
     }).addTo(map).bindPopup('🏰 СибГУТИ — корпус №1');
 
     // Корпус №3
-    L.marker([55.013203, 82.947836], {
+    L.marker([55.013816, 82.948528], {
         icon: L.divIcon({
             className: 'building-marker',
             html: '<div class="building-label">3</div>',
@@ -26,7 +26,7 @@ if (mapContainer) {
     }).addTo(map).bindPopup('⛪️ СибГУТИ — корпус №3');
 
     // Корпус №5
-    L.marker([55.016966, 82.949674], {
+    L.marker([55.016970, 82.949707], {
         icon: L.divIcon({
             className: 'building-marker',
             html: '<div class="building-label">5</div>',
