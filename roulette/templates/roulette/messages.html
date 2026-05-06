@@ -17,7 +17,9 @@
             <a href="{% url 'dialog_detail' d.dialog.id %}" class="dialog-card">
                 <div class="dialog-avatar">
                     {% if d.other_user.profile.avatar %}
-                        <img src="{{ d.other_user.profile.avatar.url }}" alt="{{ d.other_user.username }}">
+                        <img src="{{ d.other_user.profile.avatar.url }}?v={{ d.other_user.id }}" 
+                             alt="{{ d.other_user.username }}"
+                             onerror="this.onerror=null; this.src=document.body.classList.contains('dark-theme') ? '/static/images/default_avatar_dark_theme.jpg' : '/static/images/default_avatar.jpg';">
                     {% else %}
                         <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
                     {% endif %}

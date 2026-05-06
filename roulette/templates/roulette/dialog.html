@@ -15,7 +15,11 @@
         <div class="chat-user-info">
             <div class="chat-avatar">
                 {% if other_user.profile.avatar %}
-                    <img src="{{ other_user.profile.avatar.url }}" alt="{{ other_user.username }}">
+                    <img src="{{ other_user.profile.avatar.url }}?v={{ other_user.id }}" 
+                         alt="{{ other_user.username }}"
+                         onerror="this.onerror=null; this.src=document.body.classList.contains('dark-theme') ? '/static/images/default_avatar_dark_theme.jpg' : '/static/images/default_avatar.jpg';">
+                {% elif user.profile.theme == 'dark' %}
+                    <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Аватар">
                 {% else %}
                     <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
                 {% endif %}

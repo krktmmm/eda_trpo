@@ -138,3 +138,19 @@ document.getElementById('messagesIcon')?.addEventListener('click', function(e) {
         window.location.href = '/accounts/login/';
     }
 });
+
+// Обработка ошибок загрузки аватарок
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', function() {
+            // Если картинка не загрузилась — ставим дефолтную под тему
+            if (this.src.includes('media/avatars/') || this.src.includes('avatars/')) {
+                const isDarkTheme = document.body.classList.contains('dark-theme');
+                this.src = isDarkTheme 
+                    ? '/static/images/default_avatar_dark_theme.jpg' 
+                    : '/static/images/default_avatar.jpg';
+                this.onerror = null; // убираем обработчик, чтобы не зациклить
+            }
+        });
+    });
+});

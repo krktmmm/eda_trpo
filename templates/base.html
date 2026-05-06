@@ -72,7 +72,9 @@
                 {% if user.is_authenticated %}
                     <div class="profile-icon" id="profileBtn">
                         {% if user.profile.avatar %}
-                            <img src="{{ user.profile.avatar.url }}" alt="Аватар">
+                            <img src="{{ user.profile.avatar.url }}?v={{ user.id }}" alt="Аватар">
+                        {% elif user.profile.theme == 'dark' %}
+                            <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Профиль">
                         {% else %}
                             <img src="{% static 'images/default_avatar.jpg' %}" alt="Профиль">
                         {% endif %}

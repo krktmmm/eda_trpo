@@ -36,6 +36,15 @@ body {
     min-height: 60vh;
 }
 
+.profile-avatar img,
+.profile-icon img,
+.panel .profile img,
+.dialog-avatar img {
+    background-color: #5F9EA0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
 /* РАЗМЕРЫ ШРИФТА */
 .font-small {
     font-size: 14px;

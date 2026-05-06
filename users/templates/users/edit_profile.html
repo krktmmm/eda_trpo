@@ -14,7 +14,7 @@
     <div class="edit-profile-left">
         <div class="profile-avatar">
         <img id="avatar-preview" 
-             src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/default_avatar.jpg' %}{% endif %}"
+             src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}?v={{ user.id }}{% elif user.profile.theme == 'dark' %}{% static 'images/default_avatar_dark_theme.jpg' %}{% else %}{% static 'images/default_avatar.jpg' %}{% endif %}"
              alt="Аватар">
     </div>
         
