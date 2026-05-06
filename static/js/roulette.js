@@ -7,6 +7,7 @@ const searchProcess = document.getElementById('search-process');
 const slotContainer = document.getElementById('slot-animation');
 const cancelSearchBtn = document.getElementById('cancelSearchBtn');
 const searchProcessText = document.getElementById('search-process-text');
+const notFoundScreen = document.getElementById('not-found-screen');
 const matchScreen = document.getElementById('match-screen');
 
 let slotAnimation = null;
@@ -84,7 +85,6 @@ function showSearchProcess() {
 
 function hideSearchProcess() {
     searchProcess.classList.add('hidden');
-
     if (slotAnimation) {
         slotAnimation.stop();
     }
@@ -115,7 +115,6 @@ function showMatchScreen(match) {
 async function startSolo(e) {
     e.preventDefault();
     
-    // Блокируем кнопку
     const submitBtn = document.getElementById('start-solo');
     if (submitBtn) {
         submitBtn.disabled = true;
@@ -123,6 +122,7 @@ async function startSolo(e) {
     }
     
     showSearchProcess();
+    scrollToElement(searchProcess);
     
     try {
         const form = document.getElementById('create-solo-form');
@@ -139,34 +139,51 @@ async function startSolo(e) {
             })
         });
         
+        // Ждём минимум MIN_SEARCH_TIME для анимации
+        const searchStart = Date.now();
         const res = await fetch('/roulette/api/solo/find/');
         const match = await res.json();
+        
+        const elapsed = Date.now() - searchStart;
+        if (elapsed < MIN_SEARCH_TIME) {
+            await new Promise(resolve => setTimeout(resolve, MIN_SEARCH_TIME - elapsed));
+        }
         
         if (match.status === 'found') {
             currentMatchData = match;
             
-            searchTimer = setTimeout(() => {
-                stopSlotOnWin();
-                searchProcessText.innerText = 'Собеседник найден!';
-                
+            stopSlotOnWin();
+            searchProcessText.innerText = 'Собеседник найден!';
+            
+            setTimeout(() => {
+                hideSearchProcess();
+                showMatchScreen(match);
                 setTimeout(() => {
-                    hideSearchProcess();
-                    showMatchScreen(match);
-                    
-                    if (window.addNotification) {
-                        window.addNotification(
-                            `🎉 Найден собеседник: ${match.username}!`,
-                            () => { window.location.href = '/roulette/'; }
-                        );
-                    }
-                }, 1000);
-            }, MIN_SEARCH_TIME);
+                    matchScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+                
+                if (window.addNotification) {
+                    window.addNotification(
+                        `🎉 Найден собеседник: ${match.username}!`,
+                        () => { window.location.href = '/roulette/'; }
+                    );
+                }
+            }, 1000);
         } else {
-            hideSearchProcess();
-            alert('Не найдено подходящих собеседников');
+            stopSlotOnWin();
+            setTimeout(() => {
+                hideSearchProcess();
+                document.querySelector('.greeting').style.display = 'none';
+                document.querySelector('.roulette-buttons').style.display = 'none';
+                soloForm.classList.add('hidden');
+                groupForm.classList.add('hidden');
+                notFoundScreen.classList.remove('hidden');
+                setTimeout(() => {
+                    notFoundScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+            }, 2000);
         }
     } finally {
-        // Разблокировка кнопки в любом случае
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = '🎲 Начать поиск';
@@ -176,36 +193,54 @@ async function startSolo(e) {
 
 async function startGroup(e) {
     e.preventDefault();
+    
+    const submitBtn = document.getElementById('start-group');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Поиск...';
+    }
+    
     showSearchProcess();
+    scrollToElement(searchProcess);
 
-    const form = document.getElementById('create-group-form');
+    try {
+        const form = document.getElementById('create-group-form');
 
-    await fetch('/roulette/api/group/create/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        body: JSON.stringify({
-            building: form.building.value,
-            budget: form.budget.value,
-            needed_people: form.needed_people.value
-        })
-    });
+        await fetch('/roulette/api/group/create/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                building: form.building.value,
+                budget: form.budget.value,
+                needed_people: form.needed_people.value
+            })
+        });
 
-    const res = await fetch('/roulette/api/group/find/');
-    const match = await res.json();
+        // Ждём минимум MIN_SEARCH_TIME для анимации
+        const searchStart = Date.now();
+        const res = await fetch('/roulette/api/group/find/');
+        const match = await res.json();
+        
+        const elapsed = Date.now() - searchStart;
+        if (elapsed < MIN_SEARCH_TIME) {
+            await new Promise(resolve => setTimeout(resolve, MIN_SEARCH_TIME - elapsed));
+        }
 
-    if (match.status === 'found') {
-        currentMatchData = match;
+        if (match.status === 'found') {
+            currentMatchData = match;
 
-        searchTimer = setTimeout(() => {
             stopSlotOnWin();
             searchProcessText.innerText = 'Компания найдена!';
 
             setTimeout(() => {
                 hideSearchProcess();
                 showMatchScreen(match);
+                setTimeout(() => {
+                    matchScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
 
                 if (window.addNotification) {
                     window.addNotification(
@@ -216,11 +251,25 @@ async function startGroup(e) {
                     );
                 }
             }, 1000);
-
-        }, MIN_SEARCH_TIME);
-    } else {
-        hideSearchProcess();
-        alert('Не найдено подходящих компаний');
+        } else {
+            stopSlotOnWin();
+            setTimeout(() => {
+                hideSearchProcess();
+                document.querySelector('.greeting').style.display = 'none';
+                document.querySelector('.roulette-buttons').style.display = 'none';
+                soloForm.classList.add('hidden');
+                groupForm.classList.add('hidden');
+                notFoundScreen.classList.remove('hidden');
+                setTimeout(() => {
+                    notFoundScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+            }, 2000);
+        }
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = '🎲 Начать поиск';
+        }
     }
 }
 
@@ -294,54 +343,124 @@ document.getElementById('screen-again').onclick = () => {
 
 document.getElementById('screen-cancel').onclick = () => {
     matchScreen.classList.add('hidden');
-    location.href = '/roulette/';
+    document.querySelector('.greeting').style.display = '';
+    document.querySelector('.roulette-buttons').style.display = '';
 };
 
-// Проверка анимаций
-const animationsEnabled = document.body.getAttribute('data-animations') !== 'off' && 
-                          !document.body.classList.contains('animations-off');
-
-// Анимации для кнопок рулетки
-const onepersonIcon = document.getElementById('oneperson-animation');
-const twopersonIcon = document.getElementById('twoperson-animation');
-
-if (onepersonIcon && twopersonIcon) {
-    if (!animationsEnabled) {
-        // Просто показываем эмодзи
-        onepersonIcon.innerHTML = '<span style="font-size: 100px;">👤</span>';
-        twopersonIcon.innerHTML = '<span style="font-size: 120px;">👥</span>';
-    } else {
-        // Анимации включены
-        const onepersonAnimation = lottie.loadAnimation({
-            container: onepersonIcon,
-            renderer: 'svg',
-            loop: false,
-            autoplay: false,
-            path: '/static/animations/obed-ruletka/oneperson.json'
-        });
-        const twopersonAnimation = lottie.loadAnimation({
-            container: twopersonIcon,
-            renderer: 'svg',
-            loop: false,
-            autoplay: false,
-            path: '/static/animations/obed-ruletka/twoperson.json'
-        });
-        onepersonAnimation.addEventListener('DOMLoaded', () => onepersonAnimation.goToAndStop(0, true));
-        twopersonAnimation.addEventListener('DOMLoaded', () => twopersonAnimation.goToAndStop(0, true));
-        soloBtn.addEventListener('mouseenter', () => { onepersonAnimation.goToAndPlay(0, true); });
-        groupBtn.addEventListener('mouseenter', () => { twopersonAnimation.goToAndPlay(0, true); });
-        soloBtn.addEventListener('mouseleave', () => onepersonAnimation.goToAndStop(0, true));
-        groupBtn.addEventListener('mouseleave', () => twopersonAnimation.goToAndStop(0, true));
+function scrollToElement(element) {
+    if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 }
 
-// Слот-машина
+// Функция проверки, включены ли анимации
+function areAnimationsEnabled() {
+    const localSetting = localStorage.getItem('animations');
+    if (localSetting !== null) {
+        return localSetting !== 'off';
+    }
+    const body = document.body;
+    if (body && body.classList) {
+        return !body.classList.contains('animations-off');
+    }
+    return true;
+}
+
+// Загрузка статичного Lottie
+function loadStaticLottie(container, path, frame = 0) {
+    container.innerHTML = '';
+    
+    const animation = lottie.loadAnimation({
+        container: container,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: path
+    });
+    
+    animation.addEventListener('DOMLoaded', () => {
+        if (frame === 'last') {
+            animation.goToAndStop(animation.totalFrames - 1, true);
+        } else {
+            animation.goToAndStop(frame, true);
+        }
+        container.style.pointerEvents = 'none';
+    });
+    
+    return animation;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const onepersonIcon = document.getElementById('oneperson-animation');
+    const twopersonIcon = document.getElementById('twoperson-animation');
+    
+    if (!areAnimationsEnabled()) {
+        if (onepersonIcon) loadStaticLottie(onepersonIcon, '/static/animations/obed-ruletka/oneperson.json', 0);
+        if (twopersonIcon) loadStaticLottie(twopersonIcon, '/static/animations/obed-ruletka/twoperson.json', 0);
+    } else {
+        if (onepersonIcon) {
+            const onepersonAnimation = lottie.loadAnimation({
+                container: onepersonIcon,
+                renderer: 'svg',
+                loop: false,
+                autoplay: false,
+                path: '/static/animations/obed-ruletka/oneperson.json'
+            });
+            onepersonAnimation.addEventListener('DOMLoaded', () => onepersonAnimation.goToAndStop(0, true));
+            soloBtn.addEventListener('mouseenter', () => onepersonAnimation.goToAndPlay(0, true));
+            soloBtn.addEventListener('mouseleave', () => onepersonAnimation.goToAndStop(0, true));
+        }
+        if (twopersonIcon) {
+            const twopersonAnimation = lottie.loadAnimation({
+                container: twopersonIcon,
+                renderer: 'svg',
+                loop: false,
+                autoplay: false,
+                path: '/static/animations/obed-ruletka/twoperson.json'
+            });
+            twopersonAnimation.addEventListener('DOMLoaded', () => twopersonAnimation.goToAndStop(0, true));
+            groupBtn.addEventListener('mouseenter', () => twopersonAnimation.goToAndPlay(0, true));
+            groupBtn.addEventListener('mouseleave', () => twopersonAnimation.goToAndStop(0, true));
+        }
+    }
+});
+
 const originalInitSlot = initSlotAnimation;
 initSlotAnimation = function() {
     if (!slotContainer) return;
-    if (!animationsEnabled) {
-        slotContainer.innerHTML = '<span style="font-size: 130px;">🎰</span>';
+    if (!areAnimationsEnabled()) {
+        loadStaticLottie(slotContainer, '/static/animations/obed-ruletka/SlotMachine.json', 0);
         return;
     }
     originalInitSlot();
 };
+
+// Кнопка "Не искать"
+document.getElementById('not-found-cancel')?.addEventListener('click', () => {
+    notFoundScreen.classList.add('hidden');
+    document.querySelector('.greeting').style.display = '';
+    document.querySelector('.roulette-buttons').style.display = '';
+    
+    // Отменяем заявку
+    if (currentSearchMode === 'solo') {
+        fetch('/roulette/api/solo/create/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ building: '1', budget: 'any' })
+        });
+    }
+});
+
+// Кнопка "Попробовать ещё раз"
+document.getElementById('not-found-again')?.addEventListener('click', () => {
+    notFoundScreen.classList.add('hidden');
+    
+    if (currentSearchMode === 'group') {
+        document.getElementById('create-group-form').dispatchEvent(new Event('submit'));
+    } else {
+        document.getElementById('create-solo-form').dispatchEvent(new Event('submit'));
+    }
+});

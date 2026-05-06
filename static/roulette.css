@@ -176,7 +176,7 @@
     height: 140px;
 }
 
-/*  ЭКРАН ПРОЦЕССА ПОИСКА */
+/* ЭКРАН ПРОЦЕССА ПОИСКА */
 .search-process {
     margin-top: 20px;
     background: white;
@@ -184,7 +184,6 @@
     padding: 40px 30px;
     box-shadow: 0 10px 30px #0000001a;
     border: 1px solid #e0e0e0;
-    
     max-width: 850px;
     margin-left: auto;
     margin-right: auto;
@@ -243,8 +242,6 @@
 }
 
 /* ЭКРАН НАЙДЕННОГО СОБЕСЕДНИКА */
-
-/* Контейнер всего экрана */
 #match-screen {
     margin-top: 20px;
     background: white;
@@ -279,7 +276,7 @@
     margin-bottom: 35px;
 }
 
-/* Блок с аватаром (левая часть) - УВЕЛИЧЕННЫЙ */
+/* Блок с аватаром (левая часть) */
 .match-avatar {
     flex-shrink: 0;
     width: 260px;
@@ -370,7 +367,87 @@
     min-width: 160px;
 }
 
+                                 /* ВИКА ЭТО КАТЯ СДЕЛАЛА */
 .match-buttons button:hover {
     background: #f99039;
+    transform: scale(1.02);
+}
+
+/* ЭКРАН "СОБЕСЕДНИК НЕ НАЙДЕН" */
+#not-found-screen {
+    margin-top: 20px;
+    background: white;
+    border-radius: 15px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px #0000001a;
+    border: 1px solid #e0e0e0;
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 40px;
+}
+
+#not-found-screen h2 {
+    font-size: 28px;
+    color: #2c3e50;
+    font-family: 'Tobi';
+    margin-bottom: 30px;
+    border-bottom: 3px solid #f99039;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.not-found-emoji {
+    font-size: 80px;
+    margin: 20px 0;
+}
+
+.not-found-buttons {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+#not-found-cancel {
+    background: #5F9EA0;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    min-width: 160px;
+}
+
+#not-found-cancel:hover {
+    background: #f99039;
+    transform: scale(1.02);
+}
+
+#not-found-again {
+    background: #f99039;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    min-width: 160px;
+}
+
+#not-found-again:hover {
+    background: #5F9EA0;
     transform: scale(1.02);
 }
