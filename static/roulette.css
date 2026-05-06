@@ -87,7 +87,6 @@
 }
 
 /* ВЫПАДАЮЩИЕ СПИСКИ И ПОЛЯ ВВОДА */
-/* Основной стиль для select */
 .roulette-form select, 
 .roulette-form input { 
     width: 100%;
@@ -167,49 +166,71 @@
 
 /* АНИМАЦИЯ ДЛЯ ИКОНОК РУЛЕТКИ */
 .lottie-roulette-icon {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 140px;
 }
 
 /* РАЗМЕР ДЛЯ ИКОНКИ С ДВУМЯ ЧЕЛОВЕКАМИ */
 #twoperson-animation {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
 }
 
-/* ЭКРАН ПРОЦЕССА ПОИСКА */
+/*  ЭКРАН ПРОЦЕССА ПОИСКА */
 .search-process {
-    min-height: 55vh;
+    margin-top: 20px;
+    background: white;
+    border-radius: 15px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px #0000001a;
+    border: 1px solid #e0e0e0;
+    
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    min-height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding-top: 50px;
-    text-align: center;
+    justify-content: center;
+    padding-top: 40px;
 }
 
-/* ИКОНКА-СЛОТ ВО ВРЕМЯ ПОИСКА */
+/* ЗАГОЛОВОК ПРОЦЕССА ПОИСКА */
+.search-title {
+    font-size: 28px !important;
+    color: #2c3e50;
+    font-family: 'Tobi';
+    margin-bottom: 30px;
+    border-bottom: 3px solid #f99039;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+/* ИКОНКА-РУЛЕТКА ВО ВРЕМЯ ПОИСКА */
 .slot-search-icon {
-    width: 130px;
-    height: 130px;
+    width: 180px;
+    height: 180px;
+    margin: 20px auto;
 }
 
 /* ТЕКСТ ВО ВРЕМЯ ПОИСКА */
 .search-process p {
     margin-top: 20px;
-    font-size: 32px;
+    font-size: 24px;
     color: #2c3f51;
     font-family: 'Tobi';
 }
 
 /* КНОПКА "НАЗАД" */
 .back-btn {
-    margin-top: 10px;
-    padding: 10px 20px;
+    margin-top: 30px;
+    padding: 12px 28px;
     background: #5F9EA0;
     color: #ffffff;
     border: none;
-    border-radius: 30px;
+    border-radius: 15px;
     font-size: 18px;
     font-family: 'Tobi';
     cursor: pointer;
@@ -218,6 +239,7 @@
 
 .back-btn:hover {
     background: #f99039;
+    transform: scale(1.02);
 }
 
 /* ЭКРАН НАЙДЕННОГО СОБЕСЕДНИКА */
@@ -228,20 +250,11 @@
     background: white;
     border-radius: 15px;
     padding: 40px 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px #0000001a;
     border: 1px solid #e0e0e0;
     max-width: 850px;
     margin-left: auto;
     margin-right: auto;
-    text-align: center;
-}
-
-/* Заголовок "Обед - рулетка" */
-#match-screen .main-title {
-    font-family: 'Tobi';
-    font-size: 64px;
-    color: #2c3f51;
-    margin-bottom: 25px;
     text-align: center;
 }
 
@@ -250,7 +263,7 @@
     font-size: 28px !important;
     color: #2c3e50;
     font-family: 'Tobi';
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     border-bottom: 3px solid #f99039;
     display: inline-block;
     padding-bottom: 10px;
