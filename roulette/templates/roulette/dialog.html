@@ -11,8 +11,17 @@
 {% block content %}
 <div class="chat-container">
     <div class="chat-header">
-        <a href="{% url 'messages_list' %}" class="back-link">← Назад</a>
-        <h2>💬 {{ other_user.username }}</h2>
+        <a href="{% url 'messages_list' %}" class="back-link">←</a>
+        <div class="chat-user-info">
+            <div class="chat-avatar">
+                {% if other_user.profile.avatar %}
+                    <img src="{{ other_user.profile.avatar.url }}" alt="{{ other_user.username }}">
+                {% else %}
+                    <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
+                {% endif %}
+            </div>
+            <h2>{{ other_user.username }}</h2>
+        </div>
     </div>
     
     <div class="chat-messages" id="chat-messages">

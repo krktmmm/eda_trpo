@@ -23,11 +23,10 @@
     height: fit-content;
 }
 
-/* Аватар */
-.profile-avatar {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 20px;
+/* АВАТАР В ШАПКЕ ЧАТА */
+.chat-avatar {
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     cursor: pointer;
     overflow: hidden;
@@ -36,15 +35,33 @@
     align-items: center;
     justify-content: center;
     transition: 0.3s;
+    flex-shrink: 0;
 }
 
-.profile-avatar img {
+.chat-avatar img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #4b8082;
+    border: 2px solid #4b8082;
     box-sizing: border-box;
+}
+
+.chat-avatar:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+/* ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ В ШАПКЕ */
+.chat-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chat-user-info h2 {
+    margin: 0;
+    font-size: 20px;
 }
 
 
