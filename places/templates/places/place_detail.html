@@ -30,7 +30,7 @@
             <div class="review-card">
                 <div class="review-header">
                     <strong>{{ review.user.username }}</strong>
-                    <span class="review-rating">⭐ {{ review.rating }}</span>
+                    <span class="review-rating">{{ review.stars_display }}</span>
                     <small>{{ review.created_at|date:"d.m.Y" }}</small>
                 </div>
                 <p class="review-text">{{ review.text }}</p>
