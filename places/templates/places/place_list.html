@@ -40,10 +40,10 @@
     <!-- ПРАВАЯ ПАНЕЛЬ -->
     <div class="places-panel">
         <!-- КАРТА-ЗАГЛУШКА (ВИДНА ИЗНАЧАЛЬНО) -->
-        <div id="map-placeholder">
+         <div id="map-placeholder">
             <h2>🗺️ Карта заведений</h2>
             <div class="map-placeholder-inner">
-                <p>📍 Здесь будет карта с метками заведений</p>
+                <div id="places-map"></div>
             </div>
             <p class="map-hint">Выберите корпус, чтобы увидеть список заведений</p>
         </div>
@@ -78,6 +78,8 @@
         </div>
     </div>
 </div>
+
+{{ places_for_map|json_script:"places-map-data" }}
 
 <script src="{% static 'js/place_list.js' %}"></script>
 

@@ -36,12 +36,26 @@ def place_list(request):
     # Получаем список ID заведений, которые пользователь добавил в избранное
     favorited_ids = []
     if request.user.is_authenticated:
-        favorited_ids = Favorite.objects.filter(user=request.user).values_list('place_id', flat=True)
+        favorited_ids = Favorite.objects.filter(
+            user=request.user
+        ).values_list('place_id', flat=True)
+    places_for_map = []
+    for place in places:
+        if place.latitude and place.longitude:
+            places_for_map.append({
+                "id": place.id,
+                "name": place.name,
+                "address": place.address,
+                "lat": place.latitude,
+                "lng": place.longitude,
+                "nearest_building": place.nearest_building,
+            })
 
     return render(request, 'places/place_list.html', {
         'places': places,
         'favorited_ids': list(favorited_ids),
         'search_query': search_query,
+        'places_for_map': places_for_map,
     })
 
 def roulette(request):

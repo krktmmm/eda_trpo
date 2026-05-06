@@ -128,6 +128,37 @@
     color: #666;
 }
 
+/* Алина*/
+#places-map {
+    height: 400px;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.leaflet-control-attribution svg,
+.leaflet-control-attribution img {
+    display: none !important;
+}
+
+.building-label {
+    width: 30px;
+    height: 30px;
+    background: #f99039;
+    color: white;
+    border-radius: 50%;
+    border: 3px solid white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Tobi';
+    font-size: 18px;
+    font-weight: bold;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
 /* КАРТОЧКА ОДНОГО ЗАВЕДЕНИЯ */
 .place-card {
     border-bottom: 1px solid #eee;   /* Серая линия-разделитель между заведениями */

@@ -70,7 +70,11 @@ backBtn.addEventListener('click', function () {
     selectedTime = null;
 
     timeScreen.classList.add('hidden');
+    timeScreen.classList.remove('show-flex');
     buildingScreen.classList.remove('hidden');
+
+    mapPlaceholder.style.display = 'block';
+    placesContainer.style.display = 'none';
 
     placeCards.forEach(card => {
         card.style.display = 'block';
