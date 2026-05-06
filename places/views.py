@@ -5,6 +5,9 @@ from django.http import JsonResponse
 from django.contrib import messages
 from .models import Place, Review
 from .models import Favorite
+from django.http import JsonResponse
+from .models import Place
+import difflib
 
 def main_menu(request):
     """Стартовая страница с выбором: заведения или рулетка"""
@@ -12,16 +15,33 @@ def main_menu(request):
 
 def place_list(request):
     """Страница со списком всех заведений (выбор корпуса и времени)"""
+    search_query = request.GET.get('search', '').strip()
     places = Place.objects.all().order_by('name')
-    
+    if search_query:
+        search_normalized = (
+            search_query
+            .replace('ё', 'е')
+            .replace('Ё', 'Е')
+            .lower()
+        )
+        places = [
+            place for place in places
+            if search_normalized in (
+                place.name
+                .replace('ё', 'е')
+                .replace('Ё', 'Е')
+                .lower()
+            )
+        ]
     # Получаем список ID заведений, которые пользователь добавил в избранное
     favorited_ids = []
     if request.user.is_authenticated:
         favorited_ids = Favorite.objects.filter(user=request.user).values_list('place_id', flat=True)
-    
+
     return render(request, 'places/place_list.html', {
         'places': places,
         'favorited_ids': list(favorited_ids),
+        'search_query': search_query,
     })
 
 def roulette(request):
@@ -99,3 +119,35 @@ def toggle_favorite(request, place_id):
         is_favorited = True
     
     return JsonResponse({'is_favorited': is_favorited})
+
+#катя ниже это Алина добавила
+def search_places_api(request):
+    query = request.GET.get("q", "").strip()
+    if not query:
+        return JsonResponse({"results": []})
+
+    query_normalized = query.replace('ё', 'е').replace('Ё', 'Е')
+
+    places = [
+        place for place in Place.objects.all()
+        if query_normalized.lower() in place.name.replace('ё', 'е').replace('Ё', 'Е').lower()
+    ][:7]
+    results = []
+    for place in places:
+        results.append({
+            "id": place.id,
+            "name": place.name,
+            "address": place.address,
+            "cuisine_type": place.cuisine_type,
+            "avg_price": place.avg_price,
+        })
+    suggestion = None
+    if not results:
+        all_names = list(Place.objects.values_list("name", flat=True))
+        matches = difflib.get_close_matches(query, all_names, n=1, cutoff=0.5)
+        if matches:
+            suggestion = matches[0]
+    return JsonResponse({
+        "results": results,
+        "suggestion": suggestion,
+    })

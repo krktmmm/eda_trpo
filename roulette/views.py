@@ -10,6 +10,10 @@ from django.db import models
 import random
 import json
 
+@login_required
+def roulette(request):
+    return render(request, 'roulette/roulette.html')
+
 # Вспомогательная функция для соседних корпусов
 def get_nearby_buildings(building):
     nearby_map = {

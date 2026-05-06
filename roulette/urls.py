@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.roulette, name='roulette'),
     path('api/solo/create/', views.create_solo_request, name='create_solo'),
     path('api/solo/find/', views.find_solo_match, name='find_solo'),
     path('api/group/create/', views.create_group_request, name='create_group'),

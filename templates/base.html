@@ -29,10 +29,11 @@
             
             <!-- ПОИСКОВАЯ СТРОКА -->
             <div class="search">
-                <input type="text" placeholder="Нямка...">
-                <button>
+                <input id="global-search" type="text" placeholder="Нямка..." autocomplete="off">
+                <button id="global-search-btn" type="button">
                     <span>🔍</span>
                 </button>
+                <div id="search-suggestions" class="search-suggestions hidden"></div>
             </div>
 
             <!-- МЕНЮ (Главная, Уведомления, Чат) -->
@@ -128,6 +129,7 @@
     </footer>
 
     <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/search.js' %}"></script>
 
 </body>
 </html>

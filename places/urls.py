@@ -1,8 +1,11 @@
 from django.urls import path
 from . import views
+from django.urls import path
+from . import views
 
 urlpatterns = [
     path('', views.main_menu, name='main_menu'),
+    path("api/search-places/", views.search_places_api, name="search_places_api"),
     path('places/', views.place_list, name='place_list'),
     path('roulette/', views.roulette, name='roulette'),
     path('place/<int:place_id>/', views.place_detail, name='place_detail'),
