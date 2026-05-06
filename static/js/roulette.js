@@ -297,50 +297,51 @@ document.getElementById('screen-cancel').onclick = () => {
     location.href = '/roulette/';
 };
 
+// Проверка анимаций
+const animationsEnabled = document.body.getAttribute('data-animations') !== 'off' && 
+                          !document.body.classList.contains('animations-off');
+
 // Анимации для кнопок рулетки
 const onepersonIcon = document.getElementById('oneperson-animation');
 const twopersonIcon = document.getElementById('twoperson-animation');
 
 if (onepersonIcon && twopersonIcon) {
-    const onepersonAnimation = lottie.loadAnimation({
-        container: onepersonIcon,
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        path: '/static/animations/obed-ruletka/oneperson.json'
-    });
-
-    const twopersonAnimation = lottie.loadAnimation({
-        container: twopersonIcon,
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        path: '/static/animations/obed-ruletka/twoperson.json'
-    });
-
-    onepersonAnimation.addEventListener('DOMLoaded', () => {
-        onepersonAnimation.goToAndStop(0, true);
-    });
-
-    twopersonAnimation.addEventListener('DOMLoaded', () => {
-        twopersonAnimation.goToAndStop(0, true);
-    });
-
-    soloBtn.addEventListener('mouseenter', () => {
-        onepersonAnimation.stop();
-        onepersonAnimation.goToAndPlay(0, true);
-    });
-
-    groupBtn.addEventListener('mouseenter', () => {
-        twopersonAnimation.stop();
-        twopersonAnimation.goToAndPlay(0, true);
-    });
-
-    soloBtn.addEventListener('mouseleave', () => {
-        onepersonAnimation.goToAndStop(0, true);
-    });
-
-    groupBtn.addEventListener('mouseleave', () => {
-        twopersonAnimation.goToAndStop(0, true);
-    });
+    if (!animationsEnabled) {
+        // Просто показываем эмодзи
+        onepersonIcon.innerHTML = '<span style="font-size: 100px;">👤</span>';
+        twopersonIcon.innerHTML = '<span style="font-size: 120px;">👥</span>';
+    } else {
+        // Анимации включены
+        const onepersonAnimation = lottie.loadAnimation({
+            container: onepersonIcon,
+            renderer: 'svg',
+            loop: false,
+            autoplay: false,
+            path: '/static/animations/obed-ruletka/oneperson.json'
+        });
+        const twopersonAnimation = lottie.loadAnimation({
+            container: twopersonIcon,
+            renderer: 'svg',
+            loop: false,
+            autoplay: false,
+            path: '/static/animations/obed-ruletka/twoperson.json'
+        });
+        onepersonAnimation.addEventListener('DOMLoaded', () => onepersonAnimation.goToAndStop(0, true));
+        twopersonAnimation.addEventListener('DOMLoaded', () => twopersonAnimation.goToAndStop(0, true));
+        soloBtn.addEventListener('mouseenter', () => { onepersonAnimation.goToAndPlay(0, true); });
+        groupBtn.addEventListener('mouseenter', () => { twopersonAnimation.goToAndPlay(0, true); });
+        soloBtn.addEventListener('mouseleave', () => onepersonAnimation.goToAndStop(0, true));
+        groupBtn.addEventListener('mouseleave', () => twopersonAnimation.goToAndStop(0, true));
+    }
 }
+
+// Слот-машина
+const originalInitSlot = initSlotAnimation;
+initSlotAnimation = function() {
+    if (!slotContainer) return;
+    if (!animationsEnabled) {
+        slotContainer.innerHTML = '<span style="font-size: 130px;">🎰</span>';
+        return;
+    }
+    originalInitSlot();
+};

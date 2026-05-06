@@ -18,7 +18,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body class="{% if user.is_authenticated and user.profile.theme == 'dark' %}dark-theme{% endif %} {% if user.is_authenticated %}font-{{ user.profile.font_size|default:'medium' }}{% else %}font-medium{% endif %} {% if user.is_authenticated and user.profile.animations == 'off' %}animations-off{% endif %}" data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">
+<body class="{% if user.is_authenticated and user.profile.theme == 'dark' %}dark-theme{% endif %} {% if user.is_authenticated %}font-{{ user.profile.font_size|default:'medium' }}{% else %}font-medium{% endif %} {% if user.is_authenticated and user.profile.animations == 'off' %}animations-off{% endif %}" data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}" data-animations="{{ user.profile.animations|default:'on' }}">
     <!-- ШАПКА САЙТА -->
     <div class="navigation">
         <div class="panel">
