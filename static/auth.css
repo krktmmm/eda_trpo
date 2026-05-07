@@ -14,11 +14,7 @@
 }
 
 body {
-    background-image: url("/static/images/1.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background: url("/static/images/1.jpg") center/cover no-repeat fixed;
     font-family: 'Tobi';
     min-height: 100vh;
     display: flex;
@@ -26,7 +22,7 @@ body {
     align-items: center;
 }
 
-/* ФОРМЫ */
+/* Формы */
 .auth-form {
     background: #fefcfc;
     padding: 40px;
@@ -36,9 +32,7 @@ body {
     text-align: center;
 }
 
-.auth-form.hidden {
-    display: none;
-}
+.auth-form.hidden { display: none; }
 
 /* Заголовок */
 h2 {
@@ -55,7 +49,6 @@ h2 {
     margin: 20px 0;
 }
 
-/* Подпись над полем */
 .input-box span {
     display: block;
     margin-bottom: 8px;
@@ -64,23 +57,18 @@ h2 {
     width: 100%;
 }
 
-/* Поля ввода */
 .input-box input {
     width: 100%;
     padding: 12px 15px;
     border: none;
+    border-bottom: 2px solid #4b8082;
     outline: none;
     background: none;
     font-size: 18px;
-    border-bottom: 2px solid #4b8082;
     transition: 0.4s;
-    background-color: transparent;
 }
 
-.input-box input:focus {
-    outline: none;
-    border-color: #4b8082;
-}
+.input-box input:focus { border-color: #4b8082; }
 
 /* Кнопка */
 .submit-bin {
@@ -103,19 +91,10 @@ h2 {
 }
 
 /* Текст и ссылки */
-p {
-    margin-top: 20px;
-    color: #787371;
-}
+p { margin-top: 20px; color: #787371; }
 
-a {
-    color: #787371;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
+a { color: #787371; text-decoration: none; }
+a:hover { text-decoration: underline; }
 
 .error-message {
     color: red;
@@ -126,7 +105,7 @@ a:hover {
 
 .input-box.error input {
     border-color: red;
-    background-color: #fff0f0;
+    background: #fff0f0;
 }
 
 .switch-link {
@@ -135,6 +114,4 @@ a:hover {
     font-weight: bold;
 }
 
-.switch-link:hover {
-    text-decoration: underline;
-}
+.switch-link:hover { text-decoration: underline; }

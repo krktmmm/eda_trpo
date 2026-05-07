@@ -1,6 +1,4 @@
-/* ===== РЕДАКТИРОВАНИЕ ПРОФИЛЯ ===== */
-
-/* Контейнер с двумя колонками */
+/* Контейнер */
 .edit-profile-container {
     display: flex;
     gap: 50px;
@@ -10,20 +8,30 @@
     flex-wrap: wrap;
 }
 
-/* ЛЕВАЯ КОЛОНКА - АВАТАР */
+/* Левая колонка (аватар) + Правая (форма) */
+.edit-profile-left,
+.edit-profile-right {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid #e0e0e0;
+}
+
 .edit-profile-left {
     flex: 1;
     min-width: 280px;
     text-align: center;
-    background: white;
-    border-radius: 30px;
     padding: 40px 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    border: 1px solid #e0e0e0;
     height: fit-content;
 }
 
-/* АВАТАР */
+.edit-profile-right {
+    flex: 2;
+    min-width: 400px;
+}
+
+/* Аватар */
 .profile-avatar {
     width: 200px;
     height: 200px;
@@ -31,7 +39,7 @@
     border-radius: 50%;
     cursor: pointer;
     overflow: hidden;
-    background-color: #5F9EA0;
+    background: #5F9EA0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,41 +49,50 @@
 .profile-avatar img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
     object-fit: cover;
     border: 4px solid #4b8082;
+    border-radius: 50%;
     box-sizing: border-box;
 }
 
-/* КНОПКИ ЗАГРУЗКИ И УДАЛЕНИЯ АВАТАРА */
+/* Кнопки аватара */
+.avatar-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+}
+
 .avatar-upload-label,
 .avatar-delete-btn {
-    background: #5F9EA0;
-    color: white;
-    border: none;
-    padding: 10px 20px;
+    padding: 8px 20px;
     border-radius: 15px;
-    font-family: 'Tobi';
-    font-size: 14px;
     cursor: pointer;
+    font-family: 'Tobi';
     transition: 0.3s;
 }
 
-.avatar-upload-label:hover {
-    background: #f99039;
-    transform: scale(1.02);
+.avatar-upload-label {
+    background: #5F9EA0;
+    color: white;
+    display: inline-block;
 }
 
 .avatar-delete-btn {
     background: #e74c3c;
+    color: white;
+    border: none;
 }
 
+.avatar-upload-label:hover,
 .avatar-delete-btn:hover {
-    background: #c0392b;
     transform: scale(1.02);
 }
 
-/* Информация в левой колонке */
+.avatar-upload-label:hover { background: #f99039; }
+.avatar-delete-btn:hover { background: #c0392b; }
+
+/* Инфо в левой колонке */
 .edit-profile-info {
     margin-top: 20px;
     text-align: left;
@@ -89,21 +106,9 @@
     font-size: 18px;
 }
 
-.edit-profile-info strong {
-    color: #4b8082;
-}
+.edit-profile-info strong { color: #4b8082; }
 
-/* ПРАВАЯ КОЛОНКА - ФОРМА */
-.edit-profile-right {
-    flex: 2;
-    min-width: 400px;
-    background: white;
-    border-radius: 30px;
-    padding: 40px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    border: 1px solid #e0e0e0;
-}
-
+/* Заголовок правой колонки */
 .edit-profile-right h2 {
     color: #2c3e50;
     font-size: 28px;
@@ -113,21 +118,13 @@
     padding-bottom: 10px;
 }
 
-/* Стили формы */
-.edit-profile-form {
-    margin-top: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
+/* Форма */
+.form-group { margin-bottom: 20px; }
 
 .form-group label {
     display: block;
     color: #2c3e50;
-    font-size: 16px;
     margin-bottom: 8px;
-    font-weight: normal;
 }
 
 .form-group input,
@@ -154,7 +151,7 @@
 .form-group select:focus {
     outline: none;
     border-color: #f99039;
-    box-shadow: 0 0 0 3px rgba(249, 144, 57, 0.1);
+    box-shadow: 0 0 0 3px rgba(249,144,57,0.1);
 }
 
 /* Кнопка сохранения */
@@ -169,10 +166,8 @@
     cursor: pointer;
     transition: 0.3s;
     width: 100%;
-    max-width: 100%;
-    margin: 10px auto 0 auto;
+    margin: 10px auto 0;
     display: block;
-    text-align: center;
 }
 
 .save-btn:hover {
@@ -195,7 +190,7 @@
     transform: translateX(-3px);
 }
 
-/* Сообщения об ошибках и успехе */
+/* Сообщение об ошибках */
 .alert {
     padding: 12px 15px;
     border-radius: 10px;
@@ -203,13 +198,13 @@
 }
 
 .alert-success {
-    background-color: #d4edda;
+    background: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
 }
 
 .alert-error {
-    background-color: #f8d7da;
+    background: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
@@ -219,4 +214,3 @@
     font-size: 12px;
     margin-top: 5px;
 }
-
