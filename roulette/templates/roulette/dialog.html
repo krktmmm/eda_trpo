@@ -31,7 +31,13 @@
     <div class="chat-messages" id="chat-messages">
         {% for msg in messages %}
         <div class="message {% if msg.sender == user %}message-mine{% else %}message-other{% endif %}" data-id="{{ msg.id }}">
-            <div class="message-text">{{ msg.text }}</div>
+            {% if '[sticker]' in msg.text %}
+                <div class="message-text">
+                    <div class="chat-sticker" data-sticker="{{ msg.text|cut:'[sticker]' }}"></div>
+                </div>
+            {% else %}
+                <div class="message-text">{{ msg.text }}</div>
+            {% endif %}
             {% load tz %}
             <div class="message-time">{{ msg.created_at|localtime|date:"H:i" }}</div>
         </div>
@@ -39,10 +45,29 @@
     </div>
     
     <div class="chat-input">
+        <button type="button" id="stickers-btn">😺</button>
         <textarea id="message-input" placeholder="Введите сообщение..." rows="2"></textarea>
         <button id="send-btn">📤 Отправить</button>
     </div>
-</div>
+
+    <div id="stickers-panel" class="stickers-panel hidden">
+        <div class="sticker-item" data-sticker="1.json"></div>
+        <div class="sticker-item" data-sticker="2.json"></div>
+        <div class="sticker-item" data-sticker="3.json"></div>
+         <div class="sticker-item" data-sticker="4.json"></div>
+        <div class="sticker-item" data-sticker="5.json"></div>
+        <div class="sticker-item" data-sticker="6.json"></div>
+         <div class="sticker-item" data-sticker="7.json"></div>
+        <div class="sticker-item" data-sticker="9.json"></div>
+         <div class="sticker-item" data-sticker="10.json"></div>
+        <div class="sticker-item" data-sticker="11.json"></div>
+        <div class="sticker-item" data-sticker="12.json"></div>
+         <div class="sticker-item" data-sticker="13.json"></div>
+        <div class="sticker-item" data-sticker="14.json"></div>
+        <div class="sticker-item" data-sticker="15.json"></div>
+        <div class="sticker-item" data-sticker="16.json"></div>
+        <div class="sticker-item" data-sticker="18.json"></div>
+    </div>
 
 <script>
     const dialogId = {{ dialog.id }};
@@ -54,6 +79,8 @@
     const messagesContainer = document.getElementById('chat-messages');
     const messageInput = document.getElementById('message-input');
     const sendBtn = document.getElementById('send-btn');
+    const stickersBtn = document.getElementById('stickers-btn');
+    const stickersPanel = document.getElementById('stickers-panel');
     
     function escapeHtml(text) {
         const div = document.createElement('div');
@@ -61,6 +88,33 @@
         return div.innerHTML;
     }
     
+    function isSticker(text) {
+        return text.startsWith('[sticker]');
+    }
+
+    function renderMessageText(text) {
+        if (isSticker(text)) {
+            const sticker = text.replace('[sticker]', '');
+            return `<div class="chat-sticker" data-sticker="${escapeHtml(sticker)}"></div>`;
+        }
+
+        return escapeHtml(text);
+    }
+
+    function renderStickers() {
+        document.querySelectorAll('.chat-sticker:not([data-loaded="true"])').forEach(item => {
+            lottie.loadAnimation({
+                container: item,
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: `/static/stickers/${item.dataset.sticker}`
+            });
+
+            item.dataset.loaded = 'true';
+        });
+    }
+
     function scrollToBottom() {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
@@ -80,10 +134,11 @@
                         div.className = `message ${msg.is_mine ? 'message-mine' : 'message-other'}`;
                         div.setAttribute('data-id', msg.id);
                         div.innerHTML = `
-                            <div class="message-text">${escapeHtml(msg.text)}</div>
+                            <div class="message-text">${renderMessageText(msg.text)}</div>
                             <div class="message-time">${msg.created_at}</div>
                         `;
                         messagesContainer.appendChild(div);
+                        renderStickers();
                         
                         if (msg.id > lastMessageId) {
                             lastMessageId = msg.id;
@@ -131,6 +186,43 @@
     
     // Периодически проверяем новые сообщения
     setInterval(loadNewMessages, 3000);
+    stickersBtn.onclick = () => {
+        stickersPanel.classList.toggle('hidden');
+    };
+
+    document.querySelectorAll('.sticker-item').forEach(item => {
+        lottie.loadAnimation({
+            container: item,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: `/static/stickers/${item.dataset.sticker}`
+        });
+
+        item.addEventListener('click', () => {
+            const sticker = item.dataset.sticker;
+
+            fetch(`/roulette/api/messages/send/${dialogId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    text: `[sticker]${sticker}`
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    stickersPanel.classList.add('hidden');
+                    loadNewMessages();
+                }
+            });
+        });
+    });
+
+    renderStickers();
     
     // Прокручиваем вниз при загрузке
     scrollToBottom();
