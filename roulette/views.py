@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.db import models
@@ -82,7 +83,9 @@ def find_solo_match(request):
     
     # Фильтрация по бюджету (только если не "any")
     if user_request.budget != 'any':
-        base_queryset = base_queryset.filter(budget=user_request.budget)
+        base_queryset = base_queryset.filter(
+            models.Q(budget=user_request.budget) | models.Q(budget='any')
+            )
     
     # 1. Идеальное совпадение: тот же корпус
     perfect = list(base_queryset.filter(building=user_request.building))
@@ -90,11 +93,8 @@ def find_solo_match(request):
     if perfect:
         match = random.choice(perfect)
         
-        SoloRequest.objects.filter(user=match.user, is_active=True).update(is_active=False)
-        SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
-        
-        # Ищем или создаём диалог
-        dialog, created = Dialog.get_or_create_dialog(request.user, match.user)
+        request.session['match_user_id'] = match.user.id
+        request.session['match_request_id'] = match.id
         
         return JsonResponse({
             'status': 'found',
@@ -104,7 +104,6 @@ def find_solo_match(request):
             'building': match.get_building_display(),
             'budget': match.get_budget_display(),
             'match_type': 'perfect',
-            'dialog_id': dialog.id,
             'group_id': None,
         })
     
@@ -115,10 +114,8 @@ def find_solo_match(request):
     if nearby:
         match = random.choice(nearby)
         
-        SoloRequest.objects.filter(user=match.user, is_active=True).update(is_active=False)
-        SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
-        
-        dialog, created = Dialog.get_or_create_dialog(request.user, match.user)
+        request.session['match_user_id'] = match.user.id
+        request.session['match_request_id'] = match.id
         
         return JsonResponse({
             'status': 'found',
@@ -128,7 +125,6 @@ def find_solo_match(request):
             'building': match.get_building_display(),
             'budget': match.get_budget_display(),
             'match_type': 'nearby',
-            'dialog_id': dialog.id,
             'group_id': None,
         })
     
@@ -138,10 +134,8 @@ def find_solo_match(request):
     if any_building:
         match = random.choice(any_building)
         
-        SoloRequest.objects.filter(user=match.user, is_active=True).update(is_active=False)
-        SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
-        
-        dialog, created = Dialog.get_or_create_dialog(request.user, match.user)
+        request.session['match_user_id'] = match.user.id
+        request.session['match_request_id'] = match.id
         
         return JsonResponse({
             'status': 'found',
@@ -151,12 +145,40 @@ def find_solo_match(request):
             'building': match.get_building_display(),
             'budget': match.get_budget_display(),
             'match_type': 'any_building',
-            'dialog_id': dialog.id,
             'group_id': None,
         })
     
     return JsonResponse({'status': 'not_found', 'message': 'Никого не найдено'}, status=404)
 
+@login_required
+@require_http_methods(["POST"])
+def accept_solo_match(request):
+    """Подтверждение матча — создаёт диалог"""
+    
+    match_user_id = request.session.get('match_user_id')
+    
+    if not match_user_id:
+        return JsonResponse({'error': 'Нет активного матча'}, status=404)
+    
+    try:
+        match_user = User.objects.get(id=match_user_id)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'Пользователь не найден'}, status=404)
+    
+    # Деактивируем заявки обоих
+    SoloRequest.objects.filter(user=match_user, is_active=True).update(is_active=False)
+    SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+    
+    # Создаём диалог
+    dialog, created = Dialog.get_or_create_dialog(request.user, match_user)
+    
+    # Очищаем сессию
+    del request.session['match_user_id']
+    
+    return JsonResponse({
+        'status': 'ok',
+        'dialog_id': dialog.id
+    })
 
 # ==================== ГРУППА (поиск компании) ====================
 

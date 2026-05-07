@@ -1,17 +1,46 @@
 // Выпадающее меню профиля
 const profileBtn = document.getElementById('profileBtn');
 const dropdown = document.getElementById('dropdownMenu');
+const notifIcon = document.getElementById('notifIcon');
+const notifMenu = document.getElementById('notificationsMenu');
+
+// Открытие/закрытие меню профиля
 if (profileBtn) {
     profileBtn.addEventListener('click', (event) => {
         event.stopPropagation();
+        
+        // Закрываем уведомления, если открыты
+        if (notifMenu && notifMenu.classList.contains('show')) {
+            notifMenu.classList.remove('show');
+        }
+        
         dropdown.classList.toggle('show');
     });
-    window.addEventListener('click', () => {
-        if (dropdown.classList.contains('show')) {
+}
+
+// Открытие/закрытие меню уведомлений
+if (notifIcon) {
+    notifIcon.addEventListener('click', (event) => {
+        event.stopPropagation();
+        
+        // Закрываем меню профиля, если открыто
+        if (dropdown && dropdown.classList.contains('show')) {
             dropdown.classList.remove('show');
         }
+        
+        notifMenu.classList.toggle('show');
     });
 }
+
+// Закрытие всех выпадающих меню при клике вне
+window.addEventListener('click', () => {
+    if (dropdown && dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+    }
+    if (notifMenu && notifMenu.classList.contains('show')) {
+        notifMenu.classList.remove('show');
+    }
+});
 
 // Обновление счётчика непрочитанных сообщений
 function updateUnreadMessagesCount() {
@@ -102,22 +131,6 @@ function addNotification(text, onClick = null) {
     };
     notifications.unshift(newNotif);
     renderNotifications();
-}
-
-// Открытие/закрытие окна уведомлений
-const notifIcon = document.getElementById('notifIcon');
-const notifMenu = document.getElementById('notificationsMenu');
-
-if (notifIcon) {
-    notifIcon.addEventListener('click', (event) => {
-        event.stopPropagation();
-        notifMenu.classList.toggle('show');
-    });
-    window.addEventListener('click', () => {
-        if (notifMenu.classList.contains('show')) {
-            notifMenu.classList.remove('show');
-        }
-    });
 }
 
 // Функция для вызова из рулетки (глобальная)

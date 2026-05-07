@@ -317,7 +317,9 @@ if (cancelSearchBtn) {
     };
 }
 
+// Кнопка "Пойду"
 document.getElementById('screen-accept').onclick = async () => {
+    // Если групповой матч — присоединяемся к группе
     if (currentMatchData && currentMatchData.group_id) {
         await fetch(`/roulette/api/group/join/${currentMatchData.group_id}/`, {
             method: 'POST',
@@ -326,9 +328,39 @@ document.getElementById('screen-accept').onclick = async () => {
             }
         });
     }
-
-    alert(`Вы идёте на обед с ${currentMatchData.username}`);
-    location.href = '/roulette/';
+    
+    // Отправляем запрос на подтверждение соло-матча
+    const response = await fetch('/roulette/api/solo/accept/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    });
+    
+    const data = await response.json();
+    
+    // Сохраняем dialog_id для кнопки «Написать»
+    if (data.dialog_id) {
+        currentMatchData.dialog_id = data.dialog_id;
+    }
+    
+    // Показываем модальное окно
+    document.getElementById('modal-username').textContent = currentMatchData.username;
+    document.getElementById('match-modal').style.display = 'flex';
+    
+    // Кнопка "Написать"
+    document.getElementById('modal-chat-btn').onclick = () => {
+        if (currentMatchData && currentMatchData.dialog_id) {
+            window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`;
+        }
+    };
+    
+    // Кнопка "Позже"
+    document.getElementById('modal-later-btn').onclick = () => {
+        document.getElementById('match-modal').style.display = 'none';
+        location.href = '/roulette/';
+    };
 };
 
 document.getElementById('screen-again').onclick = () => {
@@ -346,6 +378,36 @@ document.getElementById('screen-cancel').onclick = () => {
     document.querySelector('.greeting').style.display = '';
     document.querySelector('.roulette-buttons').style.display = '';
 };
+
+// Кнопка "Не искать"
+document.getElementById('not-found-cancel')?.addEventListener('click', () => {
+    notFoundScreen.classList.add('hidden');
+    document.querySelector('.greeting').style.display = '';
+    document.querySelector('.roulette-buttons').style.display = '';
+    
+    // Отменяем заявку
+    if (currentSearchMode === 'solo') {
+        fetch('/roulette/api/solo/create/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ building: '1', budget: 'any' })
+        });
+    }
+});
+
+// Кнопка "Попробовать ещё раз"
+document.getElementById('not-found-again')?.addEventListener('click', () => {
+    notFoundScreen.classList.add('hidden');
+    
+    if (currentSearchMode === 'group') {
+        document.getElementById('create-group-form').dispatchEvent(new Event('submit'));
+    } else {
+        document.getElementById('create-solo-form').dispatchEvent(new Event('submit'));
+    }
+});
 
 function scrollToElement(element) {
     if (element) {
@@ -434,33 +496,3 @@ initSlotAnimation = function() {
     }
     originalInitSlot();
 };
-
-// Кнопка "Не искать"
-document.getElementById('not-found-cancel')?.addEventListener('click', () => {
-    notFoundScreen.classList.add('hidden');
-    document.querySelector('.greeting').style.display = '';
-    document.querySelector('.roulette-buttons').style.display = '';
-    
-    // Отменяем заявку
-    if (currentSearchMode === 'solo') {
-        fetch('/roulette/api/solo/create/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: JSON.stringify({ building: '1', budget: 'any' })
-        });
-    }
-});
-
-// Кнопка "Попробовать ещё раз"
-document.getElementById('not-found-again')?.addEventListener('click', () => {
-    notFoundScreen.classList.add('hidden');
-    
-    if (currentSearchMode === 'group') {
-        document.getElementById('create-group-form').dispatchEvent(new Event('submit'));
-    } else {
-        document.getElementById('create-solo-form').dispatchEvent(new Event('submit'));
-    }
-});

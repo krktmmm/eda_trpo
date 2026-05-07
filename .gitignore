@@ -11,10 +11,7 @@ ENV/
 .venv
 
 # База данных
-<<<<<<< HEAD
 # db.sqlite3
-=======
->>>>>>> origin/feature/frontend
 db.sqlite3-journal
 
 # Бинарники
