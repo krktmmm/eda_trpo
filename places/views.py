@@ -69,7 +69,9 @@ def place_detail(request, place_id):
     is_favorited = False
     if request.user.is_authenticated:
         is_favorited = Favorite.objects.filter(user=request.user, place=place).exists()
-    
+    for review in reviews:
+        # Умножаем эмодзи на оценку (например, 4 * "⭐" = "⭐⭐⭐⭐")
+        review.stars_display = "⭐" * review.rating
     return render(request, 'places/place_detail.html', {
         'place': place,
         'reviews': reviews,
