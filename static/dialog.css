@@ -167,3 +167,46 @@
 .chat-header .back-link {
     color: #2c3e50;
 }
+
+
+/* СТИКЕРЫ */
+#stickers-btn {
+    background: #5F9EA0;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 15px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.stickers-panel {
+    position: absolute;
+    bottom: 120px;
+    right: 80px;
+    width: 320px;
+    max-height: 260px;
+    background: white;
+    border-radius: 25px;
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    overflow-y: auto;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    z-index: 9999;
+}
+
+.sticker-item,
+.chat-sticker {
+    width: 90px;
+    height: 90px;
+}
+
+.sticker-item {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
