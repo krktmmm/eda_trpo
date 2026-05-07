@@ -1,6 +1,4 @@
-/* ===== РЕДАКТИРОВАНИЕ ПРОФИЛЯ ===== */
-
-/* Контейнер с двумя колонками */
+/* Контейнер */
 .edit-profile-container {
     display: flex;
     gap: 50px;
@@ -10,62 +8,91 @@
     flex-wrap: wrap;
 }
 
-/* ЛЕВАЯ КОЛОНКА - АВАТАР (как правый блок по стилю) */
+/* Левая колонка (аватар) + Правая (форма) */
+.edit-profile-left,
+.edit-profile-right {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid #e0e0e0;
+}
+
 .edit-profile-left {
     flex: 1;
     min-width: 280px;
     text-align: center;
-    background: white;
-    border-radius: 30px;
     padding: 40px 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    border: 1px solid #e0e0e0;
     height: fit-content;
 }
 
-/* АВАТАР В ШАПКЕ ЧАТА */
-.chat-avatar {
-    width: 48px;
-    height: 48px;
+.edit-profile-right {
+    flex: 2;
+    min-width: 400px;
+}
+
+/* Аватар */
+.profile-avatar {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
     border-radius: 50%;
     cursor: pointer;
     overflow: hidden;
-    background-color: #5F9EA0;
+    background: #5F9EA0;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: 0.3s;
-    flex-shrink: 0;
 }
 
-.chat-avatar img {
+.profile-avatar img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #4b8082;
+    border: 4px solid #4b8082;
+    border-radius: 50%;
     box-sizing: border-box;
 }
 
-.chat-avatar:hover {
-    transform: scale(1.05);
-    opacity: 0.9;
-}
-
-/* ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ В ШАПКЕ */
-.chat-user-info {
+/* Кнопки аватара */
+.avatar-buttons {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
 }
 
-.chat-user-info h2 {
-    margin: 0;
-    font-size: 20px;
+.avatar-upload-label,
+.avatar-delete-btn {
+    padding: 8px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: 'Tobi';
+    transition: 0.3s;
 }
 
+.avatar-upload-label {
+    background: #5F9EA0;
+    color: white;
+    display: inline-block;
+}
 
-/* Информация в левой колонке */
+.avatar-delete-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+}
+
+.avatar-upload-label:hover,
+.avatar-delete-btn:hover {
+    transform: scale(1.02);
+}
+
+.avatar-upload-label:hover { background: #f99039; }
+.avatar-delete-btn:hover { background: #c0392b; }
+
+/* Инфо в левой колонке */
 .edit-profile-info {
     margin-top: 20px;
     text-align: left;
@@ -79,28 +106,9 @@
     font-size: 18px;
 }
 
-.edit-profile-info strong {
-    color: #4b8082;
-}
+.edit-profile-info strong { color: #4b8082; }
 
-.future-feature {
-    color: #999;
-    font-size: 12px;
-    margin-top: 15px;
-    font-style: italic;
-}
-
-/* ПРАВАЯ КОЛОНКА - ФОРМА */
-.edit-profile-right {
-    flex: 2;
-    min-width: 400px;
-    background: white;
-    border-radius: 30px;
-    padding: 40px;
-    box-shadow: 0 10px 30px #0000000d;
-    border: 1px solid #e0e0e0;
-}
-
+/* Заголовок правой колонки */
 .edit-profile-right h2 {
     color: #2c3e50;
     font-size: 28px;
@@ -110,21 +118,13 @@
     padding-bottom: 10px;
 }
 
-/* Стили формы */
-.edit-profile-form {
-    margin-top: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
+/* Форма */
+.form-group { margin-bottom: 20px; }
 
 .form-group label {
     display: block;
     color: #2c3e50;
-    font-size: 16px;
     margin-bottom: 8px;
-    font-weight: normal;
 }
 
 .form-group input,
@@ -151,7 +151,7 @@
 .form-group select:focus {
     outline: none;
     border-color: #f99039;
-    box-shadow: 0 0 0 3px #f990391a;
+    box-shadow: 0 0 0 3px rgba(249,144,57,0.1);
 }
 
 /* Кнопка сохранения */
@@ -166,10 +166,8 @@
     cursor: pointer;
     transition: 0.3s;
     width: 100%;
-    max-width: 100%;
-    margin: 10px auto 0 auto;
+    margin: 10px auto 0;
     display: block;
-    text-align: center;
 }
 
 .save-btn:hover {
@@ -192,17 +190,7 @@
     transform: translateX(-3px);
 }
 
-.avatar-upload-label:hover {
-    background: #f99039 !important;
-    transform: scale(1.02);
-}
-
-.avatar-delete-btn:hover {
-    background: #c0392b !important;
-    transform: scale(1.02);
-}
-
-/* Сообщения об ошибках и успехе */
+/* Сообщение об ошибках */
 .alert {
     padding: 12px 15px;
     border-radius: 10px;
@@ -210,13 +198,13 @@
 }
 
 .alert-success {
-    background-color: #d4edda;
+    background: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
 }
 
 .alert-error {
-    background-color: #f8d7da;
+    background: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
