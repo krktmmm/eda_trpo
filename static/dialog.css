@@ -170,23 +170,47 @@
 
 
 /* СТИКЕРЫ */
+.chat-input {
+    position: relative;
+}
+
+.message-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+#message-input {
+    width: 100%;
+    padding-right: 65px;
+    box-sizing: border-box;
+}
+
 #stickers-btn {
-    background: #5F9EA0;
-    color: white;
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background: none;
     border: none;
-    border-radius: 25px;
-    padding: 15px;
-    font-size: 22px;
+
+    font-size: 28px;
     cursor: pointer;
+
+    padding: 0;
+    z-index: 5;
 }
 
 .stickers-panel {
     position: absolute;
-    bottom: 120px;
-    right: 80px;
-    width: 320px;
-    max-height: 260px;
-    background: white;
+    left: 340px;
+    right: 340px;
+    bottom: 100px;
+    max-height: 220px;
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 25px;
     padding: 15px;
     display: flex;
@@ -199,8 +223,8 @@
 
 .sticker-item,
 .chat-sticker {
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
 }
 
 .sticker-item {
