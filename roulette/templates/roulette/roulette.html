@@ -126,8 +126,8 @@
 
         <div class="match-buttons">
             <button id="screen-accept">✅ Пойду</button>
-            <button id="screen-cancel">❌ Не пойду</button>
             <button id="screen-again">🔄 Искать другого</button>
+            <button id="screen-cancel">❌ Выйти</button>
         </div>
     </div>
 
@@ -140,6 +140,37 @@
                 <button id="modal-chat-btn" class="back-btn">💬 Написать в чат</button>
                 <button id="modal-later-btn" class="back-btn">⏰ Позже</button>
             </div>
+        </div>
+    </div>
+
+    <!-- НАЙДЕНА КОМПАНИЯ -->
+    <div id="match-screen" class="search-process hidden">
+        <h1 class="main-title">🎲 Обед - рулетка</h1>
+        <h2 class="match-title" id="match-title-text">Найден сообедник!</h2>
+        
+        <div class="match-card" id="single-match-card">
+            <div class="match-avatar">
+                <img src="{% static 'images/default_avatar.jpg' %}" alt="avatar" id="match-avatar-img">
+            </div>
+            <div class="match-info">
+                <p class="match-username"><span id="screen-username"></span></p>
+                <p><strong>Корпус:</strong> <span id="screen-building"></span></p>
+                <p><strong>Бюджет:</strong> <span id="screen-budget"></span></p>
+                <p><strong>Telegram:</strong> <span id="screen-telegram"></span></p>
+                <p><strong>VK:</strong> <span id="screen-vk"></span></p>
+            </div>
+        </div>
+        
+        <!-- Групповые участники -->
+        <div id="group-members-container" class="hidden">
+            <h3>👥 Участники компании:</h3>
+            <div id="group-members-list" class="group-members-list"></div>
+        </div>
+        
+        <div class="match-buttons">
+            <button id="screen-accept">✅ Пойду</button>
+            <button id="screen-again">🔄 Искать другую</button>
+            <button id="screen-cancel">❌ Выйти</button>
         </div>
     </div>
 </div>

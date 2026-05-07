@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 class SoloRequest(models.Model):
     """Заявка на поиск сообедника"""
@@ -57,6 +57,7 @@ class GroupRequest(models.Model):
     telegram = models.CharField(max_length=100, blank=True, verbose_name="Telegram")
     vk = models.CharField(max_length=100, blank=True, verbose_name="VK")
     is_active = models.BooleanField(default=True, verbose_name="Активна")
+    dialog = models.ForeignKey('Dialog', on_delete=models.SET_NULL, null=True, blank=True, related_name='group')
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -94,19 +95,21 @@ class Dialog(models.Model):
     @classmethod
     def get_or_create_dialog(cls, user1, user2):
         """Создать или найти существующий диалог"""
-        # Сортируем для консистентности
         u1, u2 = sorted([user1, user2], key=lambda u: u.id)
-        
-        # Ищем существующий диалог
         dialog = cls.objects.filter(participants=u1).filter(participants=u2).first()
-        
         if dialog:
             return dialog, False
-        
-        # Создаём новый
         dialog = cls.objects.create()
         dialog.participants.add(u1, u2)
         return dialog, True
+    
+    @classmethod
+    def create_group_dialog(cls, users):
+        """Создать групповой диалог для компании"""
+        dialog = cls.objects.create()
+        for user in users:
+            dialog.participants.add(user)
+        return dialog
 
 
 class Message(models.Model):

@@ -71,7 +71,7 @@ function showSearchProcess() {
     soloForm.classList.add('hidden');
     groupForm.classList.add('hidden');
 
-    searchProcessText.innerText = 'Подождите, поиск сообедника...';
+    searchProcessText.innerText = 'Подождите, ищем компанию...';
     searchProcess.classList.remove('hidden');
 
     initSlotAnimation();
@@ -90,6 +90,39 @@ function hideSearchProcess() {
     }
 }
 
+// ========== СОЛО-МАТЧ ==========
+function showSoloMatch(match) {
+    document.getElementById('group-members-container').classList.add('hidden');
+    document.getElementById('single-match-card').classList.remove('hidden');
+    document.getElementById('match-title-text').textContent = 'Найден сообедник!';
+
+    document.getElementById('screen-username').innerText = match.username;
+    document.getElementById('screen-building').innerText = match.building;
+    document.getElementById('screen-budget').innerText = match.budget;
+    document.getElementById('screen-telegram').innerText = match.telegram || '—';
+    document.getElementById('screen-vk').innerText = match.vk || '—';
+}
+
+// ========== ГРУППОВОЙ МАТЧ ==========
+function showGroupMatch(match) {
+    document.getElementById('single-match-card').classList.add('hidden');
+    document.getElementById('group-members-container').classList.remove('hidden');
+    document.getElementById('match-title-text').textContent = 'Найдена компания!';
+
+    document.getElementById('screen-building').innerText = match.building;
+    document.getElementById('screen-budget').innerText = match.budget;
+
+    const list = document.getElementById('group-members-list');
+    list.innerHTML = match.members.map(m => `
+        <div class="group-member-card">
+            <img src="/static/images/default_avatar.jpg" alt="${m.username}">
+            <div class="member-name">${m.username}</div>
+            <div class="member-contact">📱 ${m.telegram}</div>
+            <div class="member-contact">📘 ${m.vk}</div>
+        </div>
+    `).join('');
+}
+
 function showMatchScreen(match) {
     document.querySelector('.greeting').style.display = 'none';
     document.querySelector('.roulette-buttons').style.display = 'none';
@@ -103,15 +136,17 @@ function showMatchScreen(match) {
     groupForm.classList.add('hidden');
     searchProcess.classList.add('hidden');
 
-    document.getElementById('screen-username').innerText = match.username;
-    document.getElementById('screen-building').innerText = match.building;
-    document.getElementById('screen-budget').innerText = match.budget;
-    document.getElementById('screen-telegram').innerText = match.telegram || '—';
-    document.getElementById('screen-vk').innerText = match.vk || '—';
+    // Определяем тип матча: соло или группа
+    if (match.members && match.members.length > 0) {
+        showGroupMatch(match);
+    } else {
+        showSoloMatch(match);
+    }
 
     matchScreen.classList.remove('hidden');
 }
 
+// ========== СТАРТ СОЛО-ПОИСКА ==========
 async function startSolo(e) {
     e.preventDefault();
     
@@ -139,7 +174,6 @@ async function startSolo(e) {
             })
         });
         
-        // Ждём минимум MIN_SEARCH_TIME для анимации
         const searchStart = Date.now();
         const res = await fetch('/roulette/api/solo/find/');
         const match = await res.json();
@@ -191,6 +225,7 @@ async function startSolo(e) {
     }
 }
 
+// ========== СТАРТ ГРУППОВОГО ПОИСКА ==========
 async function startGroup(e) {
     e.preventDefault();
     
@@ -219,7 +254,6 @@ async function startGroup(e) {
             })
         });
 
-        // Ждём минимум MIN_SEARCH_TIME для анимации
         const searchStart = Date.now();
         const res = await fetch('/roulette/api/group/find/');
         const match = await res.json();
@@ -244,13 +278,27 @@ async function startGroup(e) {
 
                 if (window.addNotification) {
                     window.addNotification(
-                        `🎉 Найдена компания от ${match.username}!`,
-                        () => {
-                            window.location.href = '/roulette/';
-                        }
+                        `🎉 Найдена компания от ${match.group_name || match.username}!`,
+                        () => { window.location.href = '/roulette/'; }
                     );
                 }
             }, 1000);
+        } else if (match.status === 'waiting') {
+            // Групп пока нет — ждём
+            stopSlotOnWin();
+            searchProcessText.innerText = 'Ищем компанию... Пока никого нет, но вы в очереди!';
+            
+            setTimeout(() => {
+                hideSearchProcess();
+                document.querySelector('.greeting').style.display = 'none';
+                document.querySelector('.roulette-buttons').style.display = 'none';
+                soloForm.classList.add('hidden');
+                groupForm.classList.add('hidden');
+                notFoundScreen.classList.remove('hidden');
+                setTimeout(() => {
+                    notFoundScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+            }, 2000);
         } else {
             stopSlotOnWin();
             setTimeout(() => {
@@ -273,6 +321,7 @@ async function startGroup(e) {
     }
 }
 
+// ========== ОБРАБОТЧИКИ ФОРМ ==========
 document.getElementById('create-solo-form').onsubmit = startSolo;
 document.getElementById('create-group-form').onsubmit = startGroup;
 
@@ -296,6 +345,7 @@ groupBtn.onclick = () => {
     scrollToForm(groupForm);
 };
 
+// ========== КНОПКА "НАЗАД" ВО ВРЕМЯ ПОИСКА ==========
 if (cancelSearchBtn) {
     cancelSearchBtn.onclick = () => {
         if (searchTimer) {
@@ -304,65 +354,91 @@ if (cancelSearchBtn) {
         }
 
         hideSearchProcess();
-
         document.querySelector('.roulette-buttons').style.display = 'flex';
+        document.querySelector('.greeting').style.display = '';
 
         if (currentSearchMode === 'solo') {
             soloForm.classList.remove('hidden');
-        }
-
-        if (currentSearchMode === 'group') {
+        } else if (currentSearchMode === 'group') {
             groupForm.classList.remove('hidden');
         }
     };
 }
 
-// Кнопка "Пойду"
+// ========== КНОПКА "ПОЙДУ" ==========
 document.getElementById('screen-accept').onclick = async () => {
-    // Если групповой матч — присоединяемся к группе
-    if (currentMatchData && currentMatchData.group_id) {
-        await fetch(`/roulette/api/group/join/${currentMatchData.group_id}/`, {
+    const acceptBtn = document.getElementById('screen-accept');
+    acceptBtn.disabled = true;
+    acceptBtn.textContent = '⏳...';
+    
+    try {
+        // Групповой матч — присоединяемся к группе
+        if (currentMatchData && currentMatchData.group_id) {
+            const joinRes = await fetch(`/roulette/api/group/join/${currentMatchData.group_id}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            });
+            const joinData = await joinRes.json();
+            
+            if (joinData.dialog_id) {
+                currentMatchData.dialog_id = joinData.dialog_id;
+            }
+            
+            document.getElementById('modal-username').textContent = 'компанией';
+            document.getElementById('modal-match-text').innerHTML = 
+                `Вы присоединились к компании!${joinData.is_full ? ' Группа собрана!' : ''}`;
+            document.getElementById('match-modal').style.display = 'flex';
+            
+            document.getElementById('modal-chat-btn').onclick = () => {
+                if (joinData.dialog_id) {
+                    window.location.href = `/roulette/messages/${joinData.dialog_id}/`;
+                }
+            };
+            
+            document.getElementById('modal-later-btn').onclick = () => {
+                document.getElementById('match-modal').style.display = 'none';
+                location.href = '/roulette/';
+            };
+            return;
+        }
+        
+        // Соло-матч
+        const response = await fetch('/roulette/api/solo/accept/', {
             method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
             }
         });
-    }
-    
-    // Отправляем запрос на подтверждение соло-матча
-    const response = await fetch('/roulette/api/solo/accept/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        
+        const data = await response.json();
+        
+        if (data.dialog_id) {
+            currentMatchData.dialog_id = data.dialog_id;
         }
-    });
-    
-    const data = await response.json();
-    
-    // Сохраняем dialog_id для кнопки «Написать»
-    if (data.dialog_id) {
-        currentMatchData.dialog_id = data.dialog_id;
+        
+        document.getElementById('modal-username').textContent = currentMatchData.username;
+        document.getElementById('match-modal').style.display = 'flex';
+        
+        document.getElementById('modal-chat-btn').onclick = () => {
+            if (currentMatchData && currentMatchData.dialog_id) {
+                window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`;
+            }
+        };
+        
+        document.getElementById('modal-later-btn').onclick = () => {
+            document.getElementById('match-modal').style.display = 'none';
+            location.href = '/roulette/';
+        };
+    } finally {
+        acceptBtn.disabled = false;
+        acceptBtn.textContent = '✅ Пойду';
     }
-    
-    // Показываем модальное окно
-    document.getElementById('modal-username').textContent = currentMatchData.username;
-    document.getElementById('match-modal').style.display = 'flex';
-    
-    // Кнопка "Написать"
-    document.getElementById('modal-chat-btn').onclick = () => {
-        if (currentMatchData && currentMatchData.dialog_id) {
-            window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`;
-        }
-    };
-    
-    // Кнопка "Позже"
-    document.getElementById('modal-later-btn').onclick = () => {
-        document.getElementById('match-modal').style.display = 'none';
-        location.href = '/roulette/';
-    };
 };
 
+// ========== КНОПКА "ИСКАТЬ ДРУГОГО" ==========
 document.getElementById('screen-again').onclick = () => {
     matchScreen.classList.add('hidden');
 
@@ -373,32 +449,21 @@ document.getElementById('screen-again').onclick = () => {
     }
 };
 
+// ========== КНОПКА "НЕ ПОЙДУ" ==========
 document.getElementById('screen-cancel').onclick = () => {
     matchScreen.classList.add('hidden');
     document.querySelector('.greeting').style.display = '';
     document.querySelector('.roulette-buttons').style.display = '';
 };
 
-// Кнопка "Не искать"
+// ========== КНОПКА "НЕ ИСКАТЬ" (после not found) ==========
 document.getElementById('not-found-cancel')?.addEventListener('click', () => {
     notFoundScreen.classList.add('hidden');
     document.querySelector('.greeting').style.display = '';
     document.querySelector('.roulette-buttons').style.display = '';
-    
-    // Отменяем заявку
-    if (currentSearchMode === 'solo') {
-        fetch('/roulette/api/solo/create/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: JSON.stringify({ building: '1', budget: 'any' })
-        });
-    }
 });
 
-// Кнопка "Попробовать ещё раз"
+// ========== КНОПКА "ПОПРОБОВАТЬ ЕЩЁ РАЗ" ==========
 document.getElementById('not-found-again')?.addEventListener('click', () => {
     notFoundScreen.classList.add('hidden');
     
@@ -411,11 +476,11 @@ document.getElementById('not-found-again')?.addEventListener('click', () => {
 
 function scrollToElement(element) {
     if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 }
 
-// Функция проверки, включены ли анимации
+// ========== АНИМАЦИИ ==========
 function areAnimationsEnabled() {
     const localSetting = localStorage.getItem('animations');
     if (localSetting !== null) {
@@ -428,7 +493,6 @@ function areAnimationsEnabled() {
     return true;
 }
 
-// Загрузка статичного Lottie
 function loadStaticLottie(container, path, frame = 0) {
     container.innerHTML = '';
     
