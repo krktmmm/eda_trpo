@@ -206,7 +206,7 @@
     left: 340px;
     right: 340px;
     bottom: 100px;
-    max-height: 420px;
+    max-height: 220px;
     background: rgba(255, 255, 255, 0.45);
     border: 1px solid rgba(255,255,255,0.35);
     backdrop-filter: blur(14px);
