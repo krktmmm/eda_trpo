@@ -225,6 +225,63 @@
     color: #f39c12;
 }
 
+/* --- ИНТЕРАКТИВНЫЕ ЗВЁЗДЫ-КАРТИНКИ --- */
+.rating-input {
+    margin-bottom: 15px;
+}
+
+.rating-label {
+    display: block;
+    color: #2c3f51;
+    font-family: 'Tobi';
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.stars {
+    display: flex;
+    flex-direction: row-reverse; /* Разворачиваем порядок для работы CSS */
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* Скрываем стандартные radio-кнопки */
+.stars input[type="radio"] {
+    display: none;
+}
+
+/* Базовый стиль звезды (пустая) */
+.stars label {
+    width: 36px;
+    height: 36px;
+    background-image: url('/static/images/star-empty.png'); /* 👈 Укажи свой путь */
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+/* Эффект при наведении */
+.stars label:hover,
+.stars label:hover ~ label {
+    background-image: url('/static/images/star-filled.png'); /* 👈 Укажи свой путь */
+    transform: scale(1.1);
+}
+
+/* Эффект после выбора (клик) */
+.stars input[type="radio"]:checked ~ label {
+    background-image: url('/static/images/star-filled.png'); /* 👈 Укажи свой путь */
+}
+
+/* Убираем лишние отступы у соседних элементов формы */
+.add-review-form textarea,
+.add-review-form input[type="text"] {
+    margin-top: 15px;
+}
+
+
+
 /* ОГРАНИЧЕНИЕ ДЛЯ ПОЛЯ "ВАШ ОТЗЫВ" */
 .add-review-form textarea {
     max-width: 100%;
