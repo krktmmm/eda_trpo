@@ -177,6 +177,54 @@
     box-sizing: border-box;
 }
 
+/* СТИЛИ ДЛЯ ЗВЁЗДНОГО РЕЙТИНГА В ФОРМЕ */
+.rating-input {
+    margin: 15px 0;
+}
+
+.rating-input label:first-child {
+    display: block;
+    color: #2c3f51;
+    font-family: 'Tobi';
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.stars input[type="radio"] {
+    display: none;
+}
+
+.stars label {
+    font-size: 36px;
+    cursor: pointer;
+    color: #ddd;
+    transition: 0.2s;
+}
+
+.stars label:hover,
+.stars label:hover ~ label {
+    color: #f39c12;
+}
+
+.stars input[type="radio"]:checked ~ label {
+    color: #f39c12;
+}
+
+.stars input[type="radio"]:checked + label:hover,
+.stars input[type="radio"]:checked + label:hover ~ label,
+.stars input[type="radio"]:checked ~ label:hover,
+.stars input[type="radio"]:checked ~ label:hover ~ label,
+.stars label:hover ~ input[type="radio"]:checked ~ label {
+    color: #f39c12;
+}
+
 /* ОГРАНИЧЕНИЕ ДЛЯ ПОЛЯ "ВАШ ОТЗЫВ" */
 .add-review-form textarea {
     max-width: 100%;

@@ -49,33 +49,37 @@
 
     <!-- ФОРМА ДОБАВЛЕНИЯ ОТЗЫВА -->
     {% if user.is_authenticated %}
-        <div class="add-review-form">
-            <h3>✍️ Добавить отзыв</h3>
-            <form method="post" action="{% url 'add_review' place.id %}">
-                {% csrf_token %}
-                <select name="rating" required>
-                    <option value="5">5 ⭐</option>
-                    <option value="4">4 ⭐</option>
-                    <option value="3">3 ⭐</option>
-                    <option value="2">2 ⭐</option>
-                    <option value="1">1 ⭐</option>
-                </select>
-                <textarea name="text" rows="3" placeholder="Ваш отзыв..." required></textarea>
-                <input type="url" name="photo_url" placeholder="🔗 Ссылка на фото (необязательно)">
-                <button type="submit" class="submit-review-btn">📤 Отправить</button>
-            </form>
+    <form method="post" action="{% url 'add_review' place.id %}" class="add-review-form">
+        {% csrf_token %}
+        <h3>✍️ Добавить отзыв</h3>
+        
+        <!-- Звёздный рейтинг -->
+        <div class="rating-input">
+            <label>Ваша оценка:</label>
+            <div class="stars">
+                <input type="radio" name="rating" value="5" id="star5" required>
+                <label for="star5">⭐</label>
+                <input type="radio" name="rating" value="4" id="star4">
+                <label for="star4">⭐</label>
+                <input type="radio" name="rating" value="3" id="star3">
+                <label for="star3">⭐</label>
+                <input type="radio" name="rating" value="2" id="star2">
+                <label for="star2">⭐</label>
+                <input type="radio" name="rating" value="1" id="star1">
+                <label for="star1">⭐</label>
+            </div>
         </div>
-    {% else %}
-        <div class="login-link">
-            <p><a href="/accounts/login/">🔑 Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв</p>
-        </div>
-    {% endif %}
-
-    <!-- КНОПКА НАЗАД -->
-    <div class="back-link">
-        <a href="/places/">← Назад к заведениям</a>
+        
+        <textarea name="text" placeholder="Ваш отзыв" required></textarea>
+        <input type="text" name="photo_url" placeholder="📎 Ссылка на фото (необязательно)">
+        
+        <button type="submit" class="submit-review-btn">📤 Отправить</button>
+    </form>
+{% else %}
+    <div class="login-link">
+        <a href="/accounts/login/">🔑 Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв
     </div>
-</div>
+{% endif %}
 
 <script src="{% static 'js/place_detail.js' %}"></script>
 
