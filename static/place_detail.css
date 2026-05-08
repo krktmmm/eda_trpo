@@ -177,6 +177,28 @@
     box-sizing: border-box;
 }
 
+/* Сообщение, что отзыв уже оставлен */
+.already-reviewed-message {
+    background-color: #e8f5e9; /* Светло-зеленый фон */
+    color: #2e7d32;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 20px;
+    border: 2px solid #c8e6c9;
+}
+
+.already-reviewed-message h3 {
+    margin: 0 0 10px 0;
+    font-family: 'Tobi';
+}
+
+.already-reviewed-message p {
+    margin: 0;
+    font-family: 'Tobi';
+    font-size: 16px;
+}
+
 /* СТИЛИ ДЛЯ ЗВЁЗДНОГО РЕЙТИНГА В ФОРМЕ */
 .rating-input {
     margin: 15px 0;

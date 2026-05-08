@@ -67,21 +67,28 @@ def place_detail(request, place_id):
     place = get_object_or_404(Place, id=place_id)
     reviews = place.reviews.all().order_by('-created_at')  # все отзывы к этому заведению
     is_favorited = False
+    has_reviewed = False
     if request.user.is_authenticated:
         is_favorited = Favorite.objects.filter(user=request.user, place=place).exists()
     for review in reviews:
         # Умножаем эмодзи на оценку (например, 4 * "⭐" = "⭐⭐⭐⭐")
         review.stars_display = "⭐" * review.rating
+        has_reviewed = reviews.filter(user=request.user).exists()
     return render(request, 'places/place_detail.html', {
         'place': place,
         'reviews': reviews,
         'is_favorited': is_favorited,
+        'has_reviewed': has_reviewed,
     })
 
 @login_required
 def add_review(request, place_id):
     """Добавление отзыва (только для авторизованных)"""
     place = get_object_or_404(Place, id=place_id)
+    
+    if Review.objects.filter(place=place, user=request.user).exists():
+        messages.error(request, ' Вы уже оставляли отзыв для этого заведения!')
+        return redirect('place_detail', place_id=place.id)
     
     if request.method == 'POST':
         rating = request.POST.get('rating')
