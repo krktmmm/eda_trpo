@@ -21,6 +21,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     {% block extra_css %}{% endblock %}
+    <script>
+        window.CSRF_TOKEN = '{{ csrf_token }}';
+    </script>
 </head>
 
 <body class="{% if user.is_authenticated and user.profile.theme == 'dark' %}dark-theme{% endif %} {% if user.is_authenticated %}font-{{ user.profile.font_size|default:'medium' }}{% else %}font-medium{% endif %} {% if user.is_authenticated and user.profile.animations == 'off' %}animations-off{% endif %}" data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}" data-animations="{{ user.profile.animations|default:'on' }}">

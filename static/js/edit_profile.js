@@ -16,7 +16,7 @@ document.getElementById('delete-avatar').addEventListener('click', async functio
         const response = await fetch('/profile/delete-avatar/', {
             method: 'POST',
             headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-CSRFToken': window.CSRF_TOKEN
             },
         });
         if (response.ok) {

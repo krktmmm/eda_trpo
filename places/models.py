@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 
 class Place(models.Model):
@@ -40,7 +40,7 @@ class Review(models.Model):
     """Отзыв о заведении"""
     
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='reviews', verbose_name="Заведение")
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name="Автор")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор")
 
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], verbose_name="Оценка (1-5)")
     text = models.TextField(verbose_name="Текст отзыва")
@@ -59,7 +59,7 @@ class Review(models.Model):
 
 class Favorite(models.Model):
     """Избранные заведения пользователя"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='favorited_by')
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -90,7 +90,7 @@ function showSoloMatch(match) {
     document.getElementById('screen-telegram').innerText = match.telegram || '—';
     document.getElementById('screen-vk').innerText = match.vk || '—';
     
-    // ✅ Устанавливаем аватарку
+    // Устанавливаем аватарку
     const avatarImg = document.getElementById('match-avatar-img');
     const isDarkTheme = document.body.classList.contains('dark-theme');
     const defaultAvatar = isDarkTheme 
@@ -201,7 +201,7 @@ async function startSolo(e) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                'X-CSRFToken': window.CSRF_TOKEN
             },
             body: JSON.stringify({
                 building: form.building.value,
@@ -281,7 +281,7 @@ async function startGroup(e) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                'X-CSRFToken': window.CSRF_TOKEN
             },
             body: JSON.stringify({
                 building: form.building.value,
@@ -470,7 +470,7 @@ async function createCompany(size) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            'X-CSRFToken': window.CSRF_TOKEN
         },
         body: JSON.stringify({ size: size })
     });
@@ -529,7 +529,7 @@ if (cancelSearchBtn) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    'X-CSRFToken': window.CSRF_TOKEN
                 },
                 body: JSON.stringify({ building: '1', budget: 'any' })
             });
@@ -538,7 +538,7 @@ if (cancelSearchBtn) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    'X-CSRFToken': window.CSRF_TOKEN
                 },
                 body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
             });
@@ -606,7 +606,7 @@ document.getElementById('screen-accept').onclick = async () => {
             const joinRes = await fetch(`/roulette/api/group/join/${currentMatchData.group_id}/`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    'X-CSRFToken': window.CSRF_TOKEN
                 }
             });
             const joinData = await joinRes.json();
@@ -641,7 +641,7 @@ document.getElementById('screen-accept').onclick = async () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                'X-CSRFToken': window.CSRF_TOKEN
             }
         });
         const data = await response.json();
@@ -680,7 +680,7 @@ document.getElementById('screen-cancel').onclick = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        'X-CSRFToken': window.CSRF_TOKEN
                     },
                     body: JSON.stringify({ building: '1', budget: 'any' })
                 });
@@ -689,7 +689,7 @@ document.getElementById('screen-cancel').onclick = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        'X-CSRFToken': window.CSRF_TOKEN
                     },
                     body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
                 });
@@ -719,7 +719,7 @@ document.getElementById('not-found-cancel').addEventListener('click', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        'X-CSRFToken': window.CSRF_TOKEN
                     },
                     body: JSON.stringify({ building: '1', budget: 'any' })
                 });
@@ -728,7 +728,7 @@ document.getElementById('not-found-cancel').addEventListener('click', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        'X-CSRFToken': window.CSRF_TOKEN
                     },
                     body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
                 });

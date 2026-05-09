@@ -96,13 +96,12 @@ document.querySelectorAll('.favorite-btn').forEach(btn => {
         }
         
         const placeId = this.dataset.placeId;
-        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
         
         fetch(`/favorites/toggle/${placeId}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrf
+                'X-CSRFToken': window.CSRF_TOKEN
             },
         })
         .then(response => response.json())

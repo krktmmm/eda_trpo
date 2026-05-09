@@ -71,7 +71,7 @@ function deleteDialog(btn) {
     fetch(`/roulette/api/dialog/delete/${dialogId}/`, {
         method: 'POST',
         headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'X-CSRFToken': window.CSRF_TOKEN,
         },
     })
     .then(response => response.json())

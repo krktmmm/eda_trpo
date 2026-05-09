@@ -93,10 +93,6 @@
         width: auto;
     }
     
-    .menu a:last-child {
-        display: none;
-    }
-    
     .edit-profile-container {
         flex-direction: column;
     }

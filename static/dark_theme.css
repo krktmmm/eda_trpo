@@ -78,6 +78,27 @@ body.dark-theme .search button:hover {
     transform: none !important;
 }
 
+body.dark-theme .search-suggestions {
+    background-color: #1e293b !important;
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .suggestion-item {
+    color: #e2e8f0 !important;
+    background: #1e293b !important;
+    border-bottom-color: #334155 !important;
+}
+
+body.dark-theme .suggestion-item:hover {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .suggestion-muted {
+    color: #94a3b8 !important;
+    background: #1e293b !important;
+}
+
 /* ===== ПРИВЕТСТВИЕ ===== */
 body.dark-theme .greeting h1,
 body.dark-theme .greeting p {

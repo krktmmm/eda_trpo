@@ -56,7 +56,7 @@ function updateUnreadMessagesCount() {
                     badge.textContent = data.unread_count;
                     badge.classList.add('count');
                 } else {
-                    badge.textContent = '';
+                    badge.textContent = data.unread_count;
                     badge.classList.remove('count');
                 }
                 badge.style.display = 'flex';

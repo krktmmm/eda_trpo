@@ -4,7 +4,6 @@ from .models import Place, Review, Favorite
 from django.db.models import Avg, Count
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import Place
 import difflib
 
 def main_menu(request):
@@ -67,11 +66,12 @@ def place_detail(request, place_id):
     is_favorited = False
     has_reviewed = False
     if request.user.is_authenticated:
+        has_reviewed = place.reviews.filter(user=request.user).exists()
         is_favorited = Favorite.objects.filter(user=request.user, place=place).exists()
+        
     for review in reviews:
-        # Умножаем эмодзи на оценку (например, 4 * "⭐" = "⭐⭐⭐⭐")
         review.stars_display = "⭐" * review.rating
-        has_reviewed = reviews.filter(user=request.user).exists()
+
     return render(request, 'places/place_detail.html', {
         'place': place,
         'reviews': reviews,
@@ -106,7 +106,8 @@ def add_review(request, place_id):
             # Обновляем рейтинг заведения
             all_reviews = place.reviews.all()
             total_rating = sum(r.rating for r in all_reviews)
-            place.rating = total_rating / all_reviews.count()
+            count = all_reviews.count()
+            place.rating = total_rating / count if count > 0 else 0
             place.rating_count = all_reviews.count()
             place.save()
             

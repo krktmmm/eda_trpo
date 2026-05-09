@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 
 class SoloRequest(models.Model):
@@ -17,7 +17,7 @@ class SoloRequest(models.Model):
         ('any', 'Не важно'),
     ]
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='solo_requests')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='solo_requests')
     building = models.CharField(max_length=1, choices=BUILDING_CHOICES, verbose_name="Корпус")
     budget = models.CharField(max_length=10, choices=BUDGET_CHOICES, default='any', verbose_name="Бюджет")
     telegram = models.CharField(max_length=100, blank=True, verbose_name="Telegram")
@@ -49,7 +49,7 @@ class GroupRequest(models.Model):
         ('any', 'Не важно'),
     ]
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='group_requests')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='group_requests')
     building = models.CharField(max_length=1, choices=BUILDING_CHOICES, verbose_name="Корпус")
     budget = models.CharField(max_length=10, choices=BUDGET_CHOICES, default='any', verbose_name="Бюджет")
     needed_people = models.IntegerField(default=2, verbose_name="Сколько человек нужно")
@@ -71,7 +71,7 @@ class GroupRequest(models.Model):
 class GroupMember(models.Model):
     """Участники групповой заявки"""
     group = models.ForeignKey(GroupRequest, on_delete=models.CASCADE, related_name='members')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     joined_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -82,7 +82,7 @@ class GroupMember(models.Model):
 
 class Dialog(models.Model):
     """Диалог между пользователями"""
-    participants = models.ManyToManyField(User, related_name='dialogs')
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='dialogs')
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -115,7 +115,7 @@ class Dialog(models.Model):
 class Message(models.Model):
     """Сообщение в диалоге"""
     dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE, related_name='messages')
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
     text = models.TextField(max_length=2000)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
