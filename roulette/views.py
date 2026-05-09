@@ -24,7 +24,6 @@ def get_nearby_buildings(building):
     return nearby_map.get(building, [])
 
 def get_building_order(user_building):
-    """Возвращает порядок корпусов: свой → соседние → остальные"""
     nearby = get_nearby_buildings(user_building)
     all_buildings = ['1', '3', '5']
     building_order = [user_building]
@@ -103,11 +102,17 @@ def find_solo_match(request):
         request.session['match_user_id'] = match.user.id
         request.session['match_request_id'] = match.id
         
+        # ✅ Получаем аватарку пользователя
+        avatar_url = None
+        if hasattr(match.user, 'profile') and match.user.profile.avatar:
+            avatar_url = match.user.profile.avatar.url
+        
         return JsonResponse({
             'status': 'found',
             'username': match.user.username,
             'telegram': match.telegram,
             'vk': match.vk,
+            'avatar_url': avatar_url,  # ✅ URL аватарки (или None)
             'building': match.get_building_display(),
             'budget': match.get_budget_display(),
             'match_type': 'match',
@@ -151,48 +156,104 @@ def create_group_request(request):
         data = json.loads(request.body)
         building = data.get('building')
         budget = data.get('budget', 'any')
-        needed_people = int(data.get('needed_people', 2))
+        needed_people_raw = data.get('needed_people')
         profile = request.user.profile
+        
+        needed_people = int(needed_people_raw) if needed_people_raw else None
+        
+        # Проверяем — может уже есть активная группа
+        existing = GroupRequest.objects.filter(
+            user=request.user,
+            is_active=True
+        ).first()
+        
+        if existing:
+            return JsonResponse({
+                'status': 'ok',
+                'id': existing.id,
+                'dialog_id': existing.dialog.id if existing.dialog else None
+            })
         
         # Деактивируем старые заявки
         GroupRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
-        GroupMember.objects.filter(
-            group__in=GroupRequest.objects.filter(user=request.user, is_active=False),
-            user=request.user
-        ).delete()
         
+        # Создаём группу БЕЗ чата
         group = GroupRequest.objects.create(
             user=request.user,
             building=building,
             budget=budget,
-            needed_people=needed_people,
+            needed_people=needed_people if needed_people else 3,
             telegram=profile.telegram,
             vk=profile.vk,
             is_active=True
         )
         GroupMember.objects.create(group=group, user=request.user)
         
-        return JsonResponse({'status': 'ok', 'id': group.id})
+        return JsonResponse({
+            'status': 'ok',
+            'id': group.id,
+            'dialog_id': None  # чата пока нет
+        })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
+@login_required
+@require_http_methods(["POST"])
+def create_company(request):
+    """Создать компанию и чат (когда пользователь нажал «Создать компанию»)"""
+    try:
+        data = json.loads(request.body)
+        size = int(data.get('size', 3))
+        
+        # Ищем активную группу пользователя
+        group = GroupRequest.objects.filter(
+            user=request.user,
+            is_active=True
+        ).first()
+        
+        if not group:
+            return JsonResponse({'error': 'Нет активной заявки'}, status=404)
+        
+        # Обновляем размер группы
+        group.needed_people = size
+        group.save()
+        
+        # Создаём чат
+        if not group.dialog:
+            dialog = Dialog.objects.create()
+            dialog.participants.add(request.user)
+            group.dialog = dialog
+            group.save()
+            
+            Message.objects.create(
+                dialog=dialog,
+                sender=request.user,
+                text=f'[system] 🎉 Компания создана! {request.user.username} ищет компанию из {size} человек!'
+            )
+        
+        return JsonResponse({
+            'status': 'ok',
+            'dialog_id': group.dialog.id
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
 @login_required
 @require_http_methods(["GET"])
 def find_group_match(request):
-    """Поиск компании — ищем существующие группы или создаём новую"""
     user_group = GroupRequest.objects.filter(user=request.user, is_active=True).first()
     if not user_group:
         return JsonResponse({'error': 'У вас нет активной заявки'}, status=404)
     
-    # Ищем существующие группы с таким же количеством человек
     base_queryset = GroupRequest.objects.filter(
         is_active=True,
-        needed_people=user_group.needed_people,
         current_members__lt=models.F('needed_people')
     ).exclude(user=request.user)
     
-    # Собираем группы по приоритетам
+    # Если пользователь указал конкретное количество — ищем такие же
+    if user_group.needed_people and user_group.needed_people > 2:
+        base_queryset = base_queryset.filter(needed_people=user_group.needed_people)
+    
     candidates = []
     building_order = get_building_order(user_group.building)
     
@@ -210,7 +271,6 @@ def find_group_match(request):
             if any_budget:
                 candidates.extend(any_budget)
     
-    # Если нашли существующие группы
     if candidates:
         skipped_ids = request.session.get('skipped_group_ids', [])
         available = [g for g in candidates if g.id not in skipped_ids]
@@ -224,36 +284,44 @@ def find_group_match(request):
         request.session['skipped_group_ids'] = skipped_ids
         request.session['match_group_id'] = group.id
         
-        # Собираем информацию об участниках группы
         members = GroupMember.objects.filter(group=group).select_related('user', 'user__profile')
         members_data = []
         for member in members:
+            avatar_url = None
+            if member.user.profile.avatar:
+                avatar_url = member.user.profile.avatar.url
+
             members_data.append({
                 'username': member.user.username,
                 'telegram': member.user.profile.telegram or '—',
                 'vk': member.user.profile.vk or '—',
+                'avatar_url': avatar_url,
             })
+        
+        slots_left = group.needed_people - group.current_members
         
         return JsonResponse({
             'status': 'found',
             'group_id': group.id,
-            'group_name': f'Компания от {group.user.username}',
+            'dialog_id': group.dialog.id if group.dialog else None,
             'building': group.get_building_display(),
             'budget': group.get_budget_display(),
             'needed_people': group.needed_people,
             'current_members': group.current_members,
+            'slots_left': slots_left,
             'members': members_data,
-            'match_type': 'existing_group',
+            'is_almost_full': slots_left == 1,
         })
     
-    # Если групп нет — пользователь будет ждать в своей созданной группе
-    return JsonResponse({'status': 'waiting', 'message': 'Ищем компанию...'})
-
+    return JsonResponse({
+        'status': 'waiting',
+        'message': 'Пока никто не ищет компанию. Вы первый!',
+        'your_group_id': user_group.id,
+    })
 
 @login_required
 @require_http_methods(["POST"])
 def join_group(request, group_id):
-    """Присоединиться к существующей группе"""
     group = get_object_or_404(GroupRequest, id=group_id, is_active=True)
     
     if GroupMember.objects.filter(group=group, user=request.user).exists():
@@ -262,33 +330,57 @@ def join_group(request, group_id):
     if group.current_members >= group.needed_people:
         return JsonResponse({'error': 'Группа уже заполнена'}, status=400)
     
-    # Деактивируем свою заявку
-    GroupRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+    # ✅ Если чата ещё нет — создаём его
+    if not group.dialog:
+        dialog = Dialog.objects.create()
+        # Добавляем всех текущих участников
+        existing_members = GroupMember.objects.filter(group=group).values_list('user', flat=True)
+        for user_id in existing_members:
+            dialog.participants.add(user_id)
+        dialog.participants.add(request.user)
+        group.dialog = dialog
+        group.save()
+        
+        Message.objects.create(
+            dialog=dialog,
+            sender=request.user,
+            text=f'[system] Чат создан! {request.user.username} присоединился к компании! ({group.current_members + 1}/{group.needed_people})'
+        )
+    else:
+        group.dialog.participants.add(request.user)
+        
+        Message.objects.create(
+            dialog=group.dialog,
+            sender=request.user,
+            text=f'[system] {request.user.username} присоединился к компании! ({group.current_members + 1}/{group.needed_people})'
+        )
     
-    # Добавляем в группу
+    GroupRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
     GroupMember.objects.create(group=group, user=request.user)
     group.current_members += 1
     
-    # Если группа заполнилась — создаём общий чат и деактивируем
-    if group.current_members >= group.needed_people:
+    is_full = group.current_members >= group.needed_people
+    
+    if is_full:
         group.is_active = False
+        all_members = GroupMember.objects.filter(group=group).values_list('user', flat=True)
+        GroupRequest.objects.filter(user__in=all_members, is_active=True).update(is_active=False)
         
-        # Создаём групповой чат
-        if not group.dialog:
-            members = GroupMember.objects.filter(group=group).values_list('user', flat=True)
-            users = list(User.objects.filter(id__in=members))
-            dialog = Dialog.create_group_dialog(users)
-            group.dialog = dialog
+        Message.objects.create(
+            dialog=group.dialog,
+            sender=request.user,
+            text=f'[system] 🎉 Группа собрана! Всем приятного обеда!'
+        )
     
     group.save()
     
     return JsonResponse({
         'status': 'ok',
         'current_members': group.current_members,
-        'dialog_id': group.dialog.id if group.dialog else None,
-        'is_full': group.current_members >= group.needed_people,
+        'dialog_id': group.dialog.id,
+        'is_full': is_full,
+        'slots_left': group.needed_people - group.current_members,
     })
-
 
 # ==================== ЛИЧНЫЕ СООБЩЕНИЯ ====================
 
@@ -311,7 +403,6 @@ def messages_list(request):
         unread_count = dialog.messages.filter(is_read=False).exclude(sender=request.user).count()
         other_users = dialog.participants.exclude(id=request.user.id)
         
-        # Для групповых чатов показываем количество участников
         if other_users.count() > 1:
             chat_name = f'Группа ({dialog.participants.count()} чел.)'
         else:

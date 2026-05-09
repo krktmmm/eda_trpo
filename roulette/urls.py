@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/solo/accept/', views.accept_solo_match, name='accept_solo'),
     path('api/group/create/', views.create_group_request, name='create_group'),
     path('api/group/find/', views.find_group_match, name='find_group'),
+    path('api/group/create-company/', views.create_company, name='create_company'),
     path('api/group/join/<int:group_id>/', views.join_group, name='join_group'),
     path('messages/', views.messages_list, name='messages_list'),
     path('messages/<int:dialog_id>/', views.dialog_detail, name='dialog_detail'),

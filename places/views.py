@@ -1,11 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from .models import Place, Review, Favorite
 from django.db.models import Avg, Count
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import Place, Review
-from .models import Favorite
-from django.http import JsonResponse
 from .models import Place
 import difflib
 
