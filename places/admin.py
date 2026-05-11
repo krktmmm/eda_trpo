@@ -3,7 +3,7 @@ from .models import Place, Review
 
 @admin.register(Place)
 class PlaceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'address', 'nearest_building', 'avg_price', 'rating')
+    list_display = ('name', 'address', 'nearest_building', 'avg_price', 'student_discount', 'rating')
     list_filter = ('nearest_building', 'cuisine_type')
     search_fields = ('name', 'address')
 

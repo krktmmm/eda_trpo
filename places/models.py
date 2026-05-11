@@ -15,6 +15,7 @@ class Place(models.Model):
     
     cuisine_type = models.CharField(max_length=100, blank=True, verbose_name="Вид заведения")
     avg_price = models.IntegerField(blank=True, null=True, verbose_name="Средний чек (₽)")
+    student_discount = models.CharField(max_length=20, blank=True, verbose_name="Скидка для студентов")
     opening_hours = models.CharField(max_length=200, blank=True, verbose_name="Часы работы")
     
     # пока только ссылка

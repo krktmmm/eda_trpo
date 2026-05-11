@@ -20,7 +20,11 @@
 
     <div class="place-info-detail">
         <p>📍 {{ place.address }}</p>
-        <p>💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}</p>
+        <p>💰 {{ place.avg_price|default:"—" }} ₽</p>
+        {% if place.student_discount %}
+            <p>🎓 Скидка для студентов: {{ place.student_discount }}</p>
+        {% endif %}
+        <p>⭐ {{ place.rating|floatformat:1 }}</p>
     </div>
 
     <!-- ОТЗЫВЫ -->

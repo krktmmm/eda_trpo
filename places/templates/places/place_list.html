@@ -67,6 +67,9 @@
                     <div class="place-address">📍 {{ place.address }}</div>
                     <div class="place-info">
                         <span class="price">💰 {{ place.avg_price|default:"—" }} ₽</span>
+                        {% if place.student_discount %}
+                            <span class="discount">🎓 Скидка: {{ place.student_discount }}</span>
+                        {% endif %}
                         <span class="rating">⭐ {{ place.rating|floatformat:1 }}</span>
                         <span class="time-needed">⏰ — мин</span>
                     </div>

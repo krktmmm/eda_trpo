@@ -52,7 +52,7 @@ class GroupRequest(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='group_requests')
     building = models.CharField(max_length=1, choices=BUILDING_CHOICES, verbose_name="Корпус")
     budget = models.CharField(max_length=10, choices=BUDGET_CHOICES, default='any', verbose_name="Бюджет")
-    needed_people = models.IntegerField(default=2, verbose_name="Сколько человек нужно")
+    needed_people = models.IntegerField(default=2, verbose_name="Сколько всего человек (включая тебя)")
     current_members = models.IntegerField(default=1, verbose_name="Сколько уже собралось")
     telegram = models.CharField(max_length=100, blank=True, verbose_name="Telegram")
     vk = models.CharField(max_length=100, blank=True, verbose_name="VK")
