@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+/* ШРИФТ */
 @font-face {
     font-family: 'Tobi';
     src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
@@ -7,12 +8,14 @@
     font-style: normal;
 }
 
+/* ОБНУЛЕНИЕ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* BODY */
 body {
     background: url("/static/images/1.jpg") center/cover no-repeat fixed;
     font-family: 'Tobi';
@@ -22,7 +25,7 @@ body {
     align-items: center;
 }
 
-/* Формы */
+/* 4. ФОРМЫ (контейнер) */
 .auth-form {
     background: #fefcfc;
     padding: 40px;
@@ -34,7 +37,7 @@ body {
 
 .auth-form.hidden { display: none; }
 
-/* Заголовок */
+/* ЗАГОЛОВОК ФОРМЫ */
 h2 {
     margin-bottom: 30px;
     color: #5a9a9c;
@@ -43,7 +46,7 @@ h2 {
     font-weight: bold;
 }
 
-/* Блок с полем ввода */
+/* ПОЛЯ ВВОДА */
 .input-box {
     position: relative;
     margin: 20px 0;
@@ -70,7 +73,7 @@ h2 {
 
 .input-box input:focus { border-color: #4b8082; }
 
-/* Кнопка */
+/* КНОПКА ОТПРАВКИ */
 .submit-bin {
     width: 100%;
     padding: 12px;
@@ -90,12 +93,21 @@ h2 {
     box-shadow: 0 4px 15px #0000004d;
 }
 
-/* Текст и ссылки */
+/* ТЕКСТ И ССЫЛКИ (под формой) */
 p { margin-top: 20px; color: #787371; }
 
 a { color: #787371; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+.switch-link {
+    color: #f99039;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.switch-link:hover { text-decoration: underline; }
+
+/* ОШИБКИ (внутри полей) */
 .error-message {
     color: red;
     font-size: 12px;
@@ -107,11 +119,3 @@ a:hover { text-decoration: underline; }
     border-color: red;
     background: #fff0f0;
 }
-
-.switch-link {
-    color: #f99039;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.switch-link:hover { text-decoration: underline; }

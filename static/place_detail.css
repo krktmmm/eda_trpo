@@ -1,13 +1,13 @@
 @charset "UTF-8";
 
-/* ОСНОВНОЙ КОНТЕЙНЕР ДЛЯ ДЕТАЛЕЙ ЗАВЕДЕНИЯ */
+/* КОНТЕЙНЕР */
 .detail-container {
     max-width: 800px;
     margin: 40px auto;
     padding: 20px;
 }
 
-/* ЗАГОЛОВОК С НАЗВАНИЕМ И КНОПКОЙ ИЗБРАННОГО */
+/* ШАПКА (название + избранное) */
 .place-header {
     display: flex;
     justify-content: space-between;
@@ -27,7 +27,30 @@
     margin: 0;
 }
 
-/* КНОПКА ИЗБРАННОГО НА СТРАНИЦЕ ДЕТАЛЕЙ */
+/* Левая часть шапки (стрелка + название) */
+.place-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.back-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: transparent;
+    color: #2c3f51;
+    text-decoration: none;
+    font-size: 32px;
+    line-height: 1;
+    transition: 0.3s;
+    flex-shrink: 0;
+}
+
+/* Кнопка избранного */
 .favorite-detail-btn {
     background: none;
     border: none;
@@ -45,7 +68,7 @@
     color: #e74c3c;
 }
 
-/* ИНФОРМАЦИЯ О ЗАВЕДЕНИИ (адрес, цена, рейтинг) */
+/* ИНФОРМАЦИЯ О ЗАВЕДЕНИИ */
 .place-info-detail {
     background: #f5f5f5;
     border-radius: 15px;
@@ -82,7 +105,7 @@
     padding-bottom: 10px;
 }
 
-/* КАРТОЧКА ОТЗЫВА */
+/* Карточка отзыва */
 .review-card {
     border: 1px solid #e0e0e0;
     margin: 15px 0;
@@ -90,6 +113,7 @@
     border-radius: 15px;
     background: #f8f9fa;
     transition: 0.3s;
+    position: relative;
 }
 
 .review-card:hover {
@@ -98,6 +122,7 @@
     box-shadow: 0 5px 15px #0000000d;
 }
 
+/* Шапка отзыва */
 .review-header {
     display: flex;
     justify-content: space-between;
@@ -120,11 +145,13 @@
     font-family: 'Tobi';
 }
 
+/* Рейтинг */
 .review-rating {
     color: #f39c12;
     font-weight: bold;
 }
 
+/* Текст */
 .review-text {
     color: #2c3e50;
     font-family: 'Tobi';
@@ -133,6 +160,7 @@
     line-height: 1.4;
 }
 
+/* Фото */
 .review-photo {
     margin-top: 10px;
 }
@@ -144,227 +172,7 @@
     height: auto;
 }
 
-/* ФОРМА ДОБАВЛЕНИЯ ОТЗЫВА */
-.add-review-form {
-    background: #fefcfc;
-    border-radius: 15px;
-    padding: 25px;
-    margin-top: 20px;
-    box-shadow: 0 10px 30px #0000001a;
-    border: 1px solid #e0e0e0;
-}
-
-.add-review-form h3 {
-    color: #2c3f51;
-    font-family: 'Tobi';
-    font-size: 22px;
-    font-weight: normal;
-    margin-bottom: 20px;
-    border-bottom: 3px solid #f99039;
-    display: inline-block;
-    padding-bottom: 8px;
-}
-
-.add-review-form select,
-.add-review-form textarea,
-.add-review-form input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 15px;
-    border: 1px solid #ccc;
-    font-family: 'Tobi';
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-/* Сообщение, что отзыв уже оставлен */
-.already-reviewed-message {
-    background-color: #f5f5f5;
-    color: #6e6e6e;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    margin-top: 20px;
-    border: 2px solid #e0e0e0;
-}
-
-.already-reviewed-message h3 {
-    margin: 0 0 10px 0;
-    font-family: 'Tobi';
-}
-
-.already-reviewed-message p {
-    margin: 0;
-    font-family: 'Tobi';
-    font-size: 16px;
-}
-
-/* это паша добавил */
-.rating-input {
-    margin-bottom: 15px;
-}
-
-.rating-label {
-    display: block;
-    color: #2c3f51;
-    font-family: 'Tobi';
-    font-size: 16px;
-    margin-bottom: 8px;
-    font-weight: bold;
-}
-
-.stars {
-    display: flex;
-    flex-direction: row-reverse; /* Разворачиваем порядок для работы CSS */
-    justify-content: flex-end;
-    gap: 8px;
-}
-
-/* Скрываем стандартные radio-кнопки */
-.stars input[type="radio"] {
-    display: none;
-}
-
-/* Блок для одной звезды */
-.stars label {
-    position: relative; /* Чтобы можно было наложить картинки друг на друга */
-    width: 40px;        /* Размер звезды */
-    height: 40px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Общие настройки для слоев (пустая и полная звезда) */
-.stars label::before,
-.stars label::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: contain;
-    background-repeat: no-repeat;
-    transition: opacity 0.3s ease; /* ПЛАВНОСТЬ ПЕРЕХОДА (0.3 сек) */
-}
-
-/* Слой 1: Пустая звезда (видна по умолчанию) */
-.stars label::before {
-    background-image: url('/static/images/star-empty.png');
-    opacity: 1;
-    z-index: 1;
-}
-
-/* Слой 2: Полная звезда (скрыта по умолчанию) */
-.stars label::after {
-    background-image: url('/static/images/star-filled.png');
-    opacity: 0;
-    z-index: 2;
-}
-
-/* При наведении мышка становится полной, пустая исчезает */
-.stars label:hover::after,
-.stars label:hover ~ label::after {
-    opacity: 1;
-}
-.stars label:hover::before,
-.stars label:hover ~ label::before {
-    opacity: 0;
-}
-
-/* Когда звезда выбрана (клик) — она остается полной */
-.stars input[type="radio"]:checked ~ label::after {
-    opacity: 1;
-}
-.stars input[type="radio"]:checked ~ label::before {
-    opacity: 0;
-}
-
-/* ОГРАНИЧЕНИЕ ДЛЯ ПОЛЯ "ВАШ ОТЗЫВ" */
-.add-review-form textarea {
-    max-width: 100%;
-    min-width: 100%;
-    max-height: 200px;
-    min-height: 100px;
-}
-
-.add-review-form select:focus,
-.add-review-form textarea:focus,
-.add-review-form input:focus {
-    outline: none;
-    border-color: #f99039;
-    box-shadow: 0 0 5px #f9903980;
-}
-
-/* КНОПКА ОТПРАВКИ */
-.submit-review-btn {
-    background: #5F9EA0;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 15px;
-    font-size: 18px;
-    font-family: 'Tobi';
-    cursor: pointer;
-    transition: 0.3s;
-    width: auto;
-    min-width: 150px;
-}
-
-.submit-review-btn:hover {
-    background: #f99039;
-    transform: scale(1.02);
-}
-
-/* КНОПКА "НАЗАД" */
-.back-link {
-    margin-top: 30px;
-    text-align: center;
-}
-
-.back-link a {
-    color: #5F9EA0;
-    text-decoration: none;
-    font-family: 'Tobi';
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-.back-link a:hover {
-    color: #f99039;
-    text-decoration: underline;
-}
-
-/* СООБЩЕНИЕ О ПУСТЫХ ОТЗЫВАХ */
-.empty-reviews {
-    text-align: center;
-    color: #999;
-    padding: 30px;
-    font-family: 'Tobi';
-    font-size: 18px;
-}
-
-/* ССЫЛКА НА ВХОД */
-.login-link {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.login-link a {
-    color: #f99039;
-    text-decoration: none;
-    font-family: 'Tobi';
-    font-size: 18px;
-}
-
-.login-link a:hover {
-    text-decoration: underline;
-}
-
-                         /* ВИКА ЭТО КАТЯ ДОБАВИЛА */
+/* Меню отзыва */
 .review-menu {
     position: absolute;
     top: 10px;
@@ -445,6 +253,200 @@
     background: #fde8e8;
 }
 
+/* Пустые отзывы */
+.empty-reviews {
+    text-align: center;
+    color: #999;
+    padding: 30px;
+    font-family: 'Tobi';
+    font-size: 18px;
+}
+
+/* ФОРМА ДОБАВЛЕНИЯ ОТЗЫВА */
+.add-review-form {
+    background: #fefcfc;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 20px;
+    box-shadow: 0 10px 30px #0000001a;
+    border: 1px solid #e0e0e0;
+}
+
+.add-review-form h3 {
+    color: #2c3f51;
+    font-family: 'Tobi';
+    font-size: 22px;
+    font-weight: normal;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #f99039;
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+/* Звёздный рейтинг */
+.rating-input {
+    margin-bottom: 15px;
+}
+
+.rating-label {
+    display: block;
+    color: #2c3f51;
+    font-family: 'Tobi';
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.stars input[type="radio"] {
+    display: none;
+}
+
+.stars label {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stars label::before,
+.stars label::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: opacity 0.3s ease;
+}
+
+.stars label::before {
+    background-image: url('/static/images/star-empty.png');
+    opacity: 1;
+    z-index: 1;
+}
+
+.stars label::after {
+    background-image: url('/static/images/star-filled.png');
+    opacity: 0;
+    z-index: 2;
+}
+
+.stars label:hover::after,
+.stars label:hover ~ label::after {
+    opacity: 1;
+}
+.stars label:hover::before,
+.stars label:hover ~ label::before {
+    opacity: 0;
+}
+
+.stars input[type="radio"]:checked ~ label::after {
+    opacity: 1;
+}
+.stars input[type="radio"]:checked ~ label::before {
+    opacity: 0;
+}
+
+/* Поля ввода */
+.add-review-form select,
+.add-review-form textarea,
+.add-review-form input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    font-family: 'Tobi';
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.add-review-form textarea {
+    max-width: 100%;
+    min-width: 100%;
+    max-height: 200px;
+    min-height: 100px;
+}
+
+.add-review-form select:focus,
+.add-review-form textarea:focus,
+.add-review-form input:focus {
+    outline: none;
+    border-color: #f99039;
+    box-shadow: 0 0 5px #f9903980;
+}
+
+/* Кнопка отправки */
+.submit-review-btn {
+    background: #5F9EA0;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 15px;
+    font-size: 18px;
+    font-family: 'Tobi';
+    cursor: pointer;
+    transition: 0.3s;
+    width: auto;
+    min-width: 150px;
+}
+
+.submit-review-btn:hover {
+    background: #f99039;
+    transform: scale(1.02);
+}
+
+/* Сообщение "уже оставлен" */
+.already-reviewed-message {
+    background-color: #f5f5f5;
+    color: #6e6e6e;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 20px;
+    border: 2px solid #e0e0e0;
+}
+
+.already-reviewed-message h3 {
+    margin: 0 0 10px 0;
+    font-family: 'Tobi';
+}
+
+.already-reviewed-message p {
+    margin: 0;
+    font-family: 'Tobi';
+    font-size: 16px;
+}
+
+/* ССЫЛКА НА ВХОД */
+.login-link {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.login-link a {
+    color: #f99039;
+    text-decoration: none;
+    font-family: 'Tobi';
+    font-size: 18px;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
 /* УВЕДОМЛЕНИЯ */
 .review-notification {
     padding: 15px;
@@ -473,18 +475,42 @@
     border: 1px solid #ffeaa7;
 }
 
-.back-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: transparent;
-    color: #2c3f51;
+/* СТРАНИЦА РЕДАКТИРОВАНИЯ ОТЗЫВА */
+.review-place-name {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.review-edit-hint {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 15px;
+    font-family: 'Tobi';
+}
+
+.back-to-place-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-align: center;
+    width: auto;
+    padding: 10px 24px;
+}
+
+/* КНОПКА "НАЗАД" */
+.back-link {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.back-link a {
+    color: #5F9EA0;
     text-decoration: none;
-    font-size: 32px;
-    line-height: 1;
+    font-family: 'Tobi';
+    font-size: 18px;
     transition: 0.3s;
-    flex-shrink: 0;
+}
+
+.back-link a:hover {
+    color: #f99039;
+    text-decoration: underline;
 }

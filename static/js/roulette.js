@@ -1,31 +1,97 @@
+// Кнопки выбора режима
 const soloBtn = document.getElementById('solo-btn');
 const groupBtn = document.getElementById('group-btn');
+
+// Формы
 const soloForm = document.getElementById('solo-form');
 const groupForm = document.getElementById('group-form');
+const soloSubmitForm = document.getElementById('create-solo-form');
+const groupSubmitForm = document.getElementById('create-group-form');
 
+// Экраны
 const searchProcess = document.getElementById('search-process');
-const slotContainer = document.getElementById('slot-animation');
-const cancelSearchBtn = document.getElementById('cancelSearchBtn');
-const searchProcessText = document.getElementById('search-process-text');
 const notFoundScreen = document.getElementById('not-found-screen');
 const matchScreen = document.getElementById('match-screen');
 
-let slotAnimation = null;
-let searchTimer = null;
-let currentMatchData = null;
-let currentSearchMode = null;
+// Элементы поиска
+const slotContainer = document.getElementById('slot-animation');
+const cancelSearchBtn = document.getElementById('cancelSearchBtn');
+const searchProcessText = document.getElementById('search-process-text');
+
+// Кнопки действий
+const screenAcceptBtn = document.getElementById('screen-accept');
+const screenAgainBtn = document.getElementById('screen-again');
+const screenCancelBtn = document.getElementById('screen-cancel');
+const notFoundCancelBtn = document.getElementById('not-found-cancel');
+const notFoundAgainBtn = document.getElementById('not-found-again');
 
 const SLOT_SPEED = 0.5;
 const MIN_SEARCH_TIME = 5000;
 
+let slotAnimation = null;
+let searchTimer = null;
+let currentMatchData = null;
+let currentSearchMode = null;  // 'solo' или 'group'
+
+/** Прокрутка к элементу */
+function scrollToElement(element) {
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+/** Прокрутка к форме */
+function scrollToForm(formElement) {
+    if (formElement && !formElement.classList.contains('hidden')) {
+        setTimeout(() => {
+            formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+}
+
+/** Проверяет, включены ли анимации */
+function areAnimationsEnabled() {
+    const localSetting = localStorage.getItem('animations');
+    if (localSetting !== null) {
+        return localSetting !== 'off';
+    }
+    if (document.body && document.body.classList) {
+        return !document.body.classList.contains('animations-off');
+    }
+    return true;
+}
+
+/** Загружает статичный Lottie на определённом кадре */
+function loadStaticLottie(container, path, frame = 0) {
+    container.innerHTML = '';
+    const animation = lottie.loadAnimation({
+        container: container,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: path
+    });
+    animation.addEventListener('DOMLoaded', () => {
+        if (frame === 'last') {
+            animation.goToAndStop(animation.totalFrames - 1, true);
+        } else {
+            animation.goToAndStop(frame, true);
+        }
+        container.style.pointerEvents = 'none';
+    });
+    return animation;
+}
+
+/** Показывает форму выбранного режима */
 function showForm(formToShow) {
-    soloForm.classList.add('hidden');
-    groupForm.classList.add('hidden');
     soloForm.style.display = '';
     groupForm.style.display = '';
+    soloForm.classList.add('hidden');
+    groupForm.classList.add('hidden');
     formToShow.classList.remove('hidden');
 }
 
+/** Запускает анимацию слота */
 function initSlotAnimation() {
     if (slotAnimation) {
         slotAnimation.destroy();
@@ -43,6 +109,7 @@ function initSlotAnimation() {
     });
 }
 
+/** Останавливает слот на последнем кадре */
 function stopSlotOnWin() {
     if (!slotAnimation) return;
     slotAnimation.loop = false;
@@ -53,6 +120,7 @@ function stopSlotOnWin() {
     );
 }
 
+/** Показывает экран процесса поиска */
 function showSearchProcess() {
     document.querySelector('.roulette-buttons').style.display = 'none';
     document.querySelector('.greeting').style.display = 'none';
@@ -72,6 +140,7 @@ function showSearchProcess() {
     }
 }
 
+/** Скрывает экран процесса поиска */
 function hideSearchProcess() {
     searchProcess.classList.add('hidden');
     if (slotAnimation) {
@@ -79,7 +148,13 @@ function hideSearchProcess() {
     }
 }
 
-// ========== СОЛО-МАТЧ ==========
+/** Показывает главный экран */
+function showMainScreen() {
+    document.querySelector('.greeting').style.display = '';
+    document.querySelector('.roulette-buttons').style.display = 'flex';
+}
+
+/** Отображает соло-матч */
 function showSoloMatch(match) {
     document.getElementById('group-members-container').classList.add('hidden');
     document.getElementById('single-match-card').classList.remove('hidden');
@@ -89,14 +164,13 @@ function showSoloMatch(match) {
     document.getElementById('screen-budget').innerText = match.budget;
     document.getElementById('screen-telegram').innerText = match.telegram || '—';
     document.getElementById('screen-vk').innerText = match.vk || '—';
-    
-    // Устанавливаем аватарку
+
     const avatarImg = document.getElementById('match-avatar-img');
     const isDarkTheme = document.body.classList.contains('dark-theme');
-    const defaultAvatar = isDarkTheme 
-        ? '/static/images/default_avatar_dark_theme.jpg' 
+    const defaultAvatar = isDarkTheme
+        ? '/static/images/default_avatar_dark_theme.jpg'
         : '/static/images/default_avatar.jpg';
-    
+
     if (match.avatar_url) {
         avatarImg.src = match.avatar_url;
         avatarImg.onerror = function() {
@@ -108,13 +182,13 @@ function showSoloMatch(match) {
     }
 }
 
-// ========== ГРУППОВОЙ МАТЧ ==========
+/** Отображает групповой матч */
 function showGroupMatch(match) {
     document.getElementById('single-match-card').classList.add('hidden');
     document.getElementById('group-members-container').classList.remove('hidden');
-    
+
     const slotsLeft = match.slots_left || (match.needed_people - match.current_members);
-    
+
     if (slotsLeft === 1) {
         document.getElementById('match-title-text').textContent = 'Найдена компания! Последнее место!';
     } else {
@@ -123,20 +197,20 @@ function showGroupMatch(match) {
 
     document.getElementById('screen-building').innerText = match.building;
     document.getElementById('screen-budget').innerText = match.budget;
-    
+
     const isDarkTheme = document.body.classList.contains('dark-theme');
-    const defaultAvatar = isDarkTheme 
-        ? '/static/images/default_avatar_dark_theme.jpg' 
+    const defaultAvatar = isDarkTheme
+        ? '/static/images/default_avatar_dark_theme.jpg'
         : '/static/images/default_avatar.jpg';
 
     const list = document.getElementById('group-members-list');
-    
+
     let html = match.members.map(m => {
         const avatarSrc = m.avatar_url || defaultAvatar;
-        const onError = m.avatar_url 
-            ? `onerror="this.src='${defaultAvatar}'; this.onerror=null;"` 
+        const onError = m.avatar_url
+            ? `onerror="this.src='${defaultAvatar}'; this.onerror=null;"`
             : '';
-        
+
         return `
             <div class="group-member-card filled">
                 <img src="${avatarSrc}" alt="${m.username}" ${onError}>
@@ -145,7 +219,7 @@ function showGroupMatch(match) {
             </div>
         `;
     }).join('');
-    
+
     for (let i = 0; i < slotsLeft; i++) {
         html += `
             <div class="group-member-card empty">
@@ -155,16 +229,17 @@ function showGroupMatch(match) {
             </div>
         `;
     }
-    
+
     html += `
         <div class="group-info">
             Собралось ${match.current_members} из ${match.needed_people} человек
         </div>
     `;
-    
+
     list.innerHTML = html;
 }
 
+/** Показывает экран матча */
 function showMatchScreen(match) {
     document.querySelector('.greeting').style.display = 'none';
     document.querySelector('.roulette-buttons').style.display = 'none';
@@ -185,19 +260,192 @@ function showMatchScreen(match) {
     matchScreen.classList.remove('hidden');
 }
 
-// ========== СТАРТ СОЛО-ПОИСКА ==========
+/** Показывает модальное окно результата */
+function showResultModal(title, message, confirmText, cancelText, onConfirm, onCancel) {
+    const modal = document.getElementById('match-modal');
+    const modalTitle = modal.querySelector('h3');
+    const modalText = document.getElementById('modal-match-text');
+    const confirmBtn = document.getElementById('modal-chat-btn');
+    const cancelBtn = document.getElementById('modal-later-btn');
+
+    modalTitle.textContent = title;
+    modalText.innerHTML = message;
+    confirmBtn.textContent = confirmText;
+    cancelBtn.textContent = cancelText;
+
+    confirmBtn.onclick = () => {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        if (onConfirm) onConfirm();
+    };
+
+    cancelBtn.onclick = () => {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        if (onCancel) onCancel();
+    };
+
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+}
+
+/** Показывает диалог подтверждения */
+function showConfirmDialog(message, confirmText, cancelText, onConfirm, onCancel) {
+    showResultModal('🤔 Подтверждение', message, confirmText, cancelText, onConfirm, onCancel);
+}
+
+/** Показывает окно создания группы */
+function showCreateGroupModal() {
+    const modal = document.getElementById('match-modal');
+    const modalTitle = modal.querySelector('h3');
+    const modalText = document.getElementById('modal-match-text');
+    const confirmBtn = document.getElementById('modal-chat-btn');
+    const cancelBtn = document.getElementById('modal-later-btn');
+
+    const neededPeopleInput = document.querySelector('#create-group-form input[name="needed_people"]');
+    const requestedSize = neededPeopleInput ? parseInt(neededPeopleInput.value) : null;
+
+    if (requestedSize && requestedSize >= 3) {
+        modalTitle.textContent = '🚀 Создать компанию?';
+        modalText.innerHTML = `
+            <p style="margin-bottom: 15px; font-size: 18px;">
+                Создать компанию из <strong>${requestedSize} человек</strong> (включая вас)?
+            </p>
+            <p style="color: #888; font-size: 14px;">
+                Вы станете первым участником и будете ждать остальных.
+            </p>
+        `;
+        confirmBtn.textContent = `✅ Да`;
+        cancelBtn.textContent = '✏️ Изменить';
+
+        confirmBtn.onclick = async () => {
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+            notFoundScreen.classList.add('hidden');
+            await createCompany(requestedSize);
+        };
+
+        cancelBtn.onclick = () => {
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+            showSizePickerModal();
+        };
+    } else {
+        showSizePickerModal();
+        return;
+    }
+
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+}
+
+/** Показывает окно выбора размера компании */
+function showSizePickerModal() {
+    const modal = document.getElementById('match-modal');
+    const modalTitle = modal.querySelector('h3');
+    const modalText = document.getElementById('modal-match-text');
+    const confirmBtn = document.getElementById('modal-chat-btn');
+    const cancelBtn = document.getElementById('modal-later-btn');
+
+    modalTitle.textContent = '🚀 Создать компанию';
+    modalText.innerHTML = `
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #2c3e50;">
+                Сколько человек будет (включая вас)?
+            </label>
+            <input type="number"
+                   id="group-size-input"
+                   placeholder="Минимум 3 человека"
+                   min="3"
+                   max="10"
+                   style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 15px; font-family: 'Tobi'; font-size: 16px; text-align: center; box-sizing: border-box;">
+            <small style="color: #999; font-size: 12px; display: block; margin-top: 5px;">
+                Компания от 3 человек (включая вас)
+            </small>
+        </div>
+    `;
+    confirmBtn.textContent = '✅ Создать';
+    cancelBtn.textContent = '❌ Отмена';
+
+    confirmBtn.onclick = async () => {
+        const sizeInput = document.getElementById('group-size-input');
+        const size = parseInt(sizeInput.value);
+
+        if (!size || size < 3) {
+            alert('Минимальный размер компании — 3 человека (включая вас)');
+            return;
+        }
+
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        notFoundScreen.classList.add('hidden');
+        await createCompany(size);
+    };
+
+    cancelBtn.onclick = () => {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    };
+
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+}
+
+/** Создаёт компанию */
+async function createCompany(size) {
+    const modal = document.getElementById('match-modal');
+    const modalButtons = modal.querySelectorAll('button');
+    modalButtons.forEach(btn => btn.disabled = true);
+
+    try {
+        const res = await fetch('/roulette/api/group/create-company/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': window.CSRF_TOKEN
+            },
+            body: JSON.stringify({ size: size })
+        });
+        const data = await res.json();
+
+        if (data.dialog_id) {
+            currentMatchData = { dialog_id: data.dialog_id };
+
+            showResultModal(
+                '🚀 Компания создана!',
+                `Вы ищете компанию из <strong>${size} человек</strong>.<br>Вы первый в очереди!`,
+                '💬 Открыть чат',
+                '⏰ Позже',
+                () => { window.location.href = `/roulette/messages/${data.dialog_id}/`; },
+                () => { location.href = '/roulette/'; }
+            );
+        }
+    } catch (error) {
+        console.error('Ошибка при создании компании:', error);
+        alert('Произошла ошибка. Попробуйте ещё раз.');
+    } finally {
+        modalButtons.forEach(btn => btn.disabled = false);
+    }
+}
+
+/** Старт соло-поиска */
 async function startSolo(e) {
     e.preventDefault();
+
+    const form = document.getElementById('create-solo-form');
+    const allButtons = form.querySelectorAll('button, select, input');
+    allButtons.forEach(el => el.disabled = true);
+
     const submitBtn = document.getElementById('start-solo');
     if (submitBtn) {
-        submitBtn.disabled = true;
         submitBtn.textContent = '⏳ Поиск...';
     }
+
     showSearchProcess();
     scrollToElement(searchProcess);
+
     try {
-        const form = document.getElementById('create-solo-form');
-        await fetch('/roulette/api/solo/create/', {
+        await fetch('/roulette/api/solo/save-params/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -208,13 +456,16 @@ async function startSolo(e) {
                 budget: form.budget.value
             })
         });
+
         const searchStart = Date.now();
         const res = await fetch('/roulette/api/solo/find/');
         const match = await res.json();
         const elapsed = Date.now() - searchStart;
+
         if (elapsed < MIN_SEARCH_TIME) {
             await new Promise(resolve => setTimeout(resolve, MIN_SEARCH_TIME - elapsed));
         }
+
         if (match.status === 'found') {
             currentMatchData = match;
             stopSlotOnWin();
@@ -238,6 +489,8 @@ async function startSolo(e) {
                 hideSearchProcess();
                 document.querySelector('.greeting').style.display = 'none';
                 document.querySelector('.roulette-buttons').style.display = 'none';
+                soloForm.style.display = '';
+                groupForm.style.display = '';
                 soloForm.classList.add('hidden');
                 groupForm.classList.add('hidden');
                 notFoundScreen.classList.remove('hidden');
@@ -251,33 +504,40 @@ async function startSolo(e) {
                 }, 200);
             }, 2000);
         }
+    } catch (error) {
+        console.error('Ошибка при поиске:', error);
+        hideSearchProcess();
+        showMainScreen();
+        soloForm.style.display = '';
+        soloForm.classList.remove('hidden');
     } finally {
+        allButtons.forEach(el => el.disabled = false);
         if (submitBtn) {
-            submitBtn.disabled = false;
             submitBtn.textContent = '🎲 Начать поиск';
         }
     }
 }
 
-// ========== СТАРТ ГРУППОВОГО ПОИСКА ==========
+/** Старт группового поиска */
 async function startGroup(e) {
     e.preventDefault();
 
-    // Защита от двойного нажатия
+    const form = document.getElementById('create-group-form');
+    const allButtons = form.querySelectorAll('button, select, input');
+    allButtons.forEach(el => el.disabled = true);
+
     const submitBtn = document.getElementById('start-group');
-    if (submitBtn.disabled) return;  // уже запущено
-    
     if (submitBtn) {
-        submitBtn.disabled = true;
         submitBtn.textContent = '⏳ Поиск...';
     }
+
     showSearchProcess();
     scrollToElement(searchProcess);
+
     try {
-        const form = document.getElementById('create-group-form');
         const neededPeople = form.needed_people.value;
 
-        const createRes = await fetch('/roulette/api/group/create/', {
+        await fetch('/roulette/api/group/save-params/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -289,15 +549,12 @@ async function startGroup(e) {
                 needed_people: neededPeople || null
             })
         });
-        const createData = await createRes.json();
-        if (createData.dialog_id) {
-            currentMatchData = { dialog_id: createData.dialog_id };
-        }
 
         const searchStart = Date.now();
         const res = await fetch('/roulette/api/group/find/');
         const match = await res.json();
         const elapsed = Date.now() - searchStart;
+
         if (elapsed < MIN_SEARCH_TIME) {
             await new Promise(resolve => setTimeout(resolve, MIN_SEARCH_TIME - elapsed));
         }
@@ -324,25 +581,27 @@ async function startGroup(e) {
             searchProcessText.innerText = 'Компаний пока нет...';
             setTimeout(() => {
                 hideSearchProcess();
-                
+
                 document.querySelector('.greeting').style.display = 'none';
                 document.querySelector('.roulette-buttons').style.display = 'none';
+                soloForm.style.display = '';
+                groupForm.style.display = '';
                 soloForm.classList.add('hidden');
                 groupForm.classList.add('hidden');
-                
+
                 notFoundScreen.classList.remove('hidden');
                 document.querySelector('#not-found-title').textContent = 'Компания не найдена';
                 document.querySelector('#not-found-text').textContent = 'Нет доступных компаний. Станьте первым!';
-                
+
                 document.getElementById('not-found-cancel').textContent = '❌ Не искать';
                 document.getElementById('not-found-again').textContent = '🔄 Попробовать ещё раз';
                 document.getElementById('not-found-create').textContent = '🚀 Создать компанию';
                 document.getElementById('not-found-create').classList.remove('hidden');
-                
+
                 document.getElementById('not-found-create').onclick = () => {
                     showCreateGroupModal();
                 };
-                
+
                 setTimeout(() => {
                     notFoundScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 200);
@@ -351,6 +610,10 @@ async function startGroup(e) {
             stopSlotOnWin();
             setTimeout(() => {
                 hideSearchProcess();
+                soloForm.style.display = '';
+                groupForm.style.display = '';
+                soloForm.classList.add('hidden');
+                groupForm.classList.add('hidden');
                 notFoundScreen.classList.remove('hidden');
                 document.querySelector('#not-found-title').textContent = 'Собеседник не найден';
                 document.querySelector('#not-found-text').textContent = 'Попробуйте изменить параметры поиска';
@@ -362,190 +625,53 @@ async function startGroup(e) {
                 }, 200);
             }, 2000);
         }
+    } catch (error) {
+        console.error('Ошибка при поиске:', error);
+        hideSearchProcess();
+        showMainScreen();
+        groupForm.style.display = '';
+        groupForm.classList.remove('hidden');
     } finally {
+        allButtons.forEach(el => el.disabled = false);
         if (submitBtn) {
-            submitBtn.disabled = false;
             submitBtn.textContent = '🎲 Начать поиск';
         }
     }
 }
 
-// ========== МОДАЛЬНОЕ ОКНО ДЛЯ СОЗДАНИЯ КОМПАНИИ ==========
-function showCreateGroupModal() {
-    const modal = document.getElementById('match-modal');
-    const modalTitle = modal.querySelector('h3');
-    const modalText = document.getElementById('modal-match-text');
-    const confirmBtn = document.getElementById('modal-chat-btn');
-    const cancelBtn = document.getElementById('modal-later-btn');
-    
-    // Получаем размер компании из формы (если был указан)
-    const neededPeopleInput = document.querySelector('#create-group-form input[name="needed_people"]');
-    const requestedSize = neededPeopleInput ? parseInt(neededPeopleInput.value) : null;
-    
-    if (requestedSize && requestedSize >= 3) {
-        // Пользователь указал размер → спрашиваем подтверждение
-        modalTitle.textContent = '🚀 Создать компанию?';
-        modalText.innerHTML = `
-            <p style="margin-bottom: 15px; font-size: 18px;">
-                Создать компанию из <strong>${requestedSize} человек</strong> (включая вас)?
-            </p>
-            <p style="color: #888; font-size: 14px;">
-                Вы станете первым участником и будете ждать остальных.
-            </p>
-        `;
-        confirmBtn.textContent = `✅ Да`;
-        cancelBtn.textContent = '✏️ Изменить';
-        
-        confirmBtn.onclick = async () => {
-            modal.style.display = 'none';
-            notFoundScreen.classList.add('hidden');
-            await createCompany(requestedSize);
-        };
-        
-        cancelBtn.onclick = () => {
-            modal.style.display = 'none';
-            // Показываем окно с выбором размера
-            showSizePickerModal();
-        };
-    } else {
-        // Размер не указан → сразу показываем выбор размера
-        showSizePickerModal();
-    }
-    
-    modal.style.display = 'flex';
-}
+// Отправка форм
+if (soloSubmitForm) soloSubmitForm.onsubmit = startSolo;
+if (groupSubmitForm) groupSubmitForm.onsubmit = startGroup;
 
-// ========== ОКНО ВЫБОРА РАЗМЕРА КОМПАНИИ ==========
-function showSizePickerModal() {
-    const modal = document.getElementById('match-modal');
-    const modalTitle = modal.querySelector('h3');
-    const modalText = document.getElementById('modal-match-text');
-    const confirmBtn = document.getElementById('modal-chat-btn');
-    const cancelBtn = document.getElementById('modal-later-btn');
-    
-    modalTitle.textContent = '🚀 Создать компанию';
-    modalText.innerHTML = `
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #2c3e50;">
-                Сколько человек будет (включая вас)?
-            </label>
-            <input type="number" 
-                   id="group-size-input" 
-                   placeholder="Минимум 3 человека" 
-                   min="3" 
-                   max="10"
-                   style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 15px; font-family: 'Tobi'; font-size: 16px; text-align: center; box-sizing: border-box;">
-            <small style="color: #999; font-size: 12px; display: block; margin-top: 5px;">
-                Компания от 3 человек (включая вас)
-            </small>
-        </div>
-    `;
-    confirmBtn.textContent = '✅ Создать';
-    cancelBtn.textContent = '❌ Отмена';
-    
-    confirmBtn.onclick = async () => {
-        const sizeInput = document.getElementById('group-size-input');
-        const size = parseInt(sizeInput.value);
-        
-        if (!size || size < 3) {
-            alert('Минимальный размер компании — 3 человека (включая вас)');
-            return;
-        }
-        
-        modal.style.display = 'none';
-        notFoundScreen.classList.add('hidden');
-        await createCompany(size);
+// Кнопки выбора режима
+if (soloBtn) {
+    soloBtn.onclick = () => {
+        currentSearchMode = 'solo';
+        showForm(soloForm);
+        scrollToForm(soloForm);
     };
-    
-    cancelBtn.onclick = () => {
-        modal.style.display = 'none';
+}
+
+if (groupBtn) {
+    groupBtn.onclick = () => {
+        currentSearchMode = 'group';
+        showForm(groupForm);
+        scrollToForm(groupForm);
     };
-    
-    modal.style.display = 'flex';
 }
 
-// ========== ФУНКЦИЯ СОЗДАНИЯ КОМПАНИИ ==========
-async function createCompany(size) {
-    const res = await fetch('/roulette/api/group/create-company/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': window.CSRF_TOKEN
-        },
-        body: JSON.stringify({ size: size })
-    });
-    const data = await res.json();
-    
-    if (data.dialog_id) {
-        currentMatchData = { dialog_id: data.dialog_id };
-        
-        showResultModal(
-            '🚀 Компания создана!',
-            `Вы ищете компанию из <strong>${size} человек</strong>.<br>Вы первый в очереди!`,
-            '💬 Открыть чат',
-            '⏰ Позже',
-            () => { window.location.href = `/roulette/messages/${data.dialog_id}/`; },
-            () => { location.href = '/roulette/'; }
-        );
-    }
-}
-
-// ========== ОБРАБОТЧИКИ ФОРМ ==========
-document.getElementById('create-solo-form').onsubmit = startSolo;
-document.getElementById('create-group-form').onsubmit = startGroup;
-
-function scrollToForm(formElement) {
-    if (formElement && !formElement.classList.contains('hidden')) {
-        setTimeout(() => {
-            formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-    }
-}
-
-soloBtn.onclick = () => {
-    currentSearchMode = 'solo';
-    showForm(soloForm);
-    scrollToForm(soloForm);
-};
-
-groupBtn.onclick = () => {
-    currentSearchMode = 'group';
-    showForm(groupForm);
-    scrollToForm(groupForm);
-};
-
-// ========== КНОПКА "НАЗАД" ВО ВРЕМЯ ПОИСКА ==========
+// Кнопка "Назад" во время поиска
 if (cancelSearchBtn) {
-    cancelSearchBtn.onclick = async () => {
+    cancelSearchBtn.onclick = () => {
         if (searchTimer) {
             clearTimeout(searchTimer);
             searchTimer = null;
         }
 
         hideSearchProcess();
-        
-        if (currentSearchMode === 'solo') {
-            await fetch('/roulette/api/solo/create/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': window.CSRF_TOKEN
-                },
-                body: JSON.stringify({ building: '1', budget: 'any' })
-            });
-        } else if (currentSearchMode === 'group') {
-            await fetch('/roulette/api/group/create/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': window.CSRF_TOKEN
-                },
-                body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
-            });
-        }
-        
-        document.querySelector('.roulette-buttons').style.display = 'flex';
-        document.querySelector('.greeting').style.display = '';
+        showMainScreen();
+        soloForm.style.display = '';
+        groupForm.style.display = '';
         if (currentSearchMode === 'solo') {
             soloForm.classList.remove('hidden');
         } else if (currentSearchMode === 'group') {
@@ -554,276 +680,237 @@ if (cancelSearchBtn) {
     };
 }
 
-// ========== КНОПКА "ИСКАТЬ ДРУГОГО" ==========
-document.getElementById('screen-again').onclick = () => {
-    matchScreen.classList.add('hidden');
-    if (currentSearchMode === 'group') {
-        document.getElementById('create-group-form').dispatchEvent(new Event('submit'));
-    } else {
-        document.getElementById('create-solo-form').dispatchEvent(new Event('submit'));
-    }
-};
+// Кнопка "Искать другого"
+if (screenAgainBtn) {
+    screenAgainBtn.onclick = function() {
+        if (this.disabled) return;
+        this.disabled = true;
+        this.textContent = '⏳ Поиск...';
 
-// ========== ФУНКЦИЯ ПОКАЗА МОДАЛЬНОГО ОКНА РЕЗУЛЬТАТА ==========
-function showResultModal(title, message, confirmText, cancelText, onConfirm, onCancel) {
-    const modal = document.getElementById('match-modal');
-    const modalTitle = modal.querySelector('h3');
-    const modalText = document.getElementById('modal-match-text');
-    const confirmBtn = document.getElementById('modal-chat-btn');
-    const cancelBtn = document.getElementById('modal-later-btn');
-    
-    modalTitle.textContent = title;
-    modalText.innerHTML = message;
-    confirmBtn.textContent = confirmText;
-    cancelBtn.textContent = cancelText;
-    
-    confirmBtn.onclick = () => {
-        modal.style.display = 'none';
-        if (onConfirm) onConfirm();
+        matchScreen.classList.add('hidden');
+
+        if (currentSearchMode === 'group') {
+            groupSubmitForm?.dispatchEvent(new Event('submit'));
+        } else {
+            soloSubmitForm?.dispatchEvent(new Event('submit'));
+        }
+
+        setTimeout(() => {
+            this.disabled = false;
+            this.textContent = '🔄 Искать другого';
+        }, 5000);
     };
-    
-    cancelBtn.onclick = () => {
-        modal.style.display = 'none';
-        if (onCancel) onCancel();
-    };
-    
-    modal.style.display = 'flex';
 }
 
-// ========== ФУНКЦИЯ ДИАЛОГА ПОДТВЕРЖДЕНИЯ (для "Выйти"/"Не искать") ==========
-function showConfirmDialog(message, confirmText, cancelText, onConfirm, onCancel) {
-    showResultModal('🤔 Подтверждение', message, confirmText, cancelText, onConfirm, onCancel);
-}
+// Кнопка "Пойду"
+if (screenAcceptBtn) {
+    screenAcceptBtn.onclick = async () => {
+        if (screenAcceptBtn.disabled) return;
 
-// ========== КНОПКА "ПОЙДУ" ==========
-document.getElementById('screen-accept').onclick = async () => {
-    const acceptBtn = document.getElementById('screen-accept');
-    acceptBtn.disabled = true;
-    acceptBtn.textContent = '⏳...';
-    try {
-        // ГРУППОВОЙ МАТЧ
-        if (currentMatchData && currentMatchData.group_id) {
-            const joinRes = await fetch(`/roulette/api/group/join/${currentMatchData.group_id}/`, {
+        screenAcceptBtn.disabled = true;
+        screenAcceptBtn.textContent = '⏳...';
+
+        try {
+            // Групповой матч
+            if (currentMatchData && currentMatchData.group_id) {
+                const joinRes = await fetch(`/roulette/api/group/join/${currentMatchData.group_id}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': window.CSRF_TOKEN }
+                });
+                const joinData = await joinRes.json();
+                if (joinData.dialog_id) {
+                    currentMatchData.dialog_id = joinData.dialog_id;
+                }
+
+                if (joinData.is_full) {
+                    showResultModal(
+                        '🎉 Группа собрана!',
+                        'Все участники в сборе!<br>Приятного обеда! 🍽️',
+                        '💬 Открыть чат',
+                        '⏰ Позже',
+                        () => { window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`; },
+                        () => { location.href = '/roulette/'; }
+                    );
+                } else {
+                    showResultModal(
+                        '✅ Вы присоединились к компании!',
+                        `Осталось найти ещё <strong>${joinData.slots_left} чел.</strong><br>Можете начать общаться в чате.`,
+                        '💬 Открыть чат',
+                        '⏰ Позже',
+                        () => { window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`; },
+                        () => { location.href = '/roulette/'; }
+                    );
+                }
+                return;
+            }
+
+            // Соло-матч
+            const response = await fetch('/roulette/api/solo/accept/', {
                 method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json',
                     'X-CSRFToken': window.CSRF_TOKEN
                 }
             });
-            const joinData = await joinRes.json();
-            if (joinData.dialog_id) {
-                currentMatchData.dialog_id = joinData.dialog_id;
+            const data = await response.json();
+            if (data.dialog_id) {
+                currentMatchData.dialog_id = data.dialog_id;
             }
-            
-            if (joinData.is_full) {
-                showResultModal(
-                    '🎉 Группа собрана!',
-                    'Все участники в сборе!<br>Приятного обеда! 🍽️',
-                    '💬 Открыть чат',
-                    '⏰ Позже',
-                    () => { window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`; },
-                    () => { location.href = '/roulette/'; }
-                );
-            } else {
-                showResultModal(
-                    '✅ Вы присоединились к компании!',
-                    `Осталось найти ещё <strong>${joinData.slots_left} чел.</strong><br>Можете начать общаться в чате.`,
-                    '💬 Открыть чат',
-                    '⏰ Позже',
-                    () => { window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`; },
-                    () => { location.href = '/roulette/'; }
-                );
-            }
-            return;
+
+            showResultModal(
+                '🎉 Вы договорились об обеде!',
+                `Хотите связаться с <strong>${currentMatchData.username}</strong>?`,
+                '💬 Написать в чат',
+                '⏰ Позже',
+                () => { window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`; },
+                () => { location.href = '/roulette/'; }
+            );
+        } catch (error) {
+            console.error('Ошибка:', error);
+        } finally {
+            screenAcceptBtn.disabled = false;
+            screenAcceptBtn.textContent = '✅ Пойду';
         }
-        
-        // СОЛО-МАТЧ
-        const response = await fetch('/roulette/api/solo/accept/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': window.CSRF_TOKEN
+    };
+}
+
+// Кнопка "Выйти" (с экрана матча)
+if (screenCancelBtn) {
+    screenCancelBtn.onclick = () => {
+        showConfirmDialog(
+            'У вас есть активная заявка.<br>Оставить её или аннулировать?',
+            '✅ Оставить',
+            '🗑️ Аннулировать',
+            () => {
+                matchScreen.classList.add('hidden');
+                showMainScreen();
+            },
+            async () => {
+                if (currentSearchMode === 'solo') {
+                    await fetch('/roulette/api/solo/create/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': window.CSRF_TOKEN
+                        },
+                        body: JSON.stringify({ building: '1', budget: 'any' })
+                    });
+                } else if (currentSearchMode === 'group') {
+                    await fetch('/roulette/api/group/create/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': window.CSRF_TOKEN
+                        },
+                        body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
+                    });
+                }
+
+                matchScreen.classList.add('hidden');
+                showMainScreen();
             }
-        });
-        const data = await response.json();
-        if (data.dialog_id) {
-            currentMatchData.dialog_id = data.dialog_id;
-        }
-        
-        showResultModal(
-            '🎉 Вы договорились об обеде!',
-            `Хотите связаться с <strong>${currentMatchData.username}</strong>?`,
-            '💬 Написать в чат',
-            '⏰ Позже',
-            () => { window.location.href = `/roulette/messages/${currentMatchData.dialog_id}/`; },
-            () => { location.href = '/roulette/'; }
         );
-    } finally {
-        acceptBtn.disabled = false;
-        acceptBtn.textContent = '✅ Пойду';
-    }
-};
-
-// ========== КНОПКА "ВЫЙТИ" (с экрана матча) ==========
-document.getElementById('screen-cancel').onclick = () => {
-    showConfirmDialog(
-        'У вас есть активная заявка.<br>Оставить её или аннулировать?',
-        '✅ Оставить',
-        '🗑️ Аннулировать',
-        () => {
-            matchScreen.classList.add('hidden');
-            document.querySelector('.greeting').style.display = '';
-            document.querySelector('.roulette-buttons').style.display = '';
-        },
-        async () => {
-            if (currentSearchMode === 'solo') {
-                await fetch('/roulette/api/solo/create/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': window.CSRF_TOKEN
-                    },
-                    body: JSON.stringify({ building: '1', budget: 'any' })
-                });
-            } else if (currentSearchMode === 'group') {
-                await fetch('/roulette/api/group/create/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': window.CSRF_TOKEN
-                    },
-                    body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
-                });
-            }
-            
-            matchScreen.classList.add('hidden');
-            document.querySelector('.greeting').style.display = '';
-            document.querySelector('.roulette-buttons').style.display = '';
-        }
-    );
-};
-
-// ========== КНОПКА "НЕ ИСКАТЬ" ==========
-document.getElementById('not-found-cancel').addEventListener('click', () => {
-    showConfirmDialog(
-        'У вас есть активная заявка.<br>Оставить её или аннулировать?',
-        '✅ Оставить',
-        '🗑️ Аннулировать',
-        () => {
-            notFoundScreen.classList.add('hidden');
-            document.querySelector('.greeting').style.display = '';
-            document.querySelector('.roulette-buttons').style.display = '';
-        },
-        async () => {
-            if (currentSearchMode === 'solo') {
-                await fetch('/roulette/api/solo/create/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': window.CSRF_TOKEN
-                    },
-                    body: JSON.stringify({ building: '1', budget: 'any' })
-                });
-            } else if (currentSearchMode === 'group') {
-                await fetch('/roulette/api/group/create/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': window.CSRF_TOKEN
-                    },
-                    body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
-                });
-            }
-            
-            notFoundScreen.classList.add('hidden');
-            document.querySelector('.greeting').style.display = '';
-            document.querySelector('.roulette-buttons').style.display = '';
-        }
-    );
-});
-
-// ========== КНОПКА "ПОПРОБОВАТЬ ЕЩЁ РАЗ" ==========
-document.getElementById('not-found-again').addEventListener('click', () => {
-    notFoundScreen.classList.add('hidden');
-    if (currentSearchMode === 'group') {
-        document.getElementById('create-group-form').dispatchEvent(new Event('submit'));
-    } else {
-        document.getElementById('create-solo-form').dispatchEvent(new Event('submit'));
-    }
-});
-
-function scrollToElement(element) {
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    };
 }
 
-// ========== АНИМАЦИИ ==========
-function areAnimationsEnabled() {
-    const localSetting = localStorage.getItem('animations');
-    if (localSetting !== null) {
-        return localSetting !== 'off';
-    }
-    const body = document.body;
-    if (body && body.classList) {
-        return !body.classList.contains('animations-off');
-    }
-    return true;
-}
+// Кнопка "Не искать"
+if (notFoundCancelBtn) {
+    notFoundCancelBtn.addEventListener('click', () => {
+        showConfirmDialog(
+            'У вас есть активная заявка.<br>Оставить её или аннулировать?',
+            '✅ Оставить',
+            '🗑️ Аннулировать',
+            () => {
+                notFoundScreen.classList.add('hidden');
+                showMainScreen();
+            },
+            async () => {
+                if (currentSearchMode === 'solo') {
+                    await fetch('/roulette/api/solo/create/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': window.CSRF_TOKEN
+                        },
+                        body: JSON.stringify({ building: '1', budget: 'any' })
+                    });
+                } else if (currentSearchMode === 'group') {
+                    await fetch('/roulette/api/group/create/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': window.CSRF_TOKEN
+                        },
+                        body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
+                    });
+                }
 
-function loadStaticLottie(container, path, frame = 0) {
-    container.innerHTML = '';
-    const animation = lottie.loadAnimation({
-        container: container,
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        path: path
+                notFoundScreen.classList.add('hidden');
+                showMainScreen();
+            }
+        );
     });
-    animation.addEventListener('DOMLoaded', () => {
-        if (frame === 'last') {
-            animation.goToAndStop(animation.totalFrames - 1, true);
+}
+
+// Кнопка "Попробовать ещё раз"
+if (notFoundAgainBtn) {
+    notFoundAgainBtn.addEventListener('click', function() {
+        if (this.disabled) return;
+        this.disabled = true;
+        this.textContent = '⏳ Поиск...';
+
+        notFoundScreen.classList.add('hidden');
+
+        if (currentSearchMode === 'group') {
+            groupSubmitForm?.dispatchEvent(new Event('submit'));
         } else {
-            animation.goToAndStop(frame, true);
+            soloSubmitForm?.dispatchEvent(new Event('submit'));
         }
-        container.style.pointerEvents = 'none';
+
+        setTimeout(() => {
+            this.disabled = false;
+            this.textContent = '🔄 Попробовать ещё раз';
+        }, 3000);
     });
-    return animation;
 }
 
+// Инициализация анимаций при загрузке
 document.addEventListener('DOMContentLoaded', function() {
     const onepersonIcon = document.getElementById('oneperson-animation');
     const twopersonIcon = document.getElementById('twoperson-animation');
+
     if (!areAnimationsEnabled()) {
         if (onepersonIcon) loadStaticLottie(onepersonIcon, '/static/animations/obed-ruletka/oneperson.json', 0);
         if (twopersonIcon) loadStaticLottie(twopersonIcon, '/static/animations/obed-ruletka/twoperson.json', 0);
     } else {
         if (onepersonIcon) {
-            const onepersonAnimation = lottie.loadAnimation({
+            const anim = lottie.loadAnimation({
                 container: onepersonIcon,
                 renderer: 'svg',
                 loop: false,
                 autoplay: false,
                 path: '/static/animations/obed-ruletka/oneperson.json'
             });
-            onepersonAnimation.addEventListener('DOMLoaded', () => onepersonAnimation.goToAndStop(0, true));
-            soloBtn.addEventListener('mouseenter', () => onepersonAnimation.goToAndPlay(0, true));
-            soloBtn.addEventListener('mouseleave', () => onepersonAnimation.goToAndStop(0, true));
+            anim.addEventListener('DOMLoaded', () => anim.goToAndStop(0, true));
+            soloBtn?.addEventListener('mouseenter', () => anim.goToAndPlay(0, true));
+            soloBtn?.addEventListener('mouseleave', () => anim.goToAndStop(0, true));
         }
         if (twopersonIcon) {
-            const twopersonAnimation = lottie.loadAnimation({
+            const anim = lottie.loadAnimation({
                 container: twopersonIcon,
                 renderer: 'svg',
                 loop: false,
                 autoplay: false,
                 path: '/static/animations/obed-ruletka/twoperson.json'
             });
-            twopersonAnimation.addEventListener('DOMLoaded', () => twopersonAnimation.goToAndStop(0, true));
-            groupBtn.addEventListener('mouseenter', () => twopersonAnimation.goToAndPlay(0, true));
-            groupBtn.addEventListener('mouseleave', () => twopersonAnimation.goToAndStop(0, true));
+            anim.addEventListener('DOMLoaded', () => anim.goToAndStop(0, true));
+            groupBtn?.addEventListener('mouseenter', () => anim.goToAndPlay(0, true));
+            groupBtn?.addEventListener('mouseleave', () => anim.goToAndStop(0, true));
         }
     }
 });
 
+// Переопределение initSlotAnimation для учёта настроек анимаций
 const originalInitSlot = initSlotAnimation;
 initSlotAnimation = function() {
     if (!slotContainer) return;

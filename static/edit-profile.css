@@ -1,4 +1,4 @@
-/* Контейнер */
+/* КОНТЕЙНЕР */
 .edit-profile-container {
     display: flex;
     gap: 50px;
@@ -8,7 +8,7 @@
     flex-wrap: wrap;
 }
 
-/* Левая колонка (аватар) + Правая (форма) */
+/* ЛЕВАЯ КОЛОНКА (аватар) */
 .edit-profile-left,
 .edit-profile-right {
     background: white;
@@ -24,11 +24,6 @@
     text-align: center;
     padding: 40px 30px;
     height: fit-content;
-}
-
-.edit-profile-right {
-    flex: 2;
-    min-width: 400px;
 }
 
 /* Аватар */
@@ -106,9 +101,15 @@
     font-size: 18px;
 }
 
-.edit-profile-info strong { color: #4b8082; }
+.edit-profile-info strong {
+    color: #4b8082;
+}
 
-/* Заголовок правой колонки */
+/* ПРАВАЯ КОЛОНКА (форма) */
+.edit-profile-right {
+    flex: 2;
+}
+
 .edit-profile-right h2 {
     color: #2c3e50;
     font-size: 28px;
@@ -118,7 +119,12 @@
     padding-bottom: 10px;
 }
 
-/* Форма */
+.edit-profile-right-centered {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Поля формы */
 .form-group { margin-bottom: 20px; }
 
 .form-group label {
@@ -152,6 +158,10 @@
     outline: none;
     border-color: #f99039;
     box-shadow: 0 0 0 3px rgba(249,144,57,0.1);
+}
+
+.hidden-file-input {
+    display: none;
 }
 
 /* Кнопка сохранения */
@@ -190,7 +200,7 @@
     transform: translateX(-3px);
 }
 
-/* Сообщение об ошибках */
+/* УВЕДОМЛЕНИЯ И ОШИБКИ */
 .alert {
     padding: 12px 15px;
     border-radius: 10px;
@@ -207,4 +217,16 @@
     background: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
+}
+
+.password-hint {
+    display: block;
+    color: #666;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
 }

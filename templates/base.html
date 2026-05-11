@@ -51,14 +51,14 @@
                 <div class="messages-dropdown">
                     <a href="/roulette/messages/" class="menu-link messages-icon" id="messagesIcon">
                         Чат💬
-                        <span class="messages-badge" id="messagesBadge" style="display: none;"></span>
+                        <span class="messages-badge hidden" id="messagesBadge"></span>
                     </a>
                 </div>
 
                 <div class="notifications-dropdown">
                     <div class="menu-link notifications-icon" id="notifIcon">
                         Бзз🔔
-                        <span class="notif-badge" id="notifBadge" style="display: none;"></span>
+                        <span class="notif-badge hidden" id="notifBadge"></span>
                     </div>
                     <div class="notifications-content" id="notificationsMenu">
                         <div class="notifications-header">📢 Уведомления</div>
@@ -141,15 +141,8 @@
     <script src="{% static 'js/base.js' %}"></script>
     <script src="{% static 'js/search.js' %}"></script>
     <script src="{% static 'js/reviews.js' %}"></script>
-
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-
-    <script
-        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="{% static 'js/map.js' %}"></script>
+    
 </body>
 </html>

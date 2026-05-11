@@ -1,3 +1,4 @@
+/* КОНТЕЙНЕР ЧАТА */
 .chat-container {
     max-width: 800px;
     margin: 20px auto;
@@ -11,6 +12,7 @@
     min-height: 500px;
 }
 
+/* ШАПКА ЧАТА */
 .chat-header {
     background: #5F9EA0;
     padding: 15px 20px;
@@ -36,130 +38,7 @@
     font-size: 20px;
 }
 
-/* ===== ИМЕНА УЧАСТНИКОВ В ШАПКЕ ===== */
-.participants-names {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 13px;
-    margin-top: 3px;
-    max-width: 400px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: #f5f5f5;
-}
-
-.message {
-    max-width: 70%;
-    padding: 8px 15px;
-    border-radius: 20px;
-    position: relative;
-}
-
-.message-mine {
-    background: #5F9EA0;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 5px;
-}
-
-.message-other {
-    background: white;
-    color: #333;
-    align-self: flex-start;
-    border-bottom-left-radius: 5px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-
-/* ===== ПОДПИСЬ НИКА НАД СООБЩЕНИЕМ ===== */
-.message-sender {
-    font-size: 12px;
-    font-weight: bold;
-    color: #f99039;
-    margin-bottom: 4px;
-    padding-left: 2px;
-}
-
-.message-mine .message-sender {
-    display: none;
-}
-
-.message-system .message-sender {
-    display: none;
-}
-
-.message-text {
-    word-wrap: break-word;
-}
-
-.message-time {
-    font-size: 10px;
-    margin-top: 5px;
-    opacity: 0.7;
-}
-
-.chat-input {
-    display: flex;
-    padding: 15px;
-    background: white;
-    border-top: 1px solid #e0e0e0;
-    gap: 10px;
-    align-items: center;
-    position: relative;
-}
-
-.chat-input textarea {
-    flex: 1;
-    padding: 0 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 15px;
-    resize: none;
-    font-family: 'Tobi';
-    font-size: 14px;
-    height: 44px;
-    line-height: 44px;
-    overflow-y: hidden;
-    box-sizing: border-box;
-}
-
-.chat-input textarea:focus {
-    outline: none;
-    border-color: #5F9EA0;
-}
-
-.chat-input textarea::placeholder {
-    line-height: 44px;
-    color: #999;
-    font-family: 'Tobi';
-    font-size: 14px;
-}
-
-.chat-input button {
-    background: #f99039;
-    color: white;
-    border: none;
-    padding: 0 25px;
-    border-radius: 15px; 
-    cursor: pointer;
-    font-family: 'Tobi';
-    font-size: 16px;
-    transition: 0.3s;
-    height: 44px; 
-}
-
-.chat-input button:hover {
-    background: #5F9EA0;
-}
-
-/* ===== АВАТАР ===== */
+/* Аватар в шапке */
 .chat-avatar {
     width: 48px;
     height: 48px;
@@ -190,7 +69,111 @@
     overflow: hidden;
 }
 
-/* ===== СТИКЕРЫ ===== */
+/* Имена участников в шапке */
+.participants-names {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    margin-top: 3px;
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ОБЛАСТЬ СООБЩЕНИЙ */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #f5f5f5;
+}
+
+/* Базовый стиль сообщения */
+.message {
+    max-width: 70%;
+    padding: 8px 15px;
+    border-radius: 20px;
+    position: relative;
+}
+
+.message-text {
+    word-wrap: break-word;
+}
+
+.message-time {
+    font-size: 10px;
+    margin-top: 5px;
+    opacity: 0.7;
+}
+
+/* Моё сообщение */
+.message-mine {
+    background: #5F9EA0;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.message-mine .message-sender {
+    display: none;
+}
+
+/* Чужое сообщение */
+.message-other {
+    background: white;
+    color: #333;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Системное сообщение */
+.message-system {
+    background: transparent !important;
+    color: #888 !important;
+    font-style: italic;
+    font-size: 13px;
+    text-align: center;
+    max-width: 100% !important;
+    padding: 5px 15px !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.message-system .message-text {
+    color: #888;
+}
+
+.message-system .message-time {
+    display: none;
+}
+
+.message-system .message-sender {
+    display: none;
+}
+
+/* Подпись ника над сообщением */
+.message-sender {
+    font-size: 12px;
+    font-weight: bold;
+    color: #f99039;
+    margin-bottom: 4px;
+    padding-left: 2px;
+}
+
+/* ПОЛЕ ВВОДА */
+.chat-input {
+    display: flex;
+    padding: 15px;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+}
 
 .message-input-wrapper {
     position: relative;
@@ -203,6 +186,33 @@
     box-sizing: border-box;
 }
 
+.chat-input textarea {
+    flex: 1;
+    padding: 0 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    resize: none;
+    font-family: 'Tobi';
+    font-size: 14px;
+    height: 44px;
+    line-height: 44px;
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+
+.chat-input textarea:focus {
+    outline: none;
+    border-color: #5F9EA0;
+}
+
+.chat-input textarea::placeholder {
+    line-height: 44px;
+    color: #999;
+    font-family: 'Tobi';
+    font-size: 14px;
+}
+
+/* Кнопка стикеров */
 #stickers-btn {
     position: absolute;
     right: 18px;
@@ -216,6 +226,25 @@
     z-index: 5;
 }
 
+/* Кнопка отправки */
+.chat-input button {
+    background: #f99039;
+    color: white;
+    border: none;
+    padding: 0 25px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: 'Tobi';
+    font-size: 16px;
+    transition: 0.3s;
+    height: 44px;
+}
+
+.chat-input button:hover {
+    background: #5F9EA0;
+}
+
+/* ПАНЕЛЬ СТИКЕРОВ */
 .stickers-panel {
     position: absolute;
     left: 340px;
@@ -246,27 +275,7 @@
     cursor: pointer;
 }
 
+/* ВСПОМОГАТЕЛЬНЫЙ КЛАСС */
 .hidden {
     display: none !important;
-}
-
-/* ===== СИСТЕМНЫЕ СООБЩЕНИЯ ===== */
-.message-system {
-    background: transparent !important;
-    color: #888 !important;
-    font-style: italic;
-    font-size: 13px;
-    text-align: center;
-    max-width: 100% !important;
-    padding: 5px 15px !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-}
-
-.message-system .message-text {
-    color: #888;
-}
-
-.message-system .message-time {
-    display: none;
 }

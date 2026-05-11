@@ -1,21 +1,25 @@
+/* КОНТЕЙНЕР */
 .favorites-container {
     max-width: 800px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
+/* ЗАГОЛОВОК */
 .favorites-container h1 {
     color: #2c3e50;
     margin-bottom: 30px;
     text-align: center;
 }
 
+/* СПИСОК ИЗБРАННОГО */
 .favorites-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
+/* КАРТОЧКА ЗАВЕДЕНИЯ */
 .favorite-card {
     display: flex;
     justify-content: space-between;
@@ -32,6 +36,7 @@
     background: #f8f9fa;
 }
 
+/* Название заведения */
 .favorite-name {
     font-size: 18px;
     font-weight: bold;
@@ -43,17 +48,20 @@
     color: #f99039;
 }
 
+/* Адрес */
 .favorite-address {
     color: #666;
     font-size: 14px;
     margin: 5px 0;
 }
 
+/* Цена */
 .favorite-price {
     color: #2ecc71;
     font-size: 14px;
 }
 
+/* Кнопка удаления */
 .remove-favorite {
     background: #e74c3c;
     color: white;
@@ -70,6 +78,7 @@
     transform: scale(1.02);
 }
 
+/* ПУСТОЙ СПИСОК */
 .empty-favorites {
     text-align: center;
     color: #999;

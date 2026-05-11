@@ -11,26 +11,26 @@
 <div class="detail-container">
     <h1>✏️ Редактировать отзыв</h1>
     
-    <p style="margin-bottom: 20px; color: #666;">
+    <p class="review-place-name">
         Заведение: <strong>{{ review.place.name }}</strong>
     </p>
 
-    <p style="font-size: 14px; color: #999; margin-bottom: 15px; font-family: 'Tobi';">
-                ✏️ Изменить отзыв можно в течение {{ edit_hours }} 
-                {% if edit_hours == 1 %}
-                    часа
-                {% elif edit_hours >= 2 and edit_hours <= 4 %}
-                    часов
-                {% elif edit_hours >= 5 and edit_hours <= 20 %}
-                    часов
-                {% elif edit_hours == 21 %}
-                    часа
-                {% elif edit_hours >= 22 and edit_hours <= 24 %}
-                    часов
-                {% else %}
-                    часов
-                {% endif %}
-                после публикации.
+    <p class="review-edit-hint">
+        ✏️ Изменить отзыв можно в течение {{ edit_hours }} 
+        {% if edit_hours == 1 %}
+            часа
+        {% elif edit_hours >= 2 and edit_hours <= 4 %}
+            часов
+        {% elif edit_hours >= 5 and edit_hours <= 20 %}
+            часов
+        {% elif edit_hours == 21 %}
+            часа
+        {% elif edit_hours >= 22 and edit_hours <= 24 %}
+            часов
+        {% else %}
+            часов
+        {% endif %}
+        после публикации.
     </p>
     
     <form method="post" action="{% url 'edit_review' review.id %}" class="add-review-form">
@@ -58,6 +58,6 @@
         <button type="submit" class="submit-review-btn">💾 Сохранить</button>
     </form>
     
-    <a href="{% url 'place_detail' review.place.id %}" class="edit-profile-btn" style="display: inline-block; margin-top: 20px; text-align: center; width: auto; padding: 10px 24px;">← Назад к заведению</a>
+    <a href="{% url 'place_detail' review.place.id %}" class="back-to-place-link">← Назад к заведению</a>
 </div>
 {% endblock %}

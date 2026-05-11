@@ -36,7 +36,7 @@
         <form method="post" class="edit-profile-form" enctype="multipart/form-data" id="profile-form">
             {% csrf_token %}
 
-            <input type="file" name="avatar" id="avatar-upload" accept="image/*" style="display: none;">
+            <input type="file" name="avatar" id="avatar-upload" accept="image/*" class="hidden-file-input">
             
             <div class="form-group">
                 <label>👤 Имя пользователя</label>

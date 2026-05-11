@@ -207,10 +207,13 @@ def edit_review(request, review_id):
             request.session['review_message'] = {'type': 'success', 'text': '✅ Отзыв обновлён!'}
             return redirect('place_detail', place_id=place.id)
     
+    time_left = review.created_at + timedelta(hours=24) - timezone.now()
+    edit_hours = max(0, int(time_left.total_seconds() / 3600))
+    
     return render(request, 'places/edit_review.html', {
         'review': review,
         'stars_range': range(1, 6),
-        'edit_hours': 24,
+        'edit_hours': edit_hours,
     })
 
 def search_places_api(request):

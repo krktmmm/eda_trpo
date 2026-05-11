@@ -7,16 +7,16 @@
     align-items: center;
     gap: 40px;
     min-height: 50vh;
-    flex-wrap: wrap
+    flex-wrap: wrap;
 }
 
-/* ТЕКСТ ВНУТРИ КАРТОЧЕК */
+/* КАРТОЧКА */
 .menu-card {
     text-decoration: none;
     text-align: center;
 }
 
-/* КАРТОЧКА ЗАВЕДЕНИЙ */
+/* Внутренняя обёртка карточки */
 .menu-card-inner {
     background: #5F9EA0;
     padding: 60px 40px;
@@ -31,18 +31,18 @@
     align-items: center;        /* центрирование по горизонтали */
 }
 
-/* КАРТОЧКА РУЛЕТКА */
+/* Карточка рулетки */
 .menu-card-inner.roulette {
     background: #f99039;
 }
 
-/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+/* Эффект при наведении */
 .menu-card-inner:hover {
     transform: scale(1.05);
     box-shadow: 0 15px 40px #00000033;
 }
 
-/* Анимированные иконки в карточках */
+/* Анимированная иконка */
 .menu-icon.lottie-icon {
     width: 140px !important;
     height: 140px !important;
@@ -55,7 +55,7 @@
     height: 100% !important;
 }
 
-/* ЗАГОЛОВОК В КАРТОЧКАХ */
+/* Заголовок */
 .menu-card h2 {
     color: white;
     margin-top: 20px;
@@ -63,7 +63,7 @@
     font-weight: normal;
 }
 
-/* ОПИСАНИЕ КАРТОЧКИ */
+/* Описание */
 .menu-card p {
     color: white;
     font-family: 'Tobi';

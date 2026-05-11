@@ -37,6 +37,21 @@ def get_building_order(user_building):
 
 @login_required
 @require_http_methods(["POST"])
+def save_solo_params(request):
+    """Сохраняет параметры поиска в сессию (без создания заявки)"""
+    data = json.loads(request.body)
+
+    # Очищаем старые параметры
+    request.session.pop('search_building', None)
+    request.session.pop('search_budget', None)
+    request.session.pop('skipped_match_ids', None)
+
+    request.session['search_building'] = data.get('building')
+    request.session['search_budget'] = data.get('budget', 'any')
+    return JsonResponse({'status': 'ok'})
+
+@login_required
+@require_http_methods(["POST"])
 def create_solo_request(request):
     try:
         data = json.loads(request.body)
@@ -61,23 +76,26 @@ def create_solo_request(request):
 @login_required
 @require_http_methods(["GET"])
 def find_solo_match(request):
-    user_request = SoloRequest.objects.filter(user=request.user, is_active=True).first()
-    if not user_request:
-        return JsonResponse({'error': 'У вас нет активной заявки'}, status=404)
+    building = request.session.get('search_building')
+    budget = request.session.get('search_budget', 'any')
     
+    if not building:
+        return JsonResponse({'error': 'Нет параметров поиска'}, status=404)
+    
+    profile = request.user.profile
     base_queryset = SoloRequest.objects.filter(is_active=True).exclude(user=request.user)
     candidates = []
     
-    building_order = get_building_order(user_request.building)
+    building_order = get_building_order(building)
     
-    for building in building_order:
-        building_candidates = list(base_queryset.filter(building=building))
+    for b in building_order:
+        building_candidates = list(base_queryset.filter(building=b))
         
-        if user_request.budget == 'any':
+        if budget == 'any':
             random.shuffle(building_candidates)
             candidates.extend(building_candidates)
         else:
-            same_budget = [m for m in building_candidates if m.budget == user_request.budget]
+            same_budget = [m for m in building_candidates if m.budget == budget]
             if same_budget:
                 candidates.extend(same_budget)
             any_budget = [m for m in building_candidates if m.budget == 'any']
@@ -98,7 +116,17 @@ def find_solo_match(request):
         request.session['match_user_id'] = match.user.id
         request.session['match_request_id'] = match.id
         
-        # ✅ Получаем аватарку пользователя
+        # Создаём заявку только когда нашли
+        SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+        SoloRequest.objects.create(
+            user=request.user,
+            building=building,
+            budget=budget,
+            telegram=profile.telegram,
+            vk=profile.vk,
+            is_active=True
+        )
+        
         avatar_url = None
         if hasattr(match.user, 'profile') and match.user.profile.avatar:
             avatar_url = match.user.profile.avatar.url
@@ -108,12 +136,23 @@ def find_solo_match(request):
             'username': match.user.username,
             'telegram': match.telegram,
             'vk': match.vk,
-            'avatar_url': avatar_url,  # ✅ URL аватарки (или None)
+            'avatar_url': avatar_url,
             'building': match.get_building_display(),
             'budget': match.get_budget_display(),
             'match_type': 'match',
             'group_id': None,
         })
+    
+    # Создаём заявку когда НЕ нашли — чтобы висела активной
+    SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+    SoloRequest.objects.create(
+        user=request.user,
+        building=building,
+        budget=budget,
+        telegram=profile.telegram,
+        vk=profile.vk,
+        is_active=True
+    )
     
     return JsonResponse({'status': 'not_found', 'message': 'Никого не найдено'}, status=404)
 
@@ -142,6 +181,23 @@ def accept_solo_match(request):
 
 @login_required
 @require_http_methods(["POST"])
+def save_group_params(request):
+    """Сохраняет параметры поиска группы в сессию"""
+    data = json.loads(request.body)
+
+    # Очищаем старые параметры
+    request.session.pop('search_building', None)
+    request.session.pop('search_budget', None)
+    request.session.pop('search_needed_people', None)
+    request.session.pop('skipped_group_ids', None)
+
+    request.session['search_building'] = data.get('building')
+    request.session['search_budget'] = data.get('budget', 'any')
+    request.session['search_needed_people'] = data.get('needed_people')
+    return JsonResponse({'status': 'ok'})
+
+@login_required
+@require_http_methods(["POST"])
 def create_group_request(request):
     try:
         data = json.loads(request.body)
@@ -152,7 +208,6 @@ def create_group_request(request):
         
         needed_people = int(needed_people_raw) if needed_people_raw else None
         
-        # Проверяем — может уже есть активная группа
         existing = GroupRequest.objects.filter(
             user=request.user,
             is_active=True
@@ -165,10 +220,8 @@ def create_group_request(request):
                 'dialog_id': existing.dialog.id if existing.dialog else None
             })
         
-        # Деактивируем старые заявки
         GroupRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
         
-        # Создаём группу БЕЗ чата
         group = GroupRequest.objects.create(
             user=request.user,
             building=building,
@@ -183,7 +236,7 @@ def create_group_request(request):
         return JsonResponse({
             'status': 'ok',
             'id': group.id,
-            'dialog_id': None  # чата пока нет
+            'dialog_id': None
         })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
@@ -191,12 +244,11 @@ def create_group_request(request):
 @login_required
 @require_http_methods(["POST"])
 def create_company(request):
-    """Создать компанию и чат (когда пользователь нажал «Создать компанию»)"""
+    """Создать компанию и чат"""
     try:
         data = json.loads(request.body)
         size = int(data.get('size', 3))
         
-        # Ищем активную группу пользователя
         group = GroupRequest.objects.filter(
             user=request.user,
             is_active=True
@@ -205,11 +257,9 @@ def create_company(request):
         if not group:
             return JsonResponse({'error': 'Нет активной заявки'}, status=404)
         
-        # Обновляем размер группы
         group.needed_people = size
         group.save()
         
-        # Создаём чат
         if not group.dialog:
             dialog = Dialog.objects.create()
             dialog.participants.add(request.user)
@@ -232,30 +282,36 @@ def create_company(request):
 @login_required
 @require_http_methods(["GET"])
 def find_group_match(request):
-    user_group = GroupRequest.objects.filter(user=request.user, is_active=True).first()
-    if not user_group:
-        return JsonResponse({'error': 'У вас нет активной заявки'}, status=404)
+    building = request.session.get('search_building')
+    budget = request.session.get('search_budget', 'any')
+    needed_people_raw = request.session.get('search_needed_people')
+    
+    if not building:
+        return JsonResponse({'error': 'Нет параметров поиска'}, status=404)
+    
+    profile = request.user.profile
     
     base_queryset = GroupRequest.objects.filter(
         is_active=True,
         current_members__lt=models.F('needed_people')
     ).exclude(user=request.user)
     
-    # Если пользователь указал конкретное количество — ищем такие же
-    if user_group.needed_people and user_group.needed_people > 2:
-        base_queryset = base_queryset.filter(needed_people=user_group.needed_people)
+    needed_people = int(needed_people_raw) if needed_people_raw else None
+    
+    if needed_people and needed_people > 2:
+        base_queryset = base_queryset.filter(needed_people=needed_people)
     
     candidates = []
-    building_order = get_building_order(user_group.building)
+    building_order = get_building_order(building)
     
-    for building in building_order:
-        building_groups = list(base_queryset.filter(building=building))
+    for b in building_order:
+        building_groups = list(base_queryset.filter(building=b))
         
-        if user_group.budget == 'any':
+        if budget == 'any':
             random.shuffle(building_groups)
             candidates.extend(building_groups)
         else:
-            same_budget = [g for g in building_groups if g.budget == user_group.budget]
+            same_budget = [g for g in building_groups if g.budget == budget]
             if same_budget:
                 candidates.extend(same_budget)
             any_budget = [g for g in building_groups if g.budget == 'any']
@@ -274,6 +330,19 @@ def find_group_match(request):
         skipped_ids.append(group.id)
         request.session['skipped_group_ids'] = skipped_ids
         request.session['match_group_id'] = group.id
+        
+        # Создаём заявку только когда нашли
+        GroupRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+        group_request = GroupRequest.objects.create(
+            user=request.user,
+            building=building,
+            budget=budget,
+            needed_people=needed_people if needed_people else 3,
+            telegram=profile.telegram,
+            vk=profile.vk,
+            is_active=True
+        )
+        GroupMember.objects.create(group=group_request, user=request.user)
         
         members = GroupMember.objects.filter(group=group).select_related('user', 'user__profile')
         members_data = []
@@ -304,10 +373,23 @@ def find_group_match(request):
             'is_almost_full': slots_left == 1,
         })
     
+    # Создаём заявку когда НЕ нашли
+    GroupRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+    group_request = GroupRequest.objects.create(
+        user=request.user,
+        building=building,
+        budget=budget,
+        needed_people=needed_people if needed_people else 3,
+        telegram=profile.telegram,
+        vk=profile.vk,
+        is_active=True
+    )
+    GroupMember.objects.create(group=group_request, user=request.user)
+    
     return JsonResponse({
         'status': 'waiting',
         'message': 'Пока никто не ищет компанию. Вы первый!',
-        'your_group_id': user_group.id,
+        'your_group_id': group_request.id,
     })
 
 @login_required
@@ -321,10 +403,8 @@ def join_group(request, group_id):
     if group.current_members >= group.needed_people:
         return JsonResponse({'error': 'Группа уже заполнена'}, status=400)
     
-    # ✅ Если чата ещё нет — создаём его
     if not group.dialog:
         dialog = Dialog.objects.create()
-        # Добавляем всех текущих участников
         existing_members = GroupMember.objects.filter(group=group).values_list('user', flat=True)
         for user_id in existing_members:
             dialog.participants.add(user_id)

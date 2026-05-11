@@ -18,7 +18,7 @@
     {% endif %}
     <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
     <div class="place-header">
-        <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="place-header-left">
             <a href="javascript:history.back()" class="back-arrow">←</a>
             <h1>{{ place.name }}</h1>
         </div>
@@ -40,7 +40,7 @@
     <div class="reviews-section">
         <h2>📝 Отзывы</h2>
         {% for review in reviews %}
-            <div class="review-card" style="position: relative;">
+            <div class="review-card">
                 <div class="review-header">
                     <strong>{{ review.user.username }}</strong>
                     <span class="review-rating">{{ review.stars_display }}</span>

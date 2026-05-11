@@ -82,7 +82,7 @@
         {% for review in reviews %}
         <div class="review-card">
             <div class="review-place">
-                <a href="{% url 'place_detail' review.place.id %}" style="color: #2c3e50; text-decoration: none;">
+                <a href="{% url 'place_detail' review.place.id %}" class="review-place-link">
                     {{ review.place.name }}
                 </a>
             </div>

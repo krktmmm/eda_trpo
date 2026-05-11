@@ -1,6 +1,3 @@
-let selectedBuilding = null;
-let selectedTime = null;
-
 const buildingButtons = document.querySelectorAll('.building-btn');
 const timeButtons = document.querySelectorAll('.time-btn');
 const placeCards = document.querySelectorAll('.place-card');
@@ -13,6 +10,10 @@ const placesTitle = document.getElementById('places-title');
 const mapPlaceholder = document.getElementById('map-placeholder');
 const placesContainer = document.getElementById('places-container');
 
+let selectedBuilding = null;
+let selectedTime = null;
+
+// Фильтрация заведений
 function filterPlaces() {
     placeCards.forEach(card => {
         let neededTime = 999;
@@ -24,7 +25,7 @@ function filterPlaces() {
         } else if (selectedBuilding === '5') {
             neededTime = parseInt(card.dataset.time5 || 999);
         }
-            
+
         const timeSpan = card.querySelector('.time-needed');
         if (timeSpan) {
             timeSpan.textContent = neededTime === 999 ? '-- мин' : `⏰ ${neededTime} мин`;
@@ -38,6 +39,7 @@ function filterPlaces() {
     });
 }
 
+// Выбор корпуса
 buildingButtons.forEach(button => {
     button.addEventListener('click', function () {
         selectedBuilding = this.dataset.building;
@@ -48,7 +50,8 @@ buildingButtons.forEach(button => {
         timeScreen.classList.add('show-flex');
 
         mapPlaceholder.style.display = 'none';
-        placesContainer.style.display = 'block';
+        placesContainer.classList.remove('hidden');
+
         placesTitle.textContent = '🍴 Заведения рядом с корпусом №' + selectedBuilding;
 
         placeCards.forEach(card => {
@@ -58,6 +61,7 @@ buildingButtons.forEach(button => {
     });
 });
 
+// Выбор времени
 timeButtons.forEach(button => {
     button.addEventListener('click', function () {
         selectedTime = parseInt(this.dataset.time);
@@ -65,38 +69,42 @@ timeButtons.forEach(button => {
     });
 });
 
-backBtn.addEventListener('click', function () {
-    selectedBuilding = null;
-    selectedTime = null;
+// Кнопка "назад"
+if (backBtn) {
+    backBtn.addEventListener('click', function () {
+        selectedBuilding = null;
+        selectedTime = null;
 
-    timeScreen.classList.add('hidden');
-    timeScreen.classList.remove('show-flex');
-    buildingScreen.classList.remove('hidden');
+        timeScreen.classList.add('hidden');
+        timeScreen.classList.remove('show-flex');
+        buildingScreen.classList.remove('hidden');
 
-    mapPlaceholder.style.display = 'block';
-    placesContainer.style.display = 'none';
+        mapPlaceholder.style.display = 'block';
+        placesContainer.classList.add('hidden');
 
-    placeCards.forEach(card => {
-        card.style.display = 'block';
+        placeCards.forEach(card => {
+            card.style.display = 'block';
+        });
     });
-});
+}
 
-// Кнопки избранного в списке заведений
+// Кнопки избранного в списке
 document.querySelectorAll('.favorite-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        
-        // Проверка на авторизацию
+
+        // Проверка авторизации
         const isAuthenticated = document.body.getAttribute('data-user-authenticated') === 'true';
         if (!isAuthenticated) {
             alert('Войдите или зарегистрируйтесь, чтобы добавлять в избранное');
             window.location.href = '/accounts/login/';
             return;
         }
-        
+
+        // Отправка запроса
         const placeId = this.dataset.placeId;
-        
+
         fetch(`/favorites/toggle/${placeId}/`, {
             method: 'POST',
             headers: {
@@ -113,6 +121,9 @@ document.querySelectorAll('.favorite-btn').forEach(btn => {
                 this.innerHTML = '🤍';
                 this.classList.remove('active');
             }
+        })
+        .catch(() => {
+            alert('Ошибка при обновлении избранного');
         });
     });
 });
