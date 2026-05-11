@@ -10,9 +10,18 @@
 {% block content %}
 
 <div class="detail-container">
+    <!-- УВЕДОМЛЕНИЕ -->
+    {% if review_message %}
+        <div class="review-notification {% if review_message.type == 'success' %}success{% elif review_message.type == 'error' %}error{% elif review_message.type == 'warning' %}warning{% endif %}">
+            {{ review_message.text }}
+        </div>
+    {% endif %}
     <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
     <div class="place-header">
-        <h1>{{ place.name }}</h1>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="javascript:history.back()" class="back-arrow">←</a>
+            <h1>{{ place.name }}</h1>
+        </div>
         <button id="favorite-detail-btn" class="favorite-detail-btn {% if is_favorited %}active{% endif %}" data-place-id="{{ place.id }}">
             {% if is_favorited %}❤️{% else %}🤍{% endif %}
         </button>
@@ -31,7 +40,7 @@
     <div class="reviews-section">
         <h2>📝 Отзывы</h2>
         {% for review in reviews %}
-            <div class="review-card">
+            <div class="review-card" style="position: relative;">
                 <div class="review-header">
                     <strong>{{ review.user.username }}</strong>
                     <span class="review-rating">{{ review.stars_display }}</span>
@@ -43,6 +52,20 @@
                         <img src="{{ review.photo_url }}" alt="Фото" width="200">
                     </div>
                 {% endif %}
+                <div class="review-menu">
+                    <button class="review-menu-btn" onclick="toggleReviewMenu(event, {{ review.id }})">⋮</button>
+                    <div class="review-dropdown" id="review-dropdown-{{ review.id }}">
+                        <button onclick="copyReviewText('{{ review.text|escapejs }}')">📋 Копировать</button>
+                        {% if user == review.user %}
+                            {% if not review.is_old %}
+                                <button onclick="editReview({{ review.id }})">✏️ Изменить</button>
+                                <button onclick="deleteReview({{ review.id }})" class="danger">🗑️ Удалить</button>
+                            {% endif %}
+                        {% else %}
+                            <button onclick="reportReview({{ review.id }})" class="danger">🚩 Пожаловаться</button>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         {% empty %}
             <div class="empty-reviews">
@@ -86,7 +109,7 @@
     {% else %}
         <!-- Если отзыв уже есть -->
         <div class="already-reviewed-message">
-            <h3>✅ Спасибо за отзыв!</h3>
+            <h3>Спасибо за отзыв!</h3>
             <p>Вы уже оставляли отзыв для этого заведения. Больше одного отзыва от одного пользователя нельзя.</p>
         </div>
     {% endif %}

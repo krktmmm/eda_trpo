@@ -6,7 +6,6 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.utils import timezone
-from django.conf import settings
 from django.db import models
 import random
 import json
@@ -34,7 +33,6 @@ def get_building_order(user_building):
             building_order.append(b)
     return building_order
 
-
 # ==================== СОЛО ====================
 
 @login_required
@@ -59,7 +57,6 @@ def create_solo_request(request):
         return JsonResponse({'status': 'ok', 'id': solo.id})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
-
 
 @login_required
 @require_http_methods(["GET"])
@@ -120,7 +117,6 @@ def find_solo_match(request):
     
     return JsonResponse({'status': 'not_found', 'message': 'Никого не найдено'}, status=404)
 
-
 @login_required
 @require_http_methods(["POST"])
 def accept_solo_match(request):
@@ -141,7 +137,6 @@ def accept_solo_match(request):
     request.session.pop('skipped_match_ids', None)
     
     return JsonResponse({'status': 'ok', 'dialog_id': dialog.id})
-
 
 # ==================== ГРУППА ====================
 
@@ -416,7 +411,6 @@ def messages_list(request):
     
     return render(request, 'roulette/messages.html', {'dialogs': dialogs_data})
 
-
 @login_required
 def dialog_detail(request, dialog_id):
     dialog = get_object_or_404(Dialog, id=dialog_id)
@@ -442,7 +436,6 @@ def dialog_detail(request, dialog_id):
         'is_group': is_group,
         'participants': dialog.participants.all(),
     })
-
 
 @login_required
 @require_http_methods(["POST"])
@@ -475,7 +468,6 @@ def send_message(request, dialog_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
-
 @login_required
 @require_http_methods(["GET"])
 def get_unread_count(request):
@@ -484,7 +476,6 @@ def get_unread_count(request):
     for dialog in dialogs:
         unread_total += dialog.messages.filter(is_read=False).exclude(sender=request.user).count()
     return JsonResponse({'unread_count': unread_total})
-
 
 @login_required
 @require_http_methods(["GET"])
@@ -510,7 +501,6 @@ def get_new_messages(request, dialog_id):
     } for m in messages]
     
     return JsonResponse({'messages': data})
-
 
 @login_required
 @require_http_methods(["POST"])

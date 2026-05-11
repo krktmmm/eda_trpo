@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Place, Review, Favorite
-from django.db.models import Avg, Count
 from django.http import JsonResponse
-from django.contrib import messages
+from django.utils import timezone
+from datetime import timedelta
 import difflib
 
 def main_menu(request):
@@ -30,7 +30,6 @@ def place_list(request):
                 .lower()
             )
         ]
-    # Получаем список ID заведений, которые пользователь добавил в избранное
     favorited_ids = []
     if request.user.is_authenticated:
         favorited_ids = Favorite.objects.filter(
@@ -62,7 +61,7 @@ def roulette(request):
 def place_detail(request, place_id):
     """Детальная страница заведения с отзывами"""
     place = get_object_or_404(Place, id=place_id)
-    reviews = place.reviews.all().order_by('-created_at')  # все отзывы к этому заведению
+    reviews = place.reviews.all().order_by('-created_at')
     is_favorited = False
     has_reviewed = False
     if request.user.is_authenticated:
@@ -71,12 +70,17 @@ def place_detail(request, place_id):
         
     for review in reviews:
         review.stars_display = "⭐" * review.rating
+        review.is_old = timezone.now() - review.created_at > timedelta(hours=24)
+
+    # Сообщение только для этой страницы
+    review_message = request.session.pop('review_message', None)
 
     return render(request, 'places/place_detail.html', {
         'place': place,
         'reviews': reviews,
         'is_favorited': is_favorited,
         'has_reviewed': has_reviewed,
+        'review_message': review_message,
     })
 
 @login_required
@@ -85,7 +89,7 @@ def add_review(request, place_id):
     place = get_object_or_404(Place, id=place_id)
     
     if Review.objects.filter(place=place, user=request.user).exists():
-        messages.error(request, ' Вы уже оставляли отзыв для этого заведения!')
+        request.session['review_message'] = {'type': 'error', 'text': 'Вы уже оставляли отзыв для этого заведения!'}
         return redirect('place_detail', place_id=place.id)
     
     if request.method == 'POST':
@@ -94,16 +98,14 @@ def add_review(request, place_id):
         photo_url = request.POST.get('photo_url', '')
         
         if rating and text:
-            # Создаём отзыв
-            review = Review.objects.create(
+            Review.objects.create(
                 place=place,
                 user=request.user,
                 rating=int(rating),
                 text=text,
                 photo_url=photo_url
-                )
+            )
             
-            # Обновляем рейтинг заведения
             all_reviews = place.reviews.all()
             total_rating = sum(r.rating for r in all_reviews)
             count = all_reviews.count()
@@ -111,21 +113,19 @@ def add_review(request, place_id):
             place.rating_count = all_reviews.count()
             place.save()
             
-            messages.success(request, 'Отзыв добавлен!')
+            request.session['review_message'] = {'type': 'success', 'text': 'Отзыв добавлен!'}
         else:
-            messages.error(request, 'Заполните все поля')
+            request.session['review_message'] = {'type': 'error', 'text': 'Заполните все поля'}
         
         return redirect('place_detail', place_id=place.id)
     
     return redirect('place_detail', place_id=place.id)
-
 
 @login_required
 def favorites_list(request):
     """Страница со списком избранных заведений"""
     favorites = Favorite.objects.filter(user=request.user).select_related('place')
     return render(request, 'places/favorites.html', {'favorites': favorites})
-
 
 @login_required
 def toggle_favorite(request, place_id):
@@ -142,7 +142,77 @@ def toggle_favorite(request, place_id):
     
     return JsonResponse({'is_favorited': is_favorited})
 
-#катя ниже это Алина добавила
+@login_required
+def delete_review(request, review_id):
+    """Удаление отзыва (только свой)"""
+    review = get_object_or_404(Review, id=review_id)
+    
+    if review.user != request.user:
+        return JsonResponse({'error': 'Нельзя удалить чужой отзыв'}, status=403)
+    
+    place = review.place
+    review.delete()
+    
+    all_reviews = place.reviews.all()
+    if all_reviews.exists():
+        total_rating = sum(r.rating for r in all_reviews)
+        place.rating = total_rating / all_reviews.count()
+        place.rating_count = all_reviews.count()
+    else:
+        place.rating = 0
+        place.rating_count = 0
+    place.save()
+
+    request.session['review_message'] = {'type': 'error', 'text': '❌ Отзыв удалён!'}
+    
+    return JsonResponse({'status': 'ok'})
+
+@login_required
+def edit_review(request, review_id):
+    """Редактирование отзыва"""
+    review = get_object_or_404(Review, id=review_id)
+    
+    if review.user != request.user:
+        request.session['review_message'] = {'type': 'error', 'text': 'Нельзя редактировать чужой отзыв'}
+        return redirect('place_detail', place_id=review.place.id)
+    
+    if timezone.now() - review.created_at > timedelta(hours=24):
+        request.session['review_message'] = {'type': 'error', 'text': 'Редактировать отзыв можно только в течение 24 часов после публикации'}
+        return redirect('place_detail', place_id=review.place.id)
+    
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        text = request.POST.get('text')
+        photo_url = request.POST.get('photo_url', '')
+        
+        if rating and text:
+            # Проверяем, изменилось ли что-то
+            if (int(rating) == review.rating and 
+                text == review.text and 
+                photo_url == review.photo_url):
+                request.session['review_message'] = {'type': 'warning', 'text': '⚠️ Ничего не изменилось'}
+                return redirect('place_detail', place_id=review.place.id)
+            
+            review.rating = int(rating)
+            review.text = text
+            review.photo_url = photo_url
+            review.save()
+            
+            place = review.place
+            all_reviews = place.reviews.all()
+            total_rating = sum(r.rating for r in all_reviews)
+            place.rating = total_rating / all_reviews.count()
+            place.save()
+            
+            request.session['review_message'] = {'type': 'success', 'text': '✅ Отзыв обновлён!'}
+            return redirect('place_detail', place_id=place.id)
+    
+    return render(request, 'places/edit_review.html', {
+        'review': review,
+        'stars_range': range(1, 6),
+        'edit_hours': 24,
+    })
+
 def search_places_api(request):
     query = request.GET.get("q", "").strip()
     if not query:

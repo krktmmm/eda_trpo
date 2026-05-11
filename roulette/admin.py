@@ -1,5 +1,5 @@
-from django.contrib import admin
 from .models import SoloRequest, GroupRequest, GroupMember
+from django.contrib import admin
 
 @admin.register(SoloRequest)
 class SoloRequestAdmin(admin.ModelAdmin):

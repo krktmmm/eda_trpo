@@ -32,7 +32,6 @@ class SoloRequest(models.Model):
         verbose_name = "Заявка (один)"
         verbose_name_plural = "Заявки (один)"
 
-
 class GroupRequest(models.Model):
     """Заявка на поиск компании (2+ человек)"""
     
@@ -52,7 +51,7 @@ class GroupRequest(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='group_requests')
     building = models.CharField(max_length=1, choices=BUILDING_CHOICES, verbose_name="Корпус")
     budget = models.CharField(max_length=10, choices=BUDGET_CHOICES, default='any', verbose_name="Бюджет")
-    needed_people = models.IntegerField(default=2, verbose_name="Сколько всего человек (включая тебя)")
+    needed_people = models.IntegerField(default=3, verbose_name="Сколько всего человек (включая тебя)")
     current_members = models.IntegerField(default=1, verbose_name="Сколько уже собралось")
     telegram = models.CharField(max_length=100, blank=True, verbose_name="Telegram")
     vk = models.CharField(max_length=100, blank=True, verbose_name="VK")
@@ -67,7 +66,6 @@ class GroupRequest(models.Model):
         verbose_name = "Заявка (группа)"
         verbose_name_plural = "Заявки (группа)"
 
-
 class GroupMember(models.Model):
     """Участники групповой заявки"""
     group = models.ForeignKey(GroupRequest, on_delete=models.CASCADE, related_name='members')
@@ -78,7 +76,6 @@ class GroupMember(models.Model):
         verbose_name = "Участник группы"
         verbose_name_plural = "Участники группы"
         unique_together = ('group', 'user')
-
 
 class Dialog(models.Model):
     """Диалог между пользователями"""
@@ -110,7 +107,6 @@ class Dialog(models.Model):
         for user in users:
             dialog.participants.add(user)
         return dialog
-
 
 class Message(models.Model):
     """Сообщение в диалоге"""

@@ -36,7 +36,6 @@ class Place(models.Model):
         verbose_name = "Заведение"
         verbose_name_plural = "Заведения"
 
-
 class Review(models.Model):
     """Отзыв о заведении"""
     

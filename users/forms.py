@@ -1,4 +1,3 @@
-from django.contrib.auth.forms import PasswordChangeForm
 from .models import Profile
 from django import forms
 

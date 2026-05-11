@@ -9,6 +9,7 @@ venv/
 env/
 ENV/
 .venv
+.env
 
 # База данных
 # db.sqlite3
@@ -38,5 +39,3 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
-
-.env

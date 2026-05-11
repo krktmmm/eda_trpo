@@ -33,7 +33,7 @@
 
 /* СКРЫВАЕТ ЭКРАН ВЫБОРА ВРЕМЕНИ */
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 /* КОНТЕЙНЕР ДЛЯ КНОПОК */
@@ -135,6 +135,7 @@
     border-radius: 20px;
     overflow: hidden;
 }
+
 .leaflet-control-attribution svg,
 .leaflet-control-attribution img {
     display: none !important;

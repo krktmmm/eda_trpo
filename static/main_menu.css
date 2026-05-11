@@ -42,11 +42,6 @@
     box-shadow: 0 15px 40px #00000033;
 }
 
-/* ИКОНКИ В КАРТОЧКАХ */
-.menu-icon {
-    font-size: 100px;
-}
-
 /* Анимированные иконки в карточках */
 .menu-icon.lottie-icon {
     width: 140px !important;

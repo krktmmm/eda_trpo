@@ -46,6 +46,7 @@ a.logo {
     flex: 1 1 auto;
     max-width: 600px;
     margin: 0 20px;
+    position: relative;
 }
 
 .search input {
@@ -380,10 +381,6 @@ a.logo {
 }
 
 /* ПОИСК С ПОДСКАЗКАМИ АЛИНА*/
-.search {
-    position: relative;
-}
-
 .search-suggestions {
     position: absolute;
     top: calc(100% + 6px);

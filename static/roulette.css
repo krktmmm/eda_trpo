@@ -46,11 +46,6 @@
     box-shadow: 0 15px 40px #00000033;
 }
 
-/* ИКОНКИ ВНУТРИ КАРТОЧЕК */
-.btn-icon {
-    font-size: 100px;
-}
-
 /* ЗАГОЛОВОК В КАРТОЧКЕ */
 .roulette-mode-btn h2 {
     color: white;

@@ -170,6 +170,10 @@
     margin-bottom: 10px;
 }
 
+.review-place a:hover {
+    color: #f99039 !important;
+}
+
 .review-rating {
     color: #f99039;
     margin-bottom: 10px;
