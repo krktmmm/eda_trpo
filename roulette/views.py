@@ -3,6 +3,7 @@ from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.conf import settings
@@ -127,7 +128,8 @@ def accept_solo_match(request):
     if not match_user_id:
         return JsonResponse({'error': 'Нет активного матча'}, status=404)
     
-    match_user = get_object_or_404(settings.AUTH_USER_MODEL, id=match_user_id)
+    User = get_user_model()
+    match_user = get_object_or_404(User, id=match_user_id)
     
     SoloRequest.objects.filter(user=match_user, is_active=True).update(is_active=False)
     SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
