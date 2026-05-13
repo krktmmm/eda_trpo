@@ -97,7 +97,7 @@ def add_review(request, place_id):
         text = request.POST.get('text')
         photo_url = request.POST.get('photo_url', '')
         
-        if rating and text:
+        if rating:
             Review.objects.create(
                 place=place,
                 user=request.user,
@@ -185,7 +185,7 @@ def edit_review(request, review_id):
         text = request.POST.get('text')
         photo_url = request.POST.get('photo_url', '')
         
-        if rating and text:
+        if rating:
             # Проверяем, изменилось ли что-то
             if (int(rating) == review.rating and 
                 text == review.text and 
