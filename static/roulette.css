@@ -507,3 +507,50 @@
 .modal-buttons {
     margin-top: 20px;
 }
+
+/* Уведомление об активной встрече */
+.active-meeting-warning {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 15px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.active-meeting-warning p {
+    margin: 0;
+    color: #856404;
+    font-size: 18px;
+}
+
+.active-meeting-warning a {
+    color: #f99039;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.active-meeting-warning a:hover {
+    text-decoration: underline;
+}
+
+/* Блокировка кнопок при активной встрече */
+.meeting-blocked-message {
+    text-align: center;
+    width: 100%;
+    padding: 40px;
+}
+
+.blocked-text {
+    font-size: 24px;
+    color: #999;
+    margin-bottom: 20px;
+}
+
+.go-to-chat-btn {
+    display: inline-block;
+    margin-top: 0;
+}

@@ -22,5 +22,6 @@ urlpatterns = [
     path('api/solo/cancel/', views.cancel_solo_request, name='cancel_solo'),
     path('api/group/cancel/', views.cancel_group_request, name='cancel_group'),
     path('api/cancel-search/', views.cancel_search, name='cancel_search'),
+    path('api/deactivate-search/', views.deactivate_search, name='deactivate_search'),
     path('api/clear-skipped/', views.clear_skipped, name='clear_skipped'),
 ]

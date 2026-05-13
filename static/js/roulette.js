@@ -625,7 +625,7 @@ async function startSolo(e) {
     activeFetchController = new AbortController();
 
     try {
-        await fetch('/roulette/api/solo/save-params/', {
+        const saveRes = await fetch('/roulette/api/solo/save-params/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -636,6 +636,15 @@ async function startSolo(e) {
                 budget: form.budget.value
             })
         });
+        
+        const saveData = await saveRes.json();
+        
+        if (saveRes.status === 400 && saveData.error === 'active_meeting') {
+            alert(saveData.message);
+            hideSearchProcess();
+            showMainScreen();
+            return;
+        }
 
         const searchStart = Date.now();
         const res = await fetch('/roulette/api/solo/find/', {

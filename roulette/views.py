@@ -12,7 +12,11 @@ import json
 
 @login_required
 def roulette(request):
-    return render(request, 'roulette/roulette.html')
+    # Проверяем, есть ли активная встреча
+    has_active_meeting = request.session.get('active_meeting', False)
+    return render(request, 'roulette/roulette.html', {
+        'has_active_meeting': has_active_meeting
+    })
 
 def get_nearby_buildings(building):
     nearby_map = {
@@ -86,6 +90,19 @@ def find_solo_match(request):
         return JsonResponse({'error': 'Нет параметров поиска'}, status=404)
     
     profile = request.user.profile
+    
+    # Убеждаемся, что у пользователя есть активная заявка
+    user_request = SoloRequest.objects.filter(user=request.user, is_active=True).first()
+    if not user_request:
+        user_request = SoloRequest.objects.create(
+            user=request.user,
+            building=building,
+            budget=budget,
+            telegram=profile.telegram,
+            vk=profile.vk,
+            is_active=True
+        )
+    
     base_queryset = SoloRequest.objects.filter(is_active=True).exclude(user=request.user)
     candidates = []
     
@@ -119,18 +136,6 @@ def find_solo_match(request):
         request.session['match_user_id'] = match.user.id
         request.session['match_request_id'] = match.id
         
-        # Если заявки нет — создаём, если есть — оставляем
-        existing = SoloRequest.objects.filter(user=request.user, is_active=True).first()
-        if not existing:
-            SoloRequest.objects.create(
-                user=request.user,
-                building=building,
-                budget=budget,
-                telegram=profile.telegram,
-                vk=profile.vk,
-                is_active=True
-            )
-        
         avatar_url = None
         if hasattr(match.user, 'profile') and match.user.profile.avatar:
             avatar_url = match.user.profile.avatar.url
@@ -146,18 +151,6 @@ def find_solo_match(request):
             'match_type': 'match',
             'group_id': None,
         })
-    
-    # Если заявки нет — создаём, если есть — оставляем
-    existing_request = SoloRequest.objects.filter(user=request.user, is_active=True).first()
-    if not existing_request:
-        SoloRequest.objects.create(
-            user=request.user,
-            building=building,
-            budget=budget,
-            telegram=profile.telegram,
-            vk=profile.vk,
-            is_active=True
-        )
     
     return JsonResponse({'status': 'not_found', 'message': 'Никого не найдено'}, status=404)
 
@@ -298,13 +291,26 @@ def find_group_match(request):
         return JsonResponse({'error': 'Нет параметров поиска'}, status=404)
     
     profile = request.user.profile
+    needed_people = int(needed_people_raw) if needed_people_raw else None
+    
+    # Убеждаемся, что у пользователя есть активная заявка
+    user_request = GroupRequest.objects.filter(user=request.user, is_active=True).first()
+    if not user_request:
+        user_request = GroupRequest.objects.create(
+            user=request.user,
+            building=building,
+            budget=budget,
+            needed_people=needed_people if needed_people else 3,
+            telegram=profile.telegram,
+            vk=profile.vk,
+            is_active=True
+        )
+        GroupMember.objects.create(group=user_request, user=request.user)
     
     base_queryset = GroupRequest.objects.filter(
         is_active=True,
         current_members__lt=models.F('needed_people')
     ).exclude(user=request.user)
-    
-    needed_people = int(needed_people_raw) if needed_people_raw else None
     
     if needed_people and needed_people > 2:
         base_queryset = base_queryset.filter(needed_people=needed_people)
@@ -339,20 +345,6 @@ def find_group_match(request):
         request.session['skipped_group_ids'] = skipped_ids
         request.session['match_group_id'] = group.id
         
-        # Если заявки нет — создаём, если есть — оставляем
-        existing = GroupRequest.objects.filter(user=request.user, is_active=True).first()
-        if not existing:
-            group_request = GroupRequest.objects.create(
-                user=request.user,
-                building=building,
-                budget=budget,
-                needed_people=needed_people if needed_people else 3,
-                telegram=profile.telegram,
-                vk=profile.vk,
-                is_active=True
-            )
-            GroupMember.objects.create(group=group_request, user=request.user)
-        
         members = GroupMember.objects.filter(group=group).select_related('user', 'user__profile')
         members_data = []
         for member in members:
@@ -382,26 +374,10 @@ def find_group_match(request):
             'is_almost_full': slots_left == 1,
         })
     
-    # Если заявки нет — создаём, если есть — оставляем
-    existing_request = GroupRequest.objects.filter(user=request.user, is_active=True).first()
-    if not existing_request:
-        group_request = GroupRequest.objects.create(
-            user=request.user,
-            building=building,
-            budget=budget,
-            needed_people=needed_people if needed_people else 3,
-            telegram=profile.telegram,
-            vk=profile.vk,
-            is_active=True
-        )
-        GroupMember.objects.create(group=group_request, user=request.user)
-    else:
-        group_request = existing_request
-    
     return JsonResponse({
         'status': 'waiting',
         'message': 'Пока никто не ищет компанию. Вы первый!',
-        'your_group_id': group_request.id,
+        'your_group_id': user_request.id,
     })
 
 @login_required
@@ -646,6 +622,8 @@ def delete_dialog(request, dialog_id):
     dialog.delete()
     return JsonResponse({'status': 'ok'})
 
+# ==================== УПРАВЛЕНИЕ ЗАЯВКАМИ ====================
+
 @login_required
 @require_http_methods(["POST"])
 def cancel_solo_request(request):
@@ -666,12 +644,27 @@ def cancel_group_request(request):
 @login_required
 @require_http_methods(["POST"])
 def cancel_search(request):
-    """Отменяет текущий поиск и удаляет созданные заявки"""
+    """Полностью УДАЛЯЕТ заявку из БД (для кнопки "Назад")"""
     SoloRequest.objects.filter(user=request.user, is_active=True).delete()
     group = GroupRequest.objects.filter(user=request.user, is_active=True).first()
     if group:
         GroupMember.objects.filter(group=group).delete()
         group.delete()
+    request.session.pop('search_building', None)
+    request.session.pop('search_budget', None)
+    request.session.pop('skipped_match_ids', None)
+    request.session.pop('skipped_group_ids', None)
+    request.session.pop('match_user_id', None)
+    request.session.pop('match_request_id', None)
+    request.session.pop('match_group_id', None)
+    return JsonResponse({'status': 'ok'})
+
+@login_required
+@require_http_methods(["POST"])
+def deactivate_search(request):
+    """Деактивирует заявку (is_active=False) — НЕ УДАЛЯЕТ из БД (для кнопки "Аннулировать" и "Не искать")"""
+    SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+    GroupRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
     request.session.pop('search_building', None)
     request.session.pop('search_budget', None)
     request.session.pop('skipped_match_ids', None)
