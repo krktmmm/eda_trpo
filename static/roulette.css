@@ -480,10 +480,6 @@
     z-index: 9999;
 }
 
-.modal.hidden {
-    display: none !important;
-}
-
 .modal-content {
     background: white;
     padding: 30px;
@@ -510,9 +506,4 @@
 
 .modal-buttons {
     margin-top: 20px;
-}
-
-/* ВСПОМОГАТЕЛЬНЫЙ КЛАСС */
-.hidden {
-    display: none !important;
 }

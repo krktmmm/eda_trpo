@@ -32,6 +32,7 @@ let slotAnimation = null;
 let searchTimer = null;
 let currentMatchData = null;
 let currentSearchMode = null;  // 'solo' или 'group'
+let activeFetchController = null;  // Для отмены fetch-запроса
 
 /** Прокрутка к элементу */
 function scrollToElement(element) {
@@ -84,8 +85,6 @@ function loadStaticLottie(container, path, frame = 0) {
 
 /** Показывает форму выбранного режима */
 function showForm(formToShow) {
-    soloForm.style.display = '';
-    groupForm.style.display = '';
     soloForm.classList.add('hidden');
     groupForm.classList.add('hidden');
     formToShow.classList.remove('hidden');
@@ -114,10 +113,24 @@ function stopSlotOnWin() {
     if (!slotAnimation) return;
     slotAnimation.loop = false;
     slotAnimation.setSpeed(SLOT_SPEED);
-    slotAnimation.playSegments(
-        [Math.floor(slotAnimation.currentFrame), slotAnimation.totalFrames - 1],
-        true
-    );
+    if (slotAnimation.totalFrames && slotAnimation.currentFrame) {
+        slotAnimation.playSegments(
+            [Math.floor(slotAnimation.currentFrame), slotAnimation.totalFrames - 1],
+            true
+        );
+    }
+}
+
+/** Отменяет текущий поиск (очищает заявки) */
+async function cancelCurrentSearch() {
+    if (activeFetchController) {
+        activeFetchController.abort();
+        activeFetchController = null;
+    }
+    await fetch('/roulette/api/cancel-search/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': window.CSRF_TOKEN }
+    });
 }
 
 /** Показывает экран процесса поиска */
@@ -291,7 +304,7 @@ function showResultModal(title, message, confirmText, cancelText, onConfirm, onC
 
 /** Показывает диалог подтверждения */
 function showConfirmDialog(message, confirmText, cancelText, onConfirm, onCancel) {
-    showResultModal('🤔 Подтверждение', message, confirmText, cancelText, onConfirm, onCancel);
+    showResultModal('Подтверждение', message, confirmText, cancelText, onConfirm, onCancel);
 }
 
 /** Показывает окно создания группы */
@@ -428,43 +441,26 @@ async function createCompany(size) {
     }
 }
 
-/** Старт соло-поиска */
-async function startSolo(e) {
-    e.preventDefault();
-
-    const form = document.getElementById('create-solo-form');
-    const allButtons = form.querySelectorAll('button, select, input');
-    allButtons.forEach(el => el.disabled = true);
-
-    const submitBtn = document.getElementById('start-solo');
-    if (submitBtn) {
-        submitBtn.textContent = '⏳ Поиск...';
-    }
-
+/** Перезапустить соло-поиск с существующей заявкой */
+async function startSoloFromExisting() {
     showSearchProcess();
     scrollToElement(searchProcess);
 
-    try {
-        await fetch('/roulette/api/solo/save-params/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': window.CSRF_TOKEN
-            },
-            body: JSON.stringify({
-                building: form.building.value,
-                budget: form.budget.value
-            })
-        });
+    activeFetchController = new AbortController();
 
+    try {
         const searchStart = Date.now();
-        const res = await fetch('/roulette/api/solo/find/');
+        const res = await fetch('/roulette/api/solo/find/', {
+            signal: activeFetchController.signal
+        });
         const match = await res.json();
         const elapsed = Date.now() - searchStart;
 
         if (elapsed < MIN_SEARCH_TIME) {
             await new Promise(resolve => setTimeout(resolve, MIN_SEARCH_TIME - elapsed));
         }
+
+        if (activeFetchController.signal.aborted) return;
 
         if (match.status === 'found') {
             currentMatchData = match;
@@ -489,8 +485,6 @@ async function startSolo(e) {
                 hideSearchProcess();
                 document.querySelector('.greeting').style.display = 'none';
                 document.querySelector('.roulette-buttons').style.display = 'none';
-                soloForm.style.display = '';
-                groupForm.style.display = '';
                 soloForm.classList.add('hidden');
                 groupForm.classList.add('hidden');
                 notFoundScreen.classList.remove('hidden');
@@ -505,12 +499,205 @@ async function startSolo(e) {
             }, 2000);
         }
     } catch (error) {
-        console.error('Ошибка при поиске:', error);
-        hideSearchProcess();
-        showMainScreen();
-        soloForm.style.display = '';
-        soloForm.classList.remove('hidden');
+        if (error.name === 'AbortError') {
+            console.log('Поиск отменён');
+        } else {
+            console.error('Ошибка:', error);
+            hideSearchProcess();
+            showMainScreen();
+            soloForm.classList.remove('hidden');
+            alert('Ошибка соединения');
+        }
     } finally {
+        activeFetchController = null;
+    }
+}
+
+/** Перезапустить групповой поиск с существующей заявкой */
+async function startGroupFromExisting() {
+    showSearchProcess();
+    scrollToElement(searchProcess);
+
+    activeFetchController = new AbortController();
+
+    try {
+        const searchStart = Date.now();
+        const res = await fetch('/roulette/api/group/find/', {
+            signal: activeFetchController.signal
+        });
+        const match = await res.json();
+        const elapsed = Date.now() - searchStart;
+
+        if (elapsed < MIN_SEARCH_TIME) {
+            await new Promise(resolve => setTimeout(resolve, MIN_SEARCH_TIME - elapsed));
+        }
+
+        if (activeFetchController.signal.aborted) return;
+
+        if (match.status === 'found') {
+            currentMatchData = match;
+            stopSlotOnWin();
+            searchProcessText.innerText = 'Компания найдена!';
+            setTimeout(() => {
+                hideSearchProcess();
+                showMatchScreen(match);
+                setTimeout(() => {
+                    matchScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+                if (window.addNotification) {
+                    window.addNotification(
+                        `🎉 Найдена компания!`,
+                        () => { window.location.href = '/roulette/'; }
+                    );
+                }
+            }, 1000);
+        } else if (match.status === 'waiting') {
+            stopSlotOnWin();
+            searchProcessText.innerText = 'Компаний пока нет...';
+            setTimeout(() => {
+                hideSearchProcess();
+                document.querySelector('.greeting').style.display = 'none';
+                document.querySelector('.roulette-buttons').style.display = 'none';
+                soloForm.classList.add('hidden');
+                groupForm.classList.add('hidden');
+                notFoundScreen.classList.remove('hidden');
+                document.querySelector('#not-found-title').textContent = 'Компания не найдена';
+                document.querySelector('#not-found-text').textContent = 'Нет доступных компаний. Станьте первым!';
+                document.getElementById('not-found-cancel').textContent = '❌ Не искать';
+                document.getElementById('not-found-again').textContent = '🔄 Попробовать ещё раз';
+                document.getElementById('not-found-create').textContent = '🚀 Создать компанию';
+                document.getElementById('not-found-create').classList.remove('hidden');
+                document.getElementById('not-found-create').onclick = () => {
+                    showCreateGroupModal();
+                };
+                setTimeout(() => {
+                    notFoundScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+            }, 2000);
+        } else {
+            stopSlotOnWin();
+            setTimeout(() => {
+                hideSearchProcess();
+                soloForm.classList.add('hidden');
+                groupForm.classList.add('hidden');
+                notFoundScreen.classList.remove('hidden');
+                document.querySelector('#not-found-title').textContent = 'Собеседник не найден';
+                document.querySelector('#not-found-text').textContent = 'Попробуйте изменить параметры поиска';
+                document.getElementById('not-found-cancel').textContent = '❌ Не искать';
+                document.getElementById('not-found-again').textContent = '🔄 Попробовать ещё раз';
+                document.getElementById('not-found-create').classList.add('hidden');
+                setTimeout(() => {
+                    notFoundScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+            }, 2000);
+        }
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            console.log('Поиск отменён');
+        } else {
+            console.error('Ошибка:', error);
+            hideSearchProcess();
+            showMainScreen();
+            groupForm.classList.remove('hidden');
+            alert('Ошибка соединения');
+        }
+    } finally {
+        activeFetchController = null;
+    }
+}
+
+/** Старт соло-поиска */
+async function startSolo(e) {
+    e.preventDefault();
+
+    const form = document.getElementById('create-solo-form');
+    const allButtons = form.querySelectorAll('button, select, input');
+    allButtons.forEach(el => el.disabled = true);
+
+    const submitBtn = document.getElementById('start-solo');
+    if (submitBtn) {
+        submitBtn.textContent = '⏳ Поиск...';
+    }
+
+    showSearchProcess();
+    scrollToElement(searchProcess);
+
+    activeFetchController = new AbortController();
+
+    try {
+        await fetch('/roulette/api/solo/save-params/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': window.CSRF_TOKEN
+            },
+            body: JSON.stringify({
+                building: form.building.value,
+                budget: form.budget.value
+            })
+        });
+
+        const searchStart = Date.now();
+        const res = await fetch('/roulette/api/solo/find/', {
+            signal: activeFetchController.signal
+        });
+        const match = await res.json();
+        const elapsed = Date.now() - searchStart;
+
+        if (elapsed < MIN_SEARCH_TIME) {
+            await new Promise(resolve => setTimeout(resolve, MIN_SEARCH_TIME - elapsed));
+        }
+
+        if (activeFetchController.signal.aborted) return;
+
+        if (match.status === 'found') {
+            currentMatchData = match;
+            stopSlotOnWin();
+            searchProcessText.innerText = 'Собеседник найден!';
+            setTimeout(() => {
+                hideSearchProcess();
+                showMatchScreen(match);
+                setTimeout(() => {
+                    matchScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+                if (window.addNotification) {
+                    window.addNotification(
+                        `🎉 Найден собеседник: ${match.username}!`,
+                        () => { window.location.href = '/roulette/'; }
+                    );
+                }
+            }, 1000);
+        } else {
+            stopSlotOnWin();
+            setTimeout(() => {
+                hideSearchProcess();
+                document.querySelector('.greeting').style.display = 'none';
+                document.querySelector('.roulette-buttons').style.display = 'none';
+                soloForm.classList.add('hidden');
+                groupForm.classList.add('hidden');
+                notFoundScreen.classList.remove('hidden');
+                document.querySelector('#not-found-title').textContent = 'Собеседник не найден!';
+                document.querySelector('#not-found-text').textContent = 'Попробуйте изменить параметры поиска';
+                document.getElementById('not-found-cancel').textContent = '❌ Не искать';
+                document.getElementById('not-found-again').textContent = '🔄 Попробовать ещё раз';
+                document.getElementById('not-found-create').classList.add('hidden');
+                setTimeout(() => {
+                    notFoundScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+            }, 2000);
+        }
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            console.log('Поиск отменён пользователем');
+        } else {
+            console.error('Ошибка при поиске:', error);
+            hideSearchProcess();
+            showMainScreen();
+            soloForm.classList.remove('hidden');
+            alert('Ошибка соединения. Проверьте интернет и попробуйте снова.');
+        }
+    } finally {
+        activeFetchController = null;
         allButtons.forEach(el => el.disabled = false);
         if (submitBtn) {
             submitBtn.textContent = '🎲 Начать поиск';
@@ -534,6 +721,8 @@ async function startGroup(e) {
     showSearchProcess();
     scrollToElement(searchProcess);
 
+    activeFetchController = new AbortController();
+
     try {
         const neededPeople = form.needed_people.value;
 
@@ -551,7 +740,9 @@ async function startGroup(e) {
         });
 
         const searchStart = Date.now();
-        const res = await fetch('/roulette/api/group/find/');
+        const res = await fetch('/roulette/api/group/find/', {
+            signal: activeFetchController.signal
+        });
         const match = await res.json();
         const elapsed = Date.now() - searchStart;
 
@@ -559,8 +750,10 @@ async function startGroup(e) {
             await new Promise(resolve => setTimeout(resolve, MIN_SEARCH_TIME - elapsed));
         }
 
+        if (activeFetchController.signal.aborted) return;
+
         if (match.status === 'found') {
-            currentMatchData = { ...match, dialog_id: match.dialog_id || currentMatchData?.dialog_id };
+            currentMatchData = match;
             stopSlotOnWin();
             searchProcessText.innerText = 'Компания найдена!';
             setTimeout(() => {
@@ -581,27 +774,20 @@ async function startGroup(e) {
             searchProcessText.innerText = 'Компаний пока нет...';
             setTimeout(() => {
                 hideSearchProcess();
-
                 document.querySelector('.greeting').style.display = 'none';
                 document.querySelector('.roulette-buttons').style.display = 'none';
-                soloForm.style.display = '';
-                groupForm.style.display = '';
                 soloForm.classList.add('hidden');
                 groupForm.classList.add('hidden');
-
                 notFoundScreen.classList.remove('hidden');
                 document.querySelector('#not-found-title').textContent = 'Компания не найдена';
                 document.querySelector('#not-found-text').textContent = 'Нет доступных компаний. Станьте первым!';
-
                 document.getElementById('not-found-cancel').textContent = '❌ Не искать';
                 document.getElementById('not-found-again').textContent = '🔄 Попробовать ещё раз';
                 document.getElementById('not-found-create').textContent = '🚀 Создать компанию';
                 document.getElementById('not-found-create').classList.remove('hidden');
-
                 document.getElementById('not-found-create').onclick = () => {
                     showCreateGroupModal();
                 };
-
                 setTimeout(() => {
                     notFoundScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 200);
@@ -610,8 +796,6 @@ async function startGroup(e) {
             stopSlotOnWin();
             setTimeout(() => {
                 hideSearchProcess();
-                soloForm.style.display = '';
-                groupForm.style.display = '';
                 soloForm.classList.add('hidden');
                 groupForm.classList.add('hidden');
                 notFoundScreen.classList.remove('hidden');
@@ -626,12 +810,17 @@ async function startGroup(e) {
             }, 2000);
         }
     } catch (error) {
-        console.error('Ошибка при поиске:', error);
-        hideSearchProcess();
-        showMainScreen();
-        groupForm.style.display = '';
-        groupForm.classList.remove('hidden');
+        if (error.name === 'AbortError') {
+            console.log('Поиск отменён пользователем');
+        } else {
+            console.error('Ошибка при поиске:', error);
+            hideSearchProcess();
+            showMainScreen();
+            groupForm.classList.remove('hidden');
+            alert('Ошибка соединения. Проверьте интернет и попробуйте снова.');
+        }
     } finally {
+        activeFetchController = null;
         allButtons.forEach(el => el.disabled = false);
         if (submitBtn) {
             submitBtn.textContent = '🎲 Начать поиск';
@@ -660,18 +849,16 @@ if (groupBtn) {
     };
 }
 
-// Кнопка "Назад" во время поиска
+// Кнопка "Назад" во время поиска — ОТМЕНЯЕТ ПОИСК И УДАЛЯЕТ ЗАЯВКУ
 if (cancelSearchBtn) {
-    cancelSearchBtn.onclick = () => {
-        if (searchTimer) {
-            clearTimeout(searchTimer);
-            searchTimer = null;
+    cancelSearchBtn.onclick = async () => {
+        if (activeFetchController) {
+            activeFetchController.abort();
+            activeFetchController = null;
         }
-
+        await cancelCurrentSearch();
         hideSearchProcess();
         showMainScreen();
-        soloForm.style.display = '';
-        groupForm.style.display = '';
         if (currentSearchMode === 'solo') {
             soloForm.classList.remove('hidden');
         } else if (currentSearchMode === 'group') {
@@ -680,7 +867,7 @@ if (cancelSearchBtn) {
     };
 }
 
-// Кнопка "Искать другого"
+// Кнопка "Искать другого" — ОЧИЩАЕТ СПИСОК ПРОПУЩЕННЫХ И ПЕРЕЗАПУСКАЕТ ПОИСК С ТОЙ ЖЕ ЗАЯВКОЙ
 if (screenAgainBtn) {
     screenAgainBtn.onclick = function() {
         if (this.disabled) return;
@@ -689,16 +876,23 @@ if (screenAgainBtn) {
 
         matchScreen.classList.add('hidden');
 
-        if (currentSearchMode === 'group') {
-            groupSubmitForm?.dispatchEvent(new Event('submit'));
-        } else {
-            soloSubmitForm?.dispatchEvent(new Event('submit'));
-        }
-
-        setTimeout(() => {
-            this.disabled = false;
-            this.textContent = '🔄 Искать другого';
-        }, 5000);
+        fetch('/roulette/api/clear-skipped/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': window.CSRF_TOKEN
+            }
+        }).then(() => {
+            if (currentSearchMode === 'group') {
+                startGroupFromExisting();
+            } else {
+                startSoloFromExisting();
+            }
+        }).finally(() => {
+            setTimeout(() => {
+                this.disabled = false;
+                this.textContent = '🔄 Искать другого';
+            }, 5000);
+        });
     };
 }
 
@@ -711,7 +905,6 @@ if (screenAcceptBtn) {
         screenAcceptBtn.textContent = '⏳...';
 
         try {
-            // Групповой матч
             if (currentMatchData && currentMatchData.group_id) {
                 const joinRes = await fetch(`/roulette/api/group/join/${currentMatchData.group_id}/`, {
                     method: 'POST',
@@ -744,7 +937,6 @@ if (screenAcceptBtn) {
                 return;
             }
 
-            // Соло-матч
             const response = await fetch('/roulette/api/solo/accept/', {
                 method: 'POST',
                 headers: {
@@ -767,6 +959,7 @@ if (screenAcceptBtn) {
             );
         } catch (error) {
             console.error('Ошибка:', error);
+            alert('Произошла ошибка. Попробуйте ещё раз.');
         } finally {
             screenAcceptBtn.disabled = false;
             screenAcceptBtn.textContent = '✅ Пойду';
@@ -774,38 +967,19 @@ if (screenAcceptBtn) {
     };
 }
 
-// Кнопка "Выйти" (с экрана матча)
+// Кнопка "Выйти" (с экрана матча) — удаляет заявку
 if (screenCancelBtn) {
     screenCancelBtn.onclick = () => {
         showConfirmDialog(
-            'У вас есть активная заявка.<br>Оставить её или аннулировать?',
-            '✅ Оставить',
-            '🗑️ Аннулировать',
+            'У вас есть активная заявка.<br>Оставить её, чтобы попадаться другим в обед-рулетке?',
+            '✅ Да',
+            '🗑️ Нет',
             () => {
                 matchScreen.classList.add('hidden');
                 showMainScreen();
             },
             async () => {
-                if (currentSearchMode === 'solo') {
-                    await fetch('/roulette/api/solo/create/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': window.CSRF_TOKEN
-                        },
-                        body: JSON.stringify({ building: '1', budget: 'any' })
-                    });
-                } else if (currentSearchMode === 'group') {
-                    await fetch('/roulette/api/group/create/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': window.CSRF_TOKEN
-                        },
-                        body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
-                    });
-                }
-
+                await cancelCurrentSearch();
                 matchScreen.classList.add('hidden');
                 showMainScreen();
             }
@@ -813,38 +987,19 @@ if (screenCancelBtn) {
     };
 }
 
-// Кнопка "Не искать"
+// Кнопка "Не искать" — удаляет заявку
 if (notFoundCancelBtn) {
     notFoundCancelBtn.addEventListener('click', () => {
         showConfirmDialog(
-            'У вас есть активная заявка.<br>Оставить её или аннулировать?',
-            '✅ Оставить',
-            '🗑️ Аннулировать',
+            'У вас есть активная заявка.<br>Оставить её, чтобы попадаться другим в обед-рулетке?',
+            '✅ Да',
+            '🗑️ Нет',
             () => {
                 notFoundScreen.classList.add('hidden');
                 showMainScreen();
             },
             async () => {
-                if (currentSearchMode === 'solo') {
-                    await fetch('/roulette/api/solo/create/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': window.CSRF_TOKEN
-                        },
-                        body: JSON.stringify({ building: '1', budget: 'any' })
-                    });
-                } else if (currentSearchMode === 'group') {
-                    await fetch('/roulette/api/group/create/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': window.CSRF_TOKEN
-                        },
-                        body: JSON.stringify({ building: '1', budget: 'any', needed_people: null })
-                    });
-                }
-
+                await cancelCurrentSearch();
                 notFoundScreen.classList.add('hidden');
                 showMainScreen();
             }

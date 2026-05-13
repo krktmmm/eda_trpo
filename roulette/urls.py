@@ -18,4 +18,9 @@ urlpatterns = [
     path('api/messages/unread/', views.get_unread_count, name='unread_count'),
     path('api/messages/new/<int:dialog_id>/', views.get_new_messages, name='new_messages'),
     path('api/dialog/delete/<int:dialog_id>/', views.delete_dialog, name='delete_dialog'),
+    path('rate/<int:user_id>/', views.rate_user, name='rate_user'),
+    path('api/solo/cancel/', views.cancel_solo_request, name='cancel_solo'),
+    path('api/group/cancel/', views.cancel_group_request, name='cancel_group'),
+    path('api/cancel-search/', views.cancel_search, name='cancel_search'),
+    path('api/clear-skipped/', views.clear_skipped, name='clear_skipped'),
 ]

@@ -80,6 +80,18 @@
     text-overflow: ellipsis;
 }
 
+/* Кнопка "Завершить обед" */
+.end-meal-link {
+    color: #f99039;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.end-meal-link:hover {
+    color: #e08530;
+    text-decoration: underline;
+}
+
 /* ОБЛАСТЬ СООБЩЕНИЙ */
 .chat-messages {
     flex: 1;
@@ -273,9 +285,4 @@
 
 .sticker-item {
     cursor: pointer;
-}
-
-/* ВСПОМОГАТЕЛЬНЫЙ КЛАСС */
-.hidden {
-    display: none !important;
 }

@@ -79,3 +79,59 @@ body {
 .font-large .time-btn { font-size: 26px !important; }
 .font-large .place-name { font-size: 1.5em !important; }
 .font-large .place-info { font-size: 16px !important; }
+
+/* ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ */
+.hidden {
+    display: none !important;
+}
+
+/* КНОПКИ (общие стили) */
+.btn-primary {
+    background: #5F9EA0;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background: #f99039;
+    transform: scale(1.02);
+}
+
+.btn-secondary {
+    background: #f99039;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-secondary:hover {
+    background: #5F9EA0;
+    transform: scale(1.02);
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+    transform: scale(1.02);
+}

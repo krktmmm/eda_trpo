@@ -127,3 +127,5 @@ LOGOUT_REDIRECT_URL = '/'
 # Media files (загруженные пользователями файлы)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+MAX_UPLOAD_SIZE = 5242880  # 5MB

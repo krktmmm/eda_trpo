@@ -837,6 +837,15 @@ body.dark-theme .participants-names {
     color: rgba(226, 232, 240, 0.85);
 }
 
+/* Кнопка "Завершить обед" */
+body.dark-theme .end-meal-link {
+    color: #f97316;
+}
+
+body.dark-theme .end-meal-link:hover {
+    color: #ff8c42;
+}
+
 /* Сообщения */
 body.dark-theme .chat-messages {
     background: #0f172a !important;

@@ -256,8 +256,3 @@
     scrollbar-width: thin;
     scrollbar-color: #f99039 transparent;  /* (ползунок) (дорожка прозрачная) */
 }
-
-/* ВСПОМОГАТЕЛЬНЫЙ КЛАСС */
-.hidden {
-    display: none !important;
-}

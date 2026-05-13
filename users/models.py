@@ -12,6 +12,8 @@ class Profile(models.Model):
     group = models.CharField(max_length=20, blank=True)
     favorite_cuisine = models.CharField(max_length=100, blank=True)
     bio = models.TextField(blank=True)
+    rating = models.FloatField(default=0, verbose_name="Рейтинг")
+    rating_count = models.IntegerField(default=0, verbose_name="Количество оценок")
     theme = models.CharField(max_length=10, default='light', blank=True)
     font_size = models.CharField(max_length=10, default='medium', blank=True)
     greeting_style = models.CharField(max_length=20, default='sweet', blank=True)

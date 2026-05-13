@@ -77,6 +77,23 @@ class GroupMember(models.Model):
         verbose_name_plural = "Участники группы"
         unique_together = ('group', 'user')
 
+class UserRating(models.Model):
+    """Оценка пользователя после встречи"""
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ratings_given', verbose_name="Кто оценил")
+    to_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ratings_received', verbose_name="Кого оценили")
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], verbose_name="Оценка (1-5)")
+    text = models.TextField(blank=True, verbose_name="Комментарий")
+    photo_url = models.URLField(blank=True, verbose_name="Ссылка на фото")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('from_user', 'to_user', 'created_at')  # можно несколько встреч с одним человеком
+        verbose_name = "Оценка пользователя"
+        verbose_name_plural = "Оценки пользователей"
+
+    def __str__(self):
+        return f"{self.from_user.username} → {self.to_user.username}: {self.rating}⭐"
+
 class Dialog(models.Model):
     """Диалог между пользователями"""
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='dialogs')

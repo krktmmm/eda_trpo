@@ -45,6 +45,11 @@
                         Чат
                     {% endif %}
                 </h2>
+                {% if not is_group and other_user %}
+                    <a href="/roulette/rate/{{ other_user.id }}/" class="end-meal-link">
+                        🍽️ Завершить обед
+                    </a>
+                {% endif %}
                 {% if is_group %}
                     <div class="participants-names">
                         {{ participants.all|join:", " }}
