@@ -2,8 +2,20 @@ const mapContainer = document.getElementById('places-map');
 
 if (mapContainer) {
     const map = L.map('places-map').setView([55.0080, 82.9512], 16);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
+    const isDarkTheme = document.body.classList.contains('dark-theme');
+
+    const tileUrl = isDarkTheme
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    const attribution = isDarkTheme
+        ? '&copy; OpenStreetMap &copy; CARTO'
+        : '© OpenStreetMap';
+
+    L.tileLayer(tileUrl, {
+        attribution: attribution,
+        subdomains: 'abcd',
+        maxZoom: 20
     }).addTo(map);
 
     // ===== КОРПУСА =====

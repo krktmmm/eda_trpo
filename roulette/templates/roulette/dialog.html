@@ -363,6 +363,14 @@
     stickersBtn.onclick = () => {
         stickersPanel.classList.toggle('hidden');
     };
+    document.addEventListener('click', (e) => {
+        const clickedInsidePanel = stickersPanel.contains(e.target);
+        const clickedStickerButton = stickersBtn.contains(e.target);
+
+        if (!clickedInsidePanel && !clickedStickerButton) {
+            stickersPanel.classList.add('hidden');
+        }
+    });
 
     renderStickers();
     
