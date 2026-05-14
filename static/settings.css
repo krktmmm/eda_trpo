@@ -3,12 +3,12 @@
 :root {
   --cd-bg: #ffffff;
   --cd-border: #d1d5db;
-  --cd-border-focus: #6366f1;
+  --cd-border-focus: #5F9EA0;
   --cd-text: #1f2937;
   --cd-placeholder: #9ca3af;
   --cd-hover-bg: #f5f3ff;
   --cd-selected-bg: #ede9fe;
-  --cd-selected-text: #4f46e5;
+  --cd-selected-text: #5F9EA0;
   --cd-focused-bg: #f0f0ff;
   --cd-shadow: 0 4px 24px rgba(99, 102, 241, 0.13);
   --cd-radius: 10px;
