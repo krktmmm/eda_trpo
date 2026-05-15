@@ -1,3 +1,181 @@
+
+/* ---------- Переменные ---------- */
+:root {
+  --cd-bg: #ffffff;
+  --cd-border: #d1d5db;
+  --cd-border-focus: #5F9EA0;
+  --cd-text: #1f2937;
+  --cd-placeholder: #9ca3af;
+  --cd-hover-bg: #f5f3ff;
+  --cd-selected-bg: #ede9fe;
+  --cd-selected-text: #5F9EA0;
+  --cd-focused-bg: #f0f0ff;
+  --cd-shadow: 0 4px 24px rgba(99, 102, 241, 0.13);
+  --cd-radius: 10px;
+  --cd-list-radius: 12px;
+  --cd-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  --cd-arrow-color: #6b7280;
+  --cd-z: 999;
+}
+ 
+/* Тёмная тема */
+.dark-theme {
+  --cd-bg: #1e1e2e;
+  --cd-border: #3b3b52;
+  --cd-border-focus: #818cf8;
+  --cd-text: #e2e8f0;
+  --cd-placeholder: #64748b;
+  --cd-hover-bg: #2a2a3e;
+  --cd-selected-bg: #312e81;
+  --cd-selected-text: #a5b4fc;
+  --cd-focused-bg: #2d2b50;
+  --cd-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --cd-arrow-color: #94a3b8;
+}
+ 
+/* ---------- Обёртка ---------- */
+.cd-wrapper {
+  position: relative;
+  display: inline-block;
+  min-width: 200px;
+  user-select: none;
+  outline: none;
+}
+ 
+/* ---------- Кнопка-триггер ---------- */
+.cd-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 14px;
+  background: var(--cd-bg);
+  border: 1.5px solid var(--cd-border);
+  border-radius: var(--cd-radius);
+  color: var(--cd-text);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition:
+    border-color var(--cd-transition),
+    box-shadow var(--cd-transition),
+    background var(--cd-transition);
+}
+ 
+.cd-wrapper:focus .cd-trigger,
+.cd-wrapper:focus-within .cd-trigger,
+.cd-wrapper.cd-open .cd-trigger {
+  border-color: var(--cd-border-focus);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+ 
+.cd-trigger-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+ 
+/* ---------- Стрелка ---------- */
+.cd-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--cd-arrow-color);
+  transition: transform var(--cd-transition);
+  flex-shrink: 0;
+}
+ 
+.cd-wrapper.cd-open .cd-arrow {
+  transform: rotate(180deg);
+}
+ 
+/* ---------- Список ---------- */
+.cd-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: var(--cd-bg);
+  border: 1.5px solid var(--cd-border-focus);
+  border-radius: var(--cd-list-radius);
+  box-shadow: var(--cd-shadow);
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: var(--cd-z);
+ 
+  /* Скрыт по умолчанию */
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  pointer-events: none;
+  transition:
+    opacity var(--cd-transition),
+    transform var(--cd-transition);
+}
+ 
+/* Открытое состояние */
+.cd-wrapper.cd-open .cd-list {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+ 
+/* Список сверху (если мало места внизу) */
+.cd-list.cd-list--top {
+  top: auto;
+  bottom: calc(100% + 6px);
+  transform-origin: bottom center;
+}
+ 
+/* ---------- Скроллбар в списке ---------- */
+.cd-list::-webkit-scrollbar {
+  width: 5px;
+}
+.cd-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.cd-list::-webkit-scrollbar-thumb {
+  background: var(--cd-border);
+  border-radius: 99px;
+}
+ 
+/* ---------- Пункт списка ---------- */
+.cd-item {
+  padding: 9px 12px;
+  border-radius: 8px;
+  color: var(--cd-text);
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition:
+    background var(--cd-transition),
+    color var(--cd-transition);
+}
+ 
+.cd-item:hover,
+.cd-item.cd-item--focused {
+  background: var(--cd-hover-bg);
+}
+ 
+.cd-item.cd-item--selected {
+  background: var(--cd-selected-bg);
+  color: var(--cd-selected-text);
+  font-weight: 600;
+}
+ 
+/* ---------- Настройки страницы ---------- */
+
+.setting-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+ 
+.setting-label {
+  font-size: 0.93rem;
+  color: var(--cd-text);
+  flex: 1;
+}
+
 /* КОНТЕЙНЕР */
 .settings-container {
     max-width: 600px;

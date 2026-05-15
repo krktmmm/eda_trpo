@@ -66,6 +66,9 @@
     </form>
 </div>
 
+{# Кастомный dropdown — подключаем ДО основного скрипта страницы #}
+<script src="{% static 'js/custom-dropdown.js' %}" defer></script>
+
 <script>
     (function() {
         const themeSelect = document.getElementById('theme-select');
@@ -88,9 +91,7 @@
         
         function checkAvatarLoading() {
             document.querySelectorAll('img').forEach(img => {
-                // Проверяем только свои аватарки (из media/avatars/)
                 if (img.src.includes('media/avatars/') || img.src.includes('avatars/')) {
-                    // Если картинка не загрузилась (естественная ошибка)
                     if (img.naturalWidth === 0 && img.naturalHeight === 0) {
                         const isDarkTheme = document.body.classList.contains('dark-theme');
                         img.src = isDarkTheme 
@@ -102,6 +103,8 @@
             });
         }
         
+        // Слушаем change на оригинальных <select> — custom-dropdown.js
+        // диспатчит это событие при выборе, так что всё работает как раньше
         themeSelect.addEventListener('change', function() {
             document.body.classList.remove('dark-theme');
             if (this.value === 'dark') {
