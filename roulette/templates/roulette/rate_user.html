@@ -4,7 +4,7 @@
 {% block title %}Оценить пользователя | СытГУТИ{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'place_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'rate_user.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -38,6 +38,7 @@
         <input type="text" name="photo_url" placeholder="📎 Ссылка на фото (необязательно)">
         
         <button type="submit" class="submit-review-btn">✅ Отправить</button>
+        <a href="javascript:history.back()" class="back-btn">← Назад</a>
     </form>
 </div>
 {% endblock %}

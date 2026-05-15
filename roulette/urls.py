@@ -24,4 +24,10 @@ urlpatterns = [
     path('api/cancel-search/', views.cancel_search, name='cancel_search'),
     path('api/deactivate-search/', views.deactivate_search, name='deactivate_search'),
     path('api/clear-skipped/', views.clear_skipped, name='clear_skipped'),
+    path('api/dialog/complete/<int:dialog_id>/', views.complete_meal, name='complete_meal'),
+    path('api/dialog/check-status/<int:dialog_id>/', views.check_dialog_status, name='check_dialog_status'),
+    path('group-rate/<int:dialog_id>/', views.group_rate, name='group_rate'),
+    path('api/group-rate/save/<int:dialog_id>/', views.save_group_rating, name='save_group_rating'),
+    path('api/group-rate/skip/<int:dialog_id>/', views.skip_group_rating, name='skip_group_rating'),
+    path('api/group-rate/progress/<int:dialog_id>/', views.get_group_rating_progress, name='get_group_rating_progress'),
 ]

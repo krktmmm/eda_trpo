@@ -27,11 +27,16 @@
                     {% endif %}
                 </div>
                 <div class="dialog-info">
-                    <div class="dialog-name">{{ d.chat_name }}</div>
+                    <div class="dialog-name">
+                        {{ d.chat_name }}
+                        {% if d.dialog.is_meal_completed %}
+                            <span style="color: #2ecc71; margin-left: 8px;" title="Обед завершён">🍽️</span>
+                        {% endif %}
+                    </div>
                     <div class="dialog-last-message">
                         {% if d.last_message %}
                             {% if '[sticker]' in d.last_message.text %}
-                                {{ d.last_message.sender.username }}: Emoji
+                                {{ d.last_message.sender.username }}: 🎭 Стикер
                             {% elif d.last_message.text|slice:":8" == '[system]' %}
                                 {{ d.last_message.text|slice:"8:" }}
                             {% else %}

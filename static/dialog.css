@@ -286,3 +286,83 @@
 .sticker-item {
     cursor: pointer;
 }
+
+/* ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ ШАПКИ ЧАТА */
+
+.chat-header {
+    position: relative;
+}
+
+.chat-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.chat-info-container {
+    flex: 1;
+}
+
+.chat-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Кнопка завершения обеда / оценки */
+.meal-action-btn {
+    background: #f99039;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Tobi';
+    font-size: 14px;
+    transition: 0.3s;
+    flex-shrink: 0;
+}
+
+.meal-action-btn:hover {
+    background: #e08530;
+    transform: scale(1.02);
+}
+
+.meal-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Бейдж "Оценено" */
+.rated-badge {
+    background: #2c3f51;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: 'Tobi';
+    flex-shrink: 0;
+}
+
+/* Бейдж "Обед завершён" под именем */
+.meal-completed-badge {
+    color: #2c3f51;
+    font-size: 13px;
+    margin-top: 4px;
+    display: inline-block;
+}
+
+/* Имена участников в шапке (переопределение) */
+.participants-names {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    margin-top: 5px;
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

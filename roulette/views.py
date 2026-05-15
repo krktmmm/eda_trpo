@@ -1,4 +1,4 @@
-from .models import SoloRequest, GroupRequest, GroupMember, Dialog, Message, UserRating
+from .models import SoloRequest, GroupRequest, GroupMember, Dialog, Message, UserRating, GroupRatingProgress, GroupUserRating
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse, HttpResponseForbidden
@@ -44,7 +44,10 @@ def get_building_order(user_building):
 def save_solo_params(request):
     """Сохраняет параметры поиска в сессию (без создания заявки)"""
     if request.session.get('active_meeting'):
-        return JsonResponse({'error': 'У вас уже есть активная встреча. Завершите её, чтобы начать новый поиск.'}, status=400)
+        return JsonResponse({
+            'error': 'active_meeting',
+            'message': 'У вас уже есть активная встреча. Завершите её в чате, чтобы начать новый поиск.'
+        }, status=400)
     data = json.loads(request.body)
 
     # Очищаем старые параметры
@@ -183,7 +186,10 @@ def accept_solo_match(request):
 def save_group_params(request):
     """Сохраняет параметры поиска группы в сессию"""
     if request.session.get('active_meeting'):
-        return JsonResponse({'error': 'У вас уже есть активная встреча. Завершите её, чтобы начать новый поиск.'}, status=400)
+        return JsonResponse({
+            'error': 'active_meeting',
+            'message': 'У вас уже есть активная встреча. Завершите её в чате, чтобы начать новый поиск.'
+        }, status=400)
     data = json.loads(request.body)
 
     # Очищаем старые параметры
@@ -681,3 +687,282 @@ def clear_skipped(request):
     request.session.pop('skipped_match_ids', None)
     request.session.pop('skipped_group_ids', None)
     return JsonResponse({'status': 'ok'})
+
+# ==================== ЗАВЕРШЕНИЕ ОБЕДА И ОЦЕНКА ====================
+
+@login_required
+@require_http_methods(["POST"])
+def complete_meal(request, dialog_id):
+    """Завершение обеда (личный и групповой чат)"""
+    dialog = get_object_or_404(Dialog, id=dialog_id)
+    
+    if request.user not in dialog.participants.all():
+        return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+    
+    if dialog.is_meal_completed:
+        return JsonResponse({'error': 'Обед уже завершён'}, status=400)
+    
+    # Отмечаем диалог как завершённый
+    dialog.is_meal_completed = True
+    dialog.completed_by = request.user
+    dialog.completed_at = timezone.now()
+    dialog.save()
+    
+    # Системное сообщение
+    Message.objects.create(
+        dialog=dialog,
+        sender=request.user,
+        text='[system] 🍽️ Обед завершён!'
+    )
+    
+    return JsonResponse({'status': 'ok'})
+
+
+@login_required
+@require_http_methods(["GET"])
+def check_dialog_status(request, dialog_id):
+    """Проверяет статус диалога (завершён ли обед, оценён ли пользователь)"""
+    dialog = get_object_or_404(Dialog, id=dialog_id)
+    
+    if request.user not in dialog.participants.all():
+        return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+    
+    # Для личного чата
+    if dialog.participants.count() == 2:
+        other_user = dialog.participants.exclude(id=request.user.id).first()
+        has_rated = UserRating.objects.filter(
+            from_user=request.user, 
+            to_user=other_user
+        ).exists()
+        
+        return JsonResponse({
+            'is_meal_completed': dialog.is_meal_completed,
+            'has_rated': has_rated,
+            'other_user_id': other_user.id if other_user else None,
+            'is_group': False
+        })
+    
+    # Для группового чата
+    else:
+        # Получаем прогресс оценки для этого пользователя
+        progress, created = GroupRatingProgress.objects.get_or_create(
+            dialog=dialog,
+            user=request.user
+        )
+        
+        # Список участников (исключая себя)
+        participants = list(dialog.participants.exclude(id=request.user.id))
+        total_count = len(participants)
+        rated_count = progress.rated_users.count()
+        
+        # Все ли оценены?
+        all_rated = rated_count >= total_count
+        
+        return JsonResponse({
+            'is_meal_completed': dialog.is_meal_completed,
+            'has_rated': all_rated,
+            'is_group': True,
+            'total_participants': total_count,
+            'rated_count': rated_count
+        })
+
+
+@login_required
+def group_rate(request, dialog_id):
+    """Страница пошаговой оценки участников группы"""
+    dialog = get_object_or_404(Dialog, id=dialog_id)
+    
+    if request.user not in dialog.participants.all():
+        return HttpResponseForbidden("Вы не участник этого диалога")
+    
+    if not dialog.is_meal_completed:
+        return redirect('dialog_detail', dialog_id=dialog_id)
+    
+    # Получаем или создаём прогресс
+    progress, created = GroupRatingProgress.objects.get_or_create(
+        dialog=dialog,
+        user=request.user
+    )
+    
+    # Список всех участников (исключая себя)
+    all_participants = list(dialog.participants.exclude(id=request.user.id))
+    total_count = len(all_participants)
+    
+    # Уже оценённые
+    rated_ids = progress.rated_users.values_list('id', flat=True)
+    rated_count = len(rated_ids)
+    
+    # Пропущенные (кто в skipped_users)
+    skipped_ids = progress.skipped_users.values_list('id', flat=True)
+    
+    # Список для отображения: сначала не оценённые и не пропущенные, потом пропущенные
+    not_rated = [p for p in all_participants if p.id not in rated_ids and p.id not in skipped_ids]
+    skipped_list = [p for p in all_participants if p.id in skipped_ids]
+    
+    remaining_users = not_rated + skipped_list
+    current_index = progress.current_index
+    
+    # Если все оценены — перенаправляем в список чатов
+    if rated_count >= total_count:
+        return redirect('messages_list')
+    
+    # Корректируем индекс, если вышел за пределы
+    if current_index >= len(remaining_users):
+        current_index = 0
+        progress.current_index = 0
+        progress.save()
+    
+    current_user = remaining_users[current_index] if remaining_users else None
+    
+    # Собираем данные для точечек
+    dots = []
+    for i, user in enumerate(remaining_users):
+        if user.id in rated_ids:
+            status = 'rated'  # оценён
+        elif user.id in skipped_ids:
+            status = 'skipped'  # пропущен
+        else:
+            status = 'pending'  # ожидает
+        dots.append({
+            'id': user.id,
+            'status': status,
+            'is_current': i == current_index
+        })
+    
+    return render(request, 'roulette/group_rate.html', {
+        'dialog': dialog,
+        'current_user': current_user,
+        'current_index': current_index + 1,
+        'total_count': total_count,
+        'dots': dots,
+        'rated_count': rated_count,
+        'stars_range': range(1, 6)
+    })
+
+
+@login_required
+@require_http_methods(["POST"])
+def save_group_rating(request, dialog_id):
+    """Сохраняет оценку участника группы"""
+    data = json.loads(request.body)
+    user_id = data.get('user_id')
+    rating = data.get('rating')
+    text = data.get('text', '')
+    photo_url = data.get('photo_url', '')
+    
+    dialog = get_object_or_404(Dialog, id=dialog_id)
+    to_user = get_object_or_404(get_user_model(), id=user_id)
+    
+    if request.user not in dialog.participants.all():
+        return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+    
+    # Сохраняем оценку
+    GroupUserRating.objects.create(
+        dialog=dialog,
+        from_user=request.user,
+        to_user=to_user,
+        rating=rating,
+        text=text,
+        photo_url=photo_url
+    )
+    
+    # Обновляем рейтинг пользователя
+    all_ratings = UserRating.objects.filter(to_user=to_user)
+    total = sum(r.rating for r in all_ratings)
+    count = all_ratings.count()
+    to_user.profile.rating = total / count if count > 0 else 0
+    to_user.profile.rating_count = count
+    to_user.profile.save()
+    
+    # Обновляем прогресс
+    progress = GroupRatingProgress.objects.get(dialog=dialog, user=request.user)
+    progress.rated_users.add(to_user)
+    
+    # Если этот пользователь был в пропущенных — убираем оттуда
+    if to_user in progress.skipped_users.all():
+        progress.skipped_users.remove(to_user)
+    
+    # Переходим к следующему
+    all_participants = list(dialog.participants.exclude(id=request.user.id))
+    rated_ids = progress.rated_users.values_list('id', flat=True)
+    skipped_ids = progress.skipped_users.values_list('id', flat=True)
+    
+    remaining = [p for p in all_participants if p.id not in rated_ids]
+    progress.current_index = 0
+    progress.save()
+    
+    return JsonResponse({'status': 'ok'})
+
+
+@login_required
+@require_http_methods(["POST"])
+def skip_group_rating(request, dialog_id):
+    """Пропускает участника (оценить позже)"""
+    data = json.loads(request.body)
+    user_id = data.get('user_id')
+    
+    dialog = get_object_or_404(Dialog, id=dialog_id)
+    to_user = get_object_or_404(get_user_model(), id=user_id)
+    
+    if request.user not in dialog.participants.all():
+        return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+    
+    progress = GroupRatingProgress.objects.get(dialog=dialog, user=request.user)
+    
+    # Добавляем в пропущенные
+    if to_user not in progress.skipped_users.all():
+        progress.skipped_users.add(to_user)
+    
+    # Переходим к следующему
+    all_participants = list(dialog.participants.exclude(id=request.user.id))
+    rated_ids = progress.rated_users.values_list('id', flat=True)
+    
+    remaining = [p for p in all_participants if p.id not in rated_ids]
+    
+    # Корректируем индекс
+    if progress.current_index >= len(remaining) - 1:
+        progress.current_index = 0
+    else:
+        progress.current_index += 1
+    progress.save()
+    
+    return JsonResponse({'status': 'ok'})
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_group_rating_progress(request, dialog_id):
+    """Возвращает текущий прогресс оценки для обновления точечек"""
+    dialog = get_object_or_404(Dialog, id=dialog_id)
+    
+    if request.user not in dialog.participants.all():
+        return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+    
+    progress = GroupRatingProgress.objects.get(dialog=dialog, user=request.user)
+    
+    all_participants = list(dialog.participants.exclude(id=request.user.id))
+    rated_ids = progress.rated_users.values_list('id', flat=True)
+    skipped_ids = progress.skipped_users.values_list('id', flat=True)
+    
+    remaining = [p for p in all_participants if p.id not in rated_ids]
+    
+    dots = []
+    for i, user in enumerate(remaining):
+        if user.id in rated_ids:
+            status = 'rated'
+        elif user.id in skipped_ids:
+            status = 'skipped'
+        else:
+            status = 'pending'
+        dots.append({
+            'id': user.id,
+            'status': status,
+            'is_current': i == progress.current_index
+        })
+    
+    return JsonResponse({
+        'dots': dots,
+        'current_index': progress.current_index,
+        'total_remaining': len(remaining),
+        'rated_count': rated_ids.count()
+    })

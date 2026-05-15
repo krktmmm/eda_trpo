@@ -87,7 +87,7 @@ class UserRating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('from_user', 'to_user', 'created_at')  # можно несколько встреч с одним человеком
+        unique_together = ('from_user', 'to_user', 'created_at')
         verbose_name = "Оценка пользователя"
         verbose_name_plural = "Оценки пользователей"
 
@@ -98,6 +98,11 @@ class Dialog(models.Model):
     """Диалог между пользователями"""
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='dialogs')
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    # Поля для завершения обеда
+    is_meal_completed = models.BooleanField(default=False)
+    completed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='completed_dialogs')
+    completed_at = models.DateTimeField(null=True, blank=True)
     
     class Meta:
         verbose_name = "Диалог"
@@ -124,6 +129,44 @@ class Dialog(models.Model):
         for user in users:
             dialog.participants.add(user)
         return dialog
+
+
+class GroupRatingProgress(models.Model):
+    """Прогресс оценки участников группового чата"""
+    dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE, related_name='rating_progress')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='group_ratings_progress')
+    rated_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='rated_by_in_group', blank=True)
+    skipped_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='skipped_by_in_group', blank=True)
+    current_index = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = ('dialog', 'user')
+        verbose_name = "Прогресс оценки группы"
+        verbose_name_plural = "Прогресс оценки групп"
+    
+    def __str__(self):
+        return f"{self.user.username} - диалог {self.dialog.id}"
+
+
+class GroupUserRating(models.Model):
+    """Оценка пользователя в групповом чате"""
+    dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE, related_name='group_ratings')
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='group_ratings_given')
+    to_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='group_ratings_received')
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], verbose_name="Оценка (1-5)")
+    text = models.TextField(blank=True, verbose_name="Комментарий")
+    photo_url = models.URLField(blank=True, verbose_name="Ссылка на фото")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('dialog', 'from_user', 'to_user')
+        verbose_name = "Оценка в группе"
+        verbose_name_plural = "Оценки в группах"
+    
+    def __str__(self):
+        return f"{self.from_user.username} → {self.to_user.username} в диалоге {self.dialog.id}: {self.rating}⭐"
+
 
 class Message(models.Model):
     """Сообщение в диалоге"""

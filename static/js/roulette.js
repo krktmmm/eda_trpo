@@ -735,7 +735,7 @@ async function startGroup(e) {
     try {
         const neededPeople = form.needed_people.value;
 
-        await fetch('/roulette/api/group/save-params/', {
+        const saveRes = await fetch('/roulette/api/group/save-params/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -747,6 +747,15 @@ async function startGroup(e) {
                 needed_people: neededPeople || null
             })
         });
+        
+        const saveData = await saveRes.json();
+        
+        if (saveRes.status === 400 && saveData.error === 'active_meeting') {
+            alert(saveData.message);
+            hideSearchProcess();
+            showMainScreen();
+            return;
+        }
 
         const searchStart = Date.now();
         const res = await fetch('/roulette/api/group/find/', {
