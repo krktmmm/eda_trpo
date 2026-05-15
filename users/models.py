@@ -2,6 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -18,9 +19,17 @@ class Profile(models.Model):
     font_size = models.CharField(max_length=10, default='medium', blank=True)
     greeting_style = models.CharField(max_length=20, default='sweet', blank=True)
     animations = models.CharField(max_length=5, default='on', blank=True)
+    last_activity = models.DateTimeField(default=timezone.now, verbose_name="Последняя активность")
     
     def __str__(self):
         return f"Profile of {self.user.username}"
+    
+    def is_online(self):
+        """Проверяет, онлайн ли пользователь (активность в последние 5 минут)"""
+        if not self.last_activity:
+            return False
+        delta = timezone.now() - self.last_activity
+        return delta.total_seconds() < 300  # 5 минут
     
     class Meta:
         verbose_name = "Профиль"

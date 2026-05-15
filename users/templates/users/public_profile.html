@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Профиль {{ target_user.username }} | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'profile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-container">
+    <!-- ЛЕВАЯ КОЛОНКА: АВАТАР -->
+    <div class="profile-left">
+        <div class="profile-avatar">
+            {% if target_user.profile.avatar %}
+                <img src="{{ target_user.profile.avatar.url }}?v={{ target_user.id }}" alt="Аватар">
+            {% elif target_user.profile.theme == 'dark' %}
+                <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Аватар">
+            {% else %}
+                <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
+            {% endif %}
+        </div>
+        
+        <div class="profile-left-info">
+            <p>
+                <strong>⭐ Рейтинг:</strong> 
+                {{ target_user.profile.rating|floatformat:1 }} 
+                ({{ target_user.profile.rating_count }} оценок)
+            </p>
+            <p>
+                <strong>🟢 Статус:</strong>
+                {% if target_user.profile.is_online %}
+                    <span style="color: #2ecc71;">Онлайн</span>
+                {% else %}
+                    <span style="color: #95a5a6;">Был(а) {{ target_user.profile.last_activity|date:"d.m.Y H:i" }}</span>
+                {% endif %}
+            </p>
+            <p><strong>📅 На сайте с:</strong> {{ target_user.date_joined|date:"d.m.Y" }}</p>
+        </div>
+    </div>
+
+    <!-- ПРАВАЯ КОЛОНКА: ДАННЫЕ ПОЛЬЗОВАТЕЛЯ -->
+    <div class="profile-right">
+        <h2>👤 {{ target_user.username }}</h2>
+        
+        <table class="info-table">
+            {% if target_user.profile.bio %}
+            <tr>
+                <td>📝 О себе:</td>
+                <td>{{ target_user.profile.bio|linebreaksbr|escape }}</td>
+            </tr>
+            {% endif %}
+            {% if target_user.profile.course %}
+            <tr>
+                <td>🎓 Курс:</td>
+                <td>{{ target_user.profile.course }}</td>
+            </tr>
+            {% endif %}
+            {% if target_user.profile.group %}
+            <tr>
+                <td>👥 Группа:</td>
+                <td>{{ target_user.profile.group }}</td>
+            </tr>
+            {% endif %}
+            {% if target_user.profile.favorite_cuisine %}
+            <tr>
+                <td>🍽️ Любимая кухня:</td>
+                <td>{{ target_user.profile.favorite_cuisine }}</td>
+            </tr>
+            {% endif %}
+            {% if target_user.profile.telegram %}
+            <tr>
+                <td>📱 Telegram:</td>
+                <td>{{ target_user.profile.telegram }}</td>
+            </tr>
+            {% endif %}
+            {% if target_user.profile.vk %}
+            <tr>
+                <td>📘 VK:</td>
+                <td>{{ target_user.profile.vk }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+</div>
+
+<!-- ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ -->
+<div class="reviews-section">
+    <h2>📝 Отзывы {{ target_user.username }}</h2>
+    <div class="reviews-grid">
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-place">
+                <a href="{% url 'place_detail' review.place.id %}" class="review-place-link">
+                    {{ review.place.name }}
+                </a>
+            </div>
+            <div class="review-rating">⭐ {{ review.rating }}/5</div>
+            <div class="review-text">{{ review.text|truncatechars:200 }}</div>
+            <div class="review-date">{{ review.created_at|date:"d.m.Y H:i" }}</div>
+        </div>
+        {% empty %}
+        <div class="empty-reviews">📭 Пользователь ещё не оставил ни одного отзыва.</div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

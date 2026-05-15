@@ -806,12 +806,12 @@ body.dark-theme .settings-container select:focus {
     border-color: #f97316 !important;
 }
 
-/* Контейнер */
+/* КОНТЕЙНЕР ЧАТА */
 body.dark-theme .chat-container {
     background: #1e293b !important;
 }
 
-/* Шапка чата */
+/* ШАПКА ЧАТА */
 body.dark-theme .chat-header {
     background: #334155 !important;
 }
@@ -846,7 +846,7 @@ body.dark-theme .end-meal-link:hover {
     color: #ff8c42;
 }
 
-/* Сообщения */
+/* СООБЩЕНИЯ */
 body.dark-theme .chat-messages {
     background: #0f172a !important;
 }
@@ -874,7 +874,7 @@ body.dark-theme .message-time {
     color: #94a3b8 !important;
 }
 
-/* Поле ввода */
+/* ПОЛЕ ВВОДА */
 body.dark-theme .chat-input {
     background: #1e293b !important;
     border-top-color: #334155 !important;
@@ -895,22 +895,43 @@ body.dark-theme .chat-input textarea::placeholder {
 }
 
 body.dark-theme .chat-input button {
+    color: white !important;
+}
+
+/* Кнопка стикеров */
+body.dark-theme #stickers-btn {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme #stickers-btn:hover {
+    background: #475569 !important;
+}
+
+/* Кнопка завершения обеда / оценки */
+body.dark-theme .meal-action-btn {
     background-color: #f97316 !important;
     color: white !important;
 }
 
-body.dark-theme .chat-input button:hover {
+body.dark-theme .meal-action-btn:hover {
     background-color: #ea580c !important;
 }
 
-/* Стикеры */
-body.dark-theme .stickers-panel {
-    background: rgba(30, 41, 59, 0.9) !important;
-    border-color: #475569 !important;
+/* Бейдж "Оценено" */
+body.dark-theme .rated-badge {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
 }
 
-body.dark-theme #stickers-btn {
-    color: #e2e8f0 !important;
+/* Бейдж "Обед завершён" */
+body.dark-theme .meal-completed-badge {
+    color: #94a3b8 !important;
+}
+
+/* ПАНЕЛЬ СТИКЕРОВ */
+body.dark-theme .stickers-panel {
+    background: rgba(30, 41, 59, 0.95) !important;
+    border-color: #475569 !important;
 }
 
 /* СПИСОК ДИАЛОГОВ */
@@ -1033,14 +1054,6 @@ body.dark-theme .login-link a {
 }
 
 body.dark-theme .login-link a:hover {
-    color: #ff8c42 !important;
-}
-
-body.dark-theme .empty-favorites a {
-    color: #f97316 !important;
-}
-
-body.dark-theme .empty-favorites a:hover {
     color: #ff8c42 !important;
 }
 

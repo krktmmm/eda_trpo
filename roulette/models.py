@@ -103,6 +103,8 @@ class Dialog(models.Model):
     is_meal_completed = models.BooleanField(default=False)
     completed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='completed_dialogs')
     completed_at = models.DateTimeField(null=True, blank=True)
+
+    is_group_chat = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = "Диалог"

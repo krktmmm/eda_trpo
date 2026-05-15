@@ -5,6 +5,7 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'group_rate.css' %}">
+    <link rel="stylesheet" href="{% static 'place_detail.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -41,20 +42,11 @@
         
         <h2 class="user-name">{{ current_user.username }}</h2>
         
-        <div class="user-contacts">
-            {% if current_user.profile.telegram %}
-            <div class="contact-item">📱 Telegram: {{ current_user.profile.telegram }}</div>
-            {% endif %}
-            {% if current_user.profile.vk %}
-            <div class="contact-item">📘 VK: {{ current_user.profile.vk }}</div>
-            {% endif %}
-        </div>
-        
         <form id="rating-form">
             {% csrf_token %}
             <input type="hidden" id="user-id" value="{{ current_user.id }}">
             
-            <div class="rating-section">
+            <div class="rating-input">
                 <label class="rating-label">Ваша оценка:</label>
                 <div class="stars">
                     <input type="radio" name="rating" value="5" id="star5" required>
@@ -69,15 +61,12 @@
                     <label for="star1" title="1 звезда"></label>
                 </div>
             </div>
-            
-            <textarea id="review-text" class="review-textarea" placeholder="Ваш комментарий (необязательно)" rows="3"></textarea>
-            <input type="text" id="photo-url" class="photo-input" placeholder="📎 Ссылка на фото (необязательно)">
         </form>
     </div>
     
     <div class="action-buttons">
         <button id="rate-btn" class="btn-rate">⭐ Оценить сейчас</button>
-        <button id="skip-btn" class="btn-skip">⏰ Оценить позже</button>
+        <button id="skip-btn" class="btn-skip">⏰ Позже</button>
     </div>
     
     <div class="progress-info">
@@ -142,8 +131,6 @@
         }
         
         const rating = ratingInput.value;
-        const text = document.getElementById('review-text').value;
-        const photoUrl = document.getElementById('photo-url').value;
         
         isSubmitting = true;
         rateBtn.disabled = true;
@@ -159,8 +146,8 @@
                 body: JSON.stringify({
                     user_id: currentUserId,
                     rating: parseInt(rating),
-                    text: text,
-                    photo_url: photoUrl
+                    text: '',
+                    photo_url: ''
                 })
             });
             

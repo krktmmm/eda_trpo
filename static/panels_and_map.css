@@ -147,7 +147,7 @@
     font-family: 'Tobi';
     font-size: 18px;
     font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px #0000004d;
 }
 
 /* КАРТОЧКА ЗАВЕДЕНИЯ */
