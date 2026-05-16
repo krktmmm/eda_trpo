@@ -1,19 +1,28 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from .models import Place, Review, ReviewImage, Favorite
 from django.http import JsonResponse
 from django.utils import timezone
 from datetime import timedelta
 import difflib
+import json
 import os
 
 def main_menu(request):
-    """Стартовая страница с выбором: заведения или рулетка"""
+    # Очищаем сохранённые параметры при заходе на главную
+    request.session.pop('roulette_building', None)
+    request.session.pop('roulette_time', None)
+    
     return render(request, 'places/main_menu.html')
 
 def place_list(request):
     """Страница со списком всех заведений (выбор корпуса и времени)"""
     search_query = request.GET.get('search', '').strip()
+    # Получаем сохранённые параметры из сессии
+    saved_building = request.session.get('roulette_building')
+    saved_time = request.session.get('roulette_time')
+
     places = Place.objects.all().order_by('name')
     if search_query:
         search_normalized = (
@@ -53,6 +62,8 @@ def place_list(request):
         'favorited_ids': list(favorited_ids),
         'search_query': search_query,
         'places_for_map': places_for_map,
+        'saved_building': saved_building,
+        'saved_time': saved_time,
     })
 
 def roulette(request):
@@ -295,4 +306,24 @@ def search_places_api(request):
     return JsonResponse({
         "results": results,
         "suggestion": suggestion,
+    })
+
+@login_required
+@require_http_methods(["POST"])
+def save_roulette_selection(request):
+    """Сохраняет выбранный корпус и время в сессию"""
+    try:
+        data = json.loads(request.body)
+        request.session['roulette_building'] = data.get('building')
+        request.session['roulette_time'] = data.get('time')
+        return JsonResponse({'status': 'ok'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@login_required
+@require_http_methods(["GET"])
+def get_roulette_selection(request):
+    return JsonResponse({
+        'building': request.session.get('roulette_building'),
+        'time': request.session.get('roulette_time'),
     })

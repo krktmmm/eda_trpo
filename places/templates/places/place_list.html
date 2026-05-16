@@ -85,5 +85,40 @@
 {{ places_for_map|json_script:"places-map-data" }}
 
 <script src="{% static 'js/place_list.js' %}"></script>
+<script>
+    // Восстановление параметров из сессии
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/get-selection/')
+            .then(r => r.json())
+            .then(data => {
+                console.log('Восстанавливаем параметры:', data);
+                
+                if (data.building) {
+                    // Нажимаем на кнопку корпуса
+                    const buildingBtn = document.querySelector(`.building-btn[data-building="${data.building}"]`);
+                    if (buildingBtn) {
+                        buildingBtn.click();
+                    }
+                    
+                    // Если есть время — применяем фильтрацию
+                    if (data.time !== null && data.time !== undefined) {
+                        // Ждём появления списка заведений
+                        setTimeout(() => {
+                            const timeBtn = document.querySelector(`.time-btn[data-time="${data.time}"]`);
+                            if (timeBtn) {
+                                timeBtn.click();
+                            } else {
+                                // Если кнопки времени нет, просто фильтруем
+                                if (typeof filterPlaces === 'function') {
+                                    filterPlaces();
+                                }
+                            }
+                        }, 300);
+                    }
+                }
+            })
+            .catch(err => console.error('Ошибка восстановления:', err));
+    });
+</script>
 
 {% endblock %}

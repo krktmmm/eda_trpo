@@ -20,7 +20,7 @@
     <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
     <div class="place-header">
         <div class="place-header-left">
-            <a href="javascript:history.back()" class="back-arrow">←</a>
+            <a href="{% url 'place_list' %}" class="back-arrow">←</a>
             <h1>{{ place.name }}</h1>
         </div>
         <button id="favorite-detail-btn" class="favorite-detail-btn {% if is_favorited %}active{% endif %}" data-place-id="{{ place.id }}">
@@ -149,8 +149,9 @@
 </div>
 
 <script src="{% static 'js/place_detail.js' %}"></script>
+<script src="{% static 'js/reviews.js' %}"></script>
 <script>
-    // Предпросмотр фото перед отправкой (с работающими крестиками)
+    // Предпросмотр фото перед отправкой
     const imagesInput = document.getElementById('review-images-input');
     const previewContainer = document.getElementById('image-preview-container');
     
@@ -218,7 +219,6 @@
             updateAddPreview();
         });
         
-        // Делегирование событий для кнопок удаления
         previewContainer.addEventListener('click', function(e) {
             const removeBtn = e.target.closest('.remove-preview');
             if (removeBtn) {

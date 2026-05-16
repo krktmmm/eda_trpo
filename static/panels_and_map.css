@@ -60,7 +60,11 @@
 .time-btn.active {
     background: #f99039;
     color: white;
-    box-shadow: 0 0 15px #f9903980;   /* Оранжевое свечение вокруг */
+}
+
+.building-btn.active {
+    background: #f99039;
+    color: white;
 }
 
 /* Кнопка "Назад" */
