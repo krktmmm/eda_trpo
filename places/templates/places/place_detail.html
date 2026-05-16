@@ -16,6 +16,7 @@
             {{ review_message.text }}
         </div>
     {% endif %}
+    
     <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
     <div class="place-header">
         <div class="place-header-left">
@@ -26,6 +27,13 @@
             {% if is_favorited %}❤️{% else %}🤍{% endif %}
         </button>
     </div>
+
+    <!-- Фото заведения (если есть) -->
+    {% if place.image %}
+        <div class="place-photo">
+            <img src="{{ place.image.url }}" alt="{{ place.name }}" onclick="openGallery([{url: '{{ place.image.url }}'}], 0)">
+        </div>
+    {% endif %}
 
     <div class="place-info-detail">
         <p>📍 {{ place.address }}</p>
@@ -47,11 +55,19 @@
                     <small>{{ review.created_at|date:"d.m.Y" }}</small>
                 </div>
                 <p class="review-text">{{ review.text }}</p>
-                {% if review.photo_url %}
-                    <div class="review-photo">
-                        <img src="{{ review.photo_url }}" alt="Фото" width="200">
+                
+                <!-- Несколько фото отзыва -->
+                {% if review.images.exists %}
+                    <div class="review-images">
+                        {% for img in review.images.all %}
+                            <img src="{{ img.image.url }}" alt="Фото" class="review-thumb" 
+                                 data-gallery='[{% for i in review.images.all %}{"url": "{{ i.image.url }}"}{% if not forloop.last %},{% endif %}{% endfor %}]'
+                                 data-index="{{ forloop.counter0 }}"
+                                 onclick="openGalleryFromData(this)">
+                        {% endfor %}
                     </div>
                 {% endif %}
+                
                 <div class="review-menu">
                     <button class="review-menu-btn" onclick="toggleReviewMenu(event, {{ review.id }})">⋮</button>
                     <div class="review-dropdown" id="review-dropdown-{{ review.id }}">
@@ -76,50 +92,207 @@
 
     <!-- ФОРМА ДОБАВЛЕНИЯ ОТЗЫВА -->
     {% if user.is_authenticated %}
-    <!-- Проверяем, писал ли пользователь отзыв -->
-    {% if not has_reviewed %}
-        
-        <form method="post" action="{% url 'add_review' place.id %}" class="add-review-form">
-            {% csrf_token %}
-            <h3>✍️ Добавить отзыв</h3>
-            
-            <!-- Звёздный рейтинг -->
-            <div class="rating-input">
-                <label class="rating-label">Ваша оценка:</label>
-                <div class="stars">
-                    <input type="radio" name="rating" value="5" id="star5" required>
-                    <label for="star5" title="5 звезд"></label>
-                    <input type="radio" name="rating" value="4" id="star4">
-                    <label for="star4" title="4 звезды"></label>
-                    <input type="radio" name="rating" value="3" id="star3">
-                    <label for="star3" title="3 звезды"></label>
-                    <input type="radio" name="rating" value="2" id="star2">
-                    <label for="star2" title="2 звезды"></label>
-                    <input type="radio" name="rating" value="1" id="star1">
-                    <label for="star1" title="1 звезда"></label>
+        {% if not has_reviewed %}
+            <form method="post" action="{% url 'add_review' place.id %}" class="add-review-form" enctype="multipart/form-data" id="add-review-form">
+                {% csrf_token %}
+                <h3>✍️ Добавить отзыв</h3>
+                
+                <div class="rating-input">
+                    <label class="rating-label">Ваша оценка: <span class="required-star">*</span></label>
+                    <div class="stars">
+                        <input type="radio" name="rating" value="5" id="star5" required>
+                        <label for="star5" title="5 звезд"></label>
+                        <input type="radio" name="rating" value="4" id="star4">
+                        <label for="star4" title="4 звезды"></label>
+                        <input type="radio" name="rating" value="3" id="star3">
+                        <label for="star3" title="3 звезды"></label>
+                        <input type="radio" name="rating" value="2" id="star2">
+                        <label for="star2" title="2 звезды"></label>
+                        <input type="radio" name="rating" value="1" id="star1">
+                        <label for="star1" title="1 звезда"></label>
+                    </div>
                 </div>
+
+                <textarea name="text" placeholder="Ваш отзыв"></textarea>
+                
+                <div class="images-upload">
+                    <label>📸 Фото:</label>
+                    <input type="file" name="images" accept="image/*" multiple class="review-photo-input" id="review-images-input">
+                    <div class="image-preview-container" id="image-preview-container"></div>
+                    <small class="photo-hint">Можно загрузить до 5 фотографий (jpg, png, до 5МБ каждая)</small>
+                </div>
+                
+                <button type="submit" class="submit-review-btn">📤 Отправить</button>
+            </form>
+        {% else %}
+            <div class="already-reviewed-message">
+                <h3>Спасибо за отзыв!</h3>
+                <p>Вы уже оставляли отзыв для этого заведения. Больше одного отзыва от одного пользователя нельзя.</p>
             </div>
-
-            <textarea name="text" placeholder="Ваш отзыв"></textarea>
-            <input type="text" name="photo_url" placeholder="📎 Ссылка на фото (необязательно)">
-            
-            <button type="submit" class="submit-review-btn"> Отправить</button>
-        </form>
-
+        {% endif %}
     {% else %}
-        <!-- Если отзыв уже есть -->
-        <div class="already-reviewed-message">
-            <h3>Спасибо за отзыв!</h3>
-            <p>Вы уже оставляли отзыв для этого заведения. Больше одного отзыва от одного пользователя нельзя.</p>
+        <div class="login-link">
+            <a href="/accounts/login/"> Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв
         </div>
     {% endif %}
+</div>
 
-{% else %}
-    <div class="login-link">
-        <a href="/accounts/login/"> Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв
+<!-- Модальное окно галереи -->
+<div id="gallery-modal" class="gallery-modal">
+    <div class="gallery-modal-content">
+        <div class="gallery-close">&times;</div>
+        <div class="gallery-prev">&#10094;</div>
+        <div class="gallery-next">&#10095;</div>
+        <img id="gallery-image" src="">
+        <div class="gallery-counter"></div>
     </div>
-{% endif %}
+</div>
 
 <script src="{% static 'js/place_detail.js' %}"></script>
+<script>
+    // Предпросмотр фото перед отправкой (с работающими крестиками)
+    const imagesInput = document.getElementById('review-images-input');
+    const previewContainer = document.getElementById('image-preview-container');
+    
+    let selectedFiles = [];
+    
+    function updateAddPreview() {
+        previewContainer.innerHTML = '';
+        
+        if (selectedFiles.length === 0) {
+            return;
+        }
+        
+        const filesToShow = selectedFiles.slice(0, 5);
+        
+        filesToShow.forEach((file, index) => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'image-preview-item';
+                previewDiv.setAttribute('data-index', index);
+                
+                reader.onload = function(event) {
+                    previewDiv.innerHTML = `
+                        <img src="${event.target.result}" alt="Предпросмотр">
+                        <button type="button" class="remove-preview" data-index="${index}">✖</button>
+                    `;
+                };
+                reader.readAsDataURL(file);
+                previewContainer.appendChild(previewDiv);
+            }
+        });
+    }
+    
+    function removeAddPreviewItem(index) {
+        if (index >= 0 && index < selectedFiles.length) {
+            selectedFiles.splice(index, 1);
+            
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            imagesInput.files = dataTransfer.files;
+            
+            updateAddPreview();
+        }
+    }
+    
+    if (imagesInput) {
+        imagesInput.addEventListener('change', function(e) {
+            const newFiles = Array.from(e.target.files);
+            
+            newFiles.forEach(file => {
+                if (!selectedFiles.some(f => f.name === file.name)) {
+                    selectedFiles.push(file);
+                }
+            });
+            
+            if (selectedFiles.length > 5) {
+                selectedFiles = selectedFiles.slice(0, 5);
+                alert('Можно загрузить не более 5 фотографий');
+            }
+            
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            imagesInput.files = dataTransfer.files;
+            
+            updateAddPreview();
+        });
+        
+        // Делегирование событий для кнопок удаления
+        previewContainer.addEventListener('click', function(e) {
+            const removeBtn = e.target.closest('.remove-preview');
+            if (removeBtn) {
+                e.stopPropagation();
+                const index = parseInt(removeBtn.dataset.index);
+                removeAddPreviewItem(index);
+            }
+        });
+    }
+    
+    // Галерея
+    let currentGalleryImages = [];
+    let currentGalleryIndex = 0;
+    const modal = document.getElementById('gallery-modal');
+    const modalImg = document.getElementById('gallery-image');
+    const closeBtn = document.querySelector('.gallery-close');
+    const prevBtn = document.querySelector('.gallery-prev');
+    const nextBtn = document.querySelector('.gallery-next');
+    const counter = document.querySelector('.gallery-counter');
+    
+    function openGallery(images, index) {
+        currentGalleryImages = images;
+        currentGalleryIndex = index;
+        updateGalleryImage();
+        modal.style.display = 'flex';
+    }
+    
+    function openGalleryFromData(element) {
+        const images = JSON.parse(element.getAttribute('data-gallery'));
+        const index = parseInt(element.getAttribute('data-index'));
+        openGallery(images, index);
+    }
+    
+    function updateGalleryImage() {
+        if (currentGalleryImages.length > 0) {
+            modalImg.src = currentGalleryImages[currentGalleryIndex].url;
+            counter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
+        }
+    }
+    
+    function prevImage() {
+        if (currentGalleryImages.length > 0) {
+            currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+            updateGalleryImage();
+        }
+    }
+    
+    function nextImage() {
+        if (currentGalleryImages.length > 0) {
+            currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
+            updateGalleryImage();
+        }
+    }
+    
+    if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
+    if (prevBtn) prevBtn.onclick = prevImage;
+    if (nextBtn) nextBtn.onclick = nextImage;
+    
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+    
+    document.addEventListener('keydown', function(e) {
+        if (modal.style.display === 'flex') {
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'Escape') modal.style.display = 'none';
+        }
+    });
+    
+    window.openGallery = openGallery;
+    window.openGalleryFromData = openGalleryFromData;
+</script>
 
 {% endblock %}

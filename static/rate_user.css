@@ -1,40 +1,3 @@
-/* Страница оценки пользователя */
-.rate-user-container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.rate-user-card {
-    background: white;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 30px #0000001a;
-    text-align: center;
-}
-
-.rate-user-avatar {
-    width: 150px;
-    height: 150px;
-    margin: 0 auto 20px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #5F9EA0;
-    border: 4px solid #4b8082;
-}
-
-.rate-user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.rate-user-name {
-    font-size: 28px;
-    color: #2c3e50;
-    margin-bottom: 20px;
-}
-
 .rate-user-text {
     margin-bottom: 20px;
     color: #666;
@@ -42,7 +5,6 @@
     text-align: center;
 }
 
-/* Контейнер для кнопок */
 .rating-buttons {
     display: flex;
     justify-content: space-between;
@@ -51,7 +13,6 @@
     margin-top: 20px;
 }
 
-/* Кнопка "Назад" слева */
 .back-btn-rating {
     background: #5F9EA0;
     color: white;
@@ -72,7 +33,6 @@
     transform: scale(1.02);
 }
 
-/* Кнопка "Отправить" по центру */
 .submit-rating-btn {
     background: #f99039;
     color: white;
@@ -88,38 +48,4 @@
 .submit-rating-btn:hover {
     background: #e08530;
     transform: scale(1.02);
-}
-
-/* Поля ввода (если понадобятся) */
-.rate-review-textarea {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 15px;
-    font-family: 'Tobi';
-    font-size: 16px;
-    resize: vertical;
-    margin: 15px 0;
-    box-sizing: border-box;
-}
-
-.rate-review-textarea:focus {
-    outline: none;
-    border-color: #f99039;
-}
-
-.rate-photo-input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 15px;
-    font-family: 'Tobi';
-    font-size: 16px;
-    margin-bottom: 15px;
-    box-sizing: border-box;
-}
-
-.rate-photo-input:focus {
-    outline: none;
-    border-color: #f99039;
 }

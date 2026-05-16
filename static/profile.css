@@ -205,3 +205,16 @@
     color: #999;
     padding: 40px;
 }
+
+/* Статус в профиле */
+.profile-left-info .online-status {
+    display: inline-block;
+}
+
+.online-text {
+    color: #2ecc71;
+}
+
+.offline-text {
+    color: #95a5a6;
+}

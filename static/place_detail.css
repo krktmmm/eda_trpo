@@ -7,7 +7,7 @@
     padding: 20px;
 }
 
-/* ШАПКА (название + избранное) */
+/* ШАПКА */
 .place-header {
     display: flex;
     justify-content: space-between;
@@ -21,13 +21,11 @@
 
 .place-header h1 {
     color: #2c3f51;
-    font-family: 'Tobi';
     font-size: 32px;
     font-weight: normal;
     margin: 0;
 }
 
-/* Левая часть шапки (стрелка + название) */
 .place-header-left {
     display: flex;
     align-items: center;
@@ -45,12 +43,10 @@
     color: #2c3f51;
     text-decoration: none;
     font-size: 32px;
-    line-height: 1;
     transition: 0.3s;
     flex-shrink: 0;
 }
 
-/* Кнопка избранного */
 .favorite-detail-btn {
     background: none;
     border: none;
@@ -74,29 +70,38 @@
     border-radius: 15px;
     padding: 20px;
     margin-bottom: 30px;
-    box-shadow: 0 5px 15px #0000000d;
 }
 
 .place-info-detail p {
     margin: 10px 0;
     color: #2c3e50;
-    font-family: 'Tobi';
     font-size: 18px;
 }
 
-/* БЛОК С ОТЗЫВАМИ */
+.place-photo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.place-photo img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 15px;
+    cursor: pointer;
+    border: 2px solid #e0e0e0;
+}
+
+/* БЛОК ОТЗЫВОВ */
 .reviews-section {
     background: #fefcfc;
     border-radius: 15px;
     padding: 20px;
     margin-bottom: 30px;
-    box-shadow: 0 10px 30px #0000001a;
     border: 1px solid #e0e0e0;
 }
 
 .reviews-section h2 {
     color: #2c3f51;
-    font-family: 'Tobi';
     font-size: 24px;
     font-weight: normal;
     margin-bottom: 20px;
@@ -105,7 +110,6 @@
     padding-bottom: 10px;
 }
 
-/* Карточка отзыва */
 .review-card {
     border: 1px solid #e0e0e0;
     margin: 15px 0;
@@ -119,10 +123,8 @@
 .review-card:hover {
     transform: translateX(5px);
     background: #ffffff;
-    box-shadow: 0 5px 15px #0000000d;
 }
 
-/* Шапка отзыва */
 .review-header {
     display: flex;
     justify-content: space-between;
@@ -136,43 +138,33 @@
 
 .review-header strong {
     color: #4b8082;
-    font-family: 'Tobi';
     font-size: 18px;
 }
 
 .review-header small {
     color: #999;
-    font-family: 'Tobi';
 }
 
-/* Рейтинг */
 .review-rating {
     color: #f39c12;
     font-weight: bold;
 }
 
-/* Текст */
 .review-text {
     color: #2c3e50;
-    font-family: 'Tobi';
     font-size: 16px;
     margin: 10px 0;
     line-height: 1.4;
 }
 
-/* Фото */
-.review-photo {
-    margin-top: 10px;
+.empty-reviews {
+    text-align: center;
+    color: #999;
+    padding: 30px;
+    font-size: 18px;
 }
 
-.review-photo img {
-    border-radius: 15px;
-    border: 2px solid #e0e0e0;
-    max-width: 100%;
-    height: auto;
-}
-
-/* Меню отзыва */
+/* МЕНЮ ОТЗЫВА */
 .review-menu {
     position: absolute;
     top: 10px;
@@ -190,8 +182,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
-    line-height: 1;
     transition: 0.3s;
 }
 
@@ -207,17 +197,11 @@
     background: white;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
-    box-shadow: 0 4px 12px #0000001a;
     min-width: 160px;
     z-index: 999;
     margin-top: 5px;
     margin-right: 25px;
     overflow: hidden;
-}
-
-.review-card:has(.review-dropdown.show) {
-    z-index: 200;
-    position: relative;
 }
 
 .review-dropdown.show {
@@ -233,10 +217,8 @@
     background: none;
     text-align: left;
     cursor: pointer;
-    font-family: 'Tobi';
     font-size: 14px;
     color: #2c3e50;
-    text-decoration: none;
     transition: 0.2s;
 }
 
@@ -249,32 +231,17 @@
     color: #e74c3c;
 }
 
-.review-dropdown .danger:hover {
-    background: #fde8e8;
-}
-
-/* Пустые отзывы */
-.empty-reviews {
-    text-align: center;
-    color: #999;
-    padding: 30px;
-    font-family: 'Tobi';
-    font-size: 18px;
-}
-
-/* ФОРМА ДОБАВЛЕНИЯ ОТЗЫВА */
+/* ФОРМА ОТЗЫВА */
 .add-review-form {
     background: #fefcfc;
     border-radius: 15px;
     padding: 25px;
     margin-top: 20px;
-    box-shadow: 0 10px 30px #0000001a;
     border: 1px solid #e0e0e0;
 }
 
 .add-review-form h3 {
     color: #2c3f51;
-    font-family: 'Tobi';
     font-size: 22px;
     font-weight: normal;
     margin-bottom: 20px;
@@ -283,8 +250,6 @@
     padding-bottom: 8px;
 }
 
-/* Поля ввода */
-.add-review-form select,
 .add-review-form textarea,
 .add-review-form input {
     width: 100%;
@@ -292,7 +257,6 @@
     margin: 10px 0;
     border-radius: 15px;
     border: 1px solid #ccc;
-    font-family: 'Tobi';
     font-size: 16px;
     box-sizing: border-box;
 }
@@ -304,15 +268,12 @@
     min-height: 100px;
 }
 
-.add-review-form select:focus,
 .add-review-form textarea:focus,
 .add-review-form input:focus {
     outline: none;
     border-color: #f99039;
-    box-shadow: 0 0 5px #f9903980;
 }
 
-/* Кнопка отправки */
 .submit-review-btn {
     background: #5F9EA0;
     color: white;
@@ -320,21 +281,17 @@
     padding: 12px 24px;
     border-radius: 15px;
     font-size: 18px;
-    font-family: 'Tobi';
     cursor: pointer;
     transition: 0.3s;
-    width: auto;
     min-width: 150px;
 }
 
 .submit-review-btn:hover {
     background: #f99039;
-    transform: scale(1.02);
 }
 
-/* Сообщение "уже оставлен" */
 .already-reviewed-message {
-    background-color: #f5f5f5;
+    background: #f5f5f5;
     color: #6e6e6e;
     padding: 20px;
     border-radius: 15px;
@@ -345,16 +302,8 @@
 
 .already-reviewed-message h3 {
     margin: 0 0 10px 0;
-    font-family: 'Tobi';
 }
 
-.already-reviewed-message p {
-    margin: 0;
-    font-family: 'Tobi';
-    font-size: 16px;
-}
-
-/* ССЫЛКА НА ВХОД */
 .login-link {
     text-align: center;
     margin: 20px 0;
@@ -363,12 +312,7 @@
 .login-link a {
     color: #f99039;
     text-decoration: none;
-    font-family: 'Tobi';
     font-size: 18px;
-}
-
-.login-link a:hover {
-    text-decoration: underline;
 }
 
 /* УВЕДОМЛЕНИЯ */
@@ -377,7 +321,6 @@
     border-radius: 15px;
     margin-bottom: 20px;
     text-align: center;
-    font-family: 'Tobi';
     font-size: 16px;
 }
 
@@ -399,47 +342,7 @@
     border: 1px solid #ffeaa7;
 }
 
-/* СТРАНИЦА РЕДАКТИРОВАНИЯ ОТЗЫВА */
-.review-place-name {
-    margin-bottom: 20px;
-    color: #666;
-}
-
-.review-edit-hint {
-    font-size: 14px;
-    color: #999;
-    margin-bottom: 15px;
-    font-family: 'Tobi';
-}
-
-.back-to-place-link {
-    display: inline-block;
-    margin-top: 20px;
-    text-align: center;
-    width: auto;
-    padding: 10px 24px;
-}
-
-/* КНОПКА "НАЗАД" */
-.back-link {
-    margin-top: 30px;
-    text-align: center;
-}
-
-.back-link a {
-    color: #5F9EA0;
-    text-decoration: none;
-    font-family: 'Tobi';
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-.back-link a:hover {
-    color: #f99039;
-    text-decoration: underline;
-}
-
-/* ЗВЁЗДНЫЙ РЕЙТИНГ С КАРТИНКАМИ ДЛЯ ОТЗЫВОВ */
+/* ЗВЁЗДНЫЙ РЕЙТИНГ */
 .rating-input {
     margin-bottom: 20px;
     text-align: center;
@@ -451,7 +354,6 @@
     font-size: 18px;
     margin-bottom: 15px;
     font-weight: bold;
-    text-align: center;
 }
 
 .stars {
@@ -514,4 +416,276 @@
 
 .stars input[type="radio"]:checked ~ label::before {
     opacity: 0;
+}
+
+/* ГАЛЕРЕЯ ФОТО */
+.review-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.review-thumb {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid #e0e0e0;
+}
+
+.review-thumb:hover {
+    transform: scale(1.05);
+    border-color: #f99039;
+}
+
+.images-upload {
+    margin: 15px 0;
+}
+
+.images-upload label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.review-photo-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background: #fefcfc;
+    box-sizing: border-box;
+}
+
+.photo-hint {
+    display: block;
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+/* Предпросмотр фото */
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.image-preview-item {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+}
+
+.remove-preview {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 2px 4px #00000033;
+}
+
+.remove-preview:hover {
+    transform: scale(1.1);
+    background: #c0392b;
+}
+
+/* Текущие фото при редактировании */
+.current-photos {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 15px;
+}
+
+.current-photos label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.image-edit-item {
+    position: relative;
+    display: inline-block;
+    margin: 5px;
+}
+
+.delete-photo-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 2px 4px #00000033;
+}
+
+.delete-photo-btn:hover {
+    transform: scale(1.1);
+    background: #c0392b;
+}
+
+.delete-photo-btn.active {
+    background: #2ecc71;
+}
+
+/* Предупреждение о дубликатах */
+.duplicate-warning {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    border: 1px solid #ffeaa7;
+    background: #fff3cd;
+    color: #856404;
+}
+
+.duplicate-warning.hidden {
+    display: none;
+}
+
+/* Модальное окно галереи */
+.gallery-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000f2;
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.gallery-modal-content img {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+}
+
+.gallery-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+    z-index: 10001;
+}
+
+.gallery-close:hover {
+    color: #f99039;
+}
+
+.gallery-prev,
+.gallery-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 45px;
+    cursor: pointer;
+    padding: 20px 10px;
+    user-select: none;
+    z-index: 10001;
+    transition: 0.3s;
+}
+
+.gallery-prev {
+    left: -60px;
+}
+
+.gallery-next {
+    right: -60px;
+}
+
+.gallery-prev:hover,
+.gallery-next:hover {
+    color: #f99039;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-counter {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 16px;
+    background: #00000080;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+/* СТРАНИЦА РЕДАКТИРОВАНИЯ */
+.review-place-name {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.review-edit-hint {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+.back-to-place-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px 24px;
+}
+
+/* Звёздочка обязательного поля */
+.required-star {
+    color: red;
 }

@@ -73,9 +73,9 @@
         Оценено: {{ rated_count }} из {{ total_count }}
     </div>
     {% else %}
-    <div class="user-card" style="text-align: center;">
+    <div class="user-card text-center">
         <p>🎉 Все участники оценены!</p>
-        <a href="{% url 'messages_list' %}" class="btn-rate" style="display: inline-block; text-decoration: none;">Вернуться к чатам</a>
+        <a href="{% url 'messages_list' %}" class="btn-rate btn-rate-inline">Вернуться к чатам</a>
     </div>
     {% endif %}
 </div>

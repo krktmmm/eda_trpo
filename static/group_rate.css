@@ -131,3 +131,14 @@
     color: #666;
     font-size: 14px;
 }
+
+/* Дополнительные стили */
+.text-center {
+    text-align: center;
+}
+
+.btn-rate-inline {
+    display: inline-block;
+    text-decoration: none;
+    margin-top: 15px;
+}

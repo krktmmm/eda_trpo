@@ -9,7 +9,13 @@
 
 {% block content %}
 <div class="detail-container">
-    <h1>✏️ Редактировать отзыв</h1>
+    <!-- ШАПКА (стрелка + название) -->
+    <div class="place-header">
+        <div class="place-header-left">
+            <a href="{% url 'place_detail' review.place.id %}" class="back-arrow">←</a>
+            <h1>✏️ Редактировать отзыв</h1>
+        </div>
+    </div>
     
     <p class="review-place-name">
         Заведение: <strong>{{ review.place.name }}</strong>
@@ -33,7 +39,26 @@
         после публикации.
     </p>
     
-    <form method="post" action="{% url 'edit_review' review.id %}" class="add-review-form">
+    <!-- Текущие фото с красным кружком-крестиком (удаление сразу) -->
+    {% if review.images.exists %}
+        <div class="current-photos">
+            <label>Текущие фото:</label>
+            <div class="review-images" id="existing-images-container">
+                {% for img in review.images.all %}
+                    <div class="image-edit-item" data-img-id="{{ img.id }}">
+                        <img src="{{ img.image.url }}" alt="Фото" class="review-thumb" 
+                             data-gallery='[{% for i in review.images.all %}{"url": "{{ i.image.url }}"}{% if not forloop.last %},{% endif %}{% endfor %}]'
+                             data-index="{{ forloop.counter0 }}"
+                             onclick="openGalleryFromData(this)">
+                        <button type="button" class="delete-photo-btn" data-img-id="{{ img.id }}">✖</button>
+                    </div>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="delete_images" id="delete_images_input" value="">
+        </div>
+    {% endif %}
+    
+    <form method="post" action="{% url 'edit_review' review.id %}" class="add-review-form" enctype="multipart/form-data" id="edit-review-form">
         {% csrf_token %}
         
         <div class="rating-input">
@@ -53,11 +78,233 @@
         </div>
         
         <textarea name="text" placeholder="Ваш отзыв">{{ review.text }}</textarea>
-        <input type="text" name="photo_url" placeholder="📎 Ссылка на фото (необязательно)" value="{{ review.photo_url }}">
         
-        <button type="submit" class="submit-review-btn">💾 Сохранить</button>
+        <div class="images-upload">
+            <label>📸 Добавить новые фото:</label>
+            <input type="file" name="images" accept="image/*" multiple class="review-photo-input" id="review-images-input">
+            <div class="image-preview-container" id="image-preview-container"></div>
+            <div id="duplicate-warning" class="duplicate-warning hidden"></div>
+            <small class="photo-hint">Можно добавить ещё до 5 фотографий (jpg, png, до 5МБ каждая)</small>
+        </div>
+        
+        <button type="submit" class="submit-review-btn">💾 Сохранить изменения</button>
     </form>
-    
-    <a href="{% url 'place_detail' review.place.id %}" class="back-to-place-link">← Назад к заведению</a>
 </div>
+
+<!-- Модальное окно галереи -->
+<div id="gallery-modal" class="gallery-modal">
+    <div class="gallery-modal-content">
+        <div class="gallery-close">&times;</div>
+        <div class="gallery-prev">&#10094;</div>
+        <div class="gallery-next">&#10095;</div>
+        <img id="gallery-image" src="">
+        <div class="gallery-counter"></div>
+    </div>
+</div>
+
+<script>
+    // Получаем имена существующих фото (без пути)
+    const existingPhotoNames = [
+        {% for img in review.images.all %}
+            "{{ img.image.name|cut:'review_photos/' }}",
+        {% endfor %}
+    ];
+    
+    // ========== УДАЛЕНИЕ СУЩЕСТВУЮЩИХ ФОТО (сразу из DOM) ==========
+    let deletePhotos = [];
+    const existingContainer = document.getElementById('existing-images-container');
+    
+    function removeExistingPhoto(btn, imgId, container) {
+        const item = btn.closest('.image-edit-item');
+        if (item) {
+            item.remove();
+            deletePhotos.push(imgId);
+            document.getElementById('delete_images_input').value = deletePhotos.join(',');
+            
+            // Обновляем data-gallery для оставшихся фото
+            const remainingItems = existingContainer.querySelectorAll('.image-edit-item');
+            if (remainingItems.length > 0) {
+                const remainingUrls = [];
+                remainingItems.forEach(item => {
+                    const img = item.querySelector('img');
+                    if (img) {
+                        remainingUrls.push({url: img.src});
+                    }
+                });
+                remainingItems.forEach((item, newIndex) => {
+                    const img = item.querySelector('img');
+                    if (img) {
+                        img.setAttribute('data-gallery', JSON.stringify(remainingUrls));
+                        img.setAttribute('data-index', newIndex);
+                    }
+                });
+            }
+        }
+    }
+    
+    document.querySelectorAll('.delete-photo-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const imgId = parseInt(this.dataset.imgId);
+            removeExistingPhoto(this, imgId, existingContainer);
+        });
+    });
+    
+    // ========== ДОБАВЛЕНИЕ НОВЫХ ФОТО ==========
+    let uniqueFilesToAdd = [];
+    
+    const imagesInput = document.getElementById('review-images-input');
+    const previewContainer = document.getElementById('image-preview-container');
+    const duplicateWarning = document.getElementById('duplicate-warning');
+    
+    function updatePreview() {
+        previewContainer.innerHTML = '';
+        
+        if (uniqueFilesToAdd.length === 0) {
+            return;
+        }
+        
+        const filesToShow = uniqueFilesToAdd.slice(0, 5);
+        
+        filesToShow.forEach((file, index) => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'image-preview-item';
+                previewDiv.setAttribute('data-index', index);
+                
+                reader.onload = function(event) {
+                    previewDiv.innerHTML = `
+                        <img src="${event.target.result}" alt="Предпросмотр">
+                        <button type="button" class="remove-preview" data-index="${index}">✖</button>
+                    `;
+                };
+                reader.readAsDataURL(file);
+                previewContainer.appendChild(previewDiv);
+            }
+        });
+    }
+    
+    // Делегирование для удаления новых фото из предпросмотра
+    previewContainer.addEventListener('click', function(e) {
+        const removeBtn = e.target.closest('.remove-preview');
+        if (removeBtn) {
+            e.stopPropagation();
+            const index = parseInt(removeBtn.dataset.index);
+            uniqueFilesToAdd.splice(index, 1);
+            
+            const dataTransfer = new DataTransfer();
+            uniqueFilesToAdd.forEach(file => dataTransfer.items.add(file));
+            imagesInput.files = dataTransfer.files;
+            
+            updatePreview();
+        }
+    });
+    
+    if (imagesInput) {
+        imagesInput.addEventListener('change', function(e) {
+            const newFiles = Array.from(e.target.files);
+            const duplicates = [];
+            
+            newFiles.forEach(file => {
+                if (existingPhotoNames.includes(file.name)) {
+                    duplicates.push(file.name);
+                } else if (!uniqueFilesToAdd.some(f => f.name === file.name)) {
+                    uniqueFilesToAdd.push(file);
+                }
+            });
+            
+            if (duplicates.length > 0) {
+                duplicateWarning.classList.remove('hidden');
+                duplicateWarning.innerHTML = `⚠️ Следующие фото уже есть в отзыве и не будут добавлены:<br> ${duplicates.join(', ')}`;
+            } else {
+                duplicateWarning.classList.add('hidden');
+            }
+            
+            const dataTransfer = new DataTransfer();
+            uniqueFilesToAdd.forEach(file => dataTransfer.items.add(file));
+            imagesInput.files = dataTransfer.files;
+            
+            updatePreview();
+        });
+    }
+    
+    // ========== ОТПРАВКА ФОРМЫ ==========
+    document.getElementById('edit-review-form')?.addEventListener('submit', function(e) {
+        const deleteIds = document.getElementById('delete_images_input').value;
+        if (deleteIds) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'delete_images';
+            input.value = deleteIds;
+            this.appendChild(input);
+        }
+    });
+    
+    // ========== ГАЛЕРЕЯ ==========
+    let currentGalleryImages = [];
+    let currentGalleryIndex = 0;
+    const modal = document.getElementById('gallery-modal');
+    const modalImg = document.getElementById('gallery-image');
+    const closeBtn = document.querySelector('.gallery-close');
+    const prevBtn = document.querySelector('.gallery-prev');
+    const nextBtn = document.querySelector('.gallery-next');
+    const counter = document.querySelector('.gallery-counter');
+    
+    function openGallery(images, index) {
+        currentGalleryImages = images;
+        currentGalleryIndex = index;
+        updateGalleryImage();
+        modal.style.display = 'flex';
+    }
+    
+    function openGalleryFromData(element) {
+        const images = JSON.parse(element.getAttribute('data-gallery'));
+        const index = parseInt(element.getAttribute('data-index'));
+        openGallery(images, index);
+    }
+    
+    function updateGalleryImage() {
+        if (currentGalleryImages.length > 0) {
+            modalImg.src = currentGalleryImages[currentGalleryIndex].url;
+            counter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
+        }
+    }
+    
+    function prevImage() {
+        if (currentGalleryImages.length > 0) {
+            currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+            updateGalleryImage();
+        }
+    }
+    
+    function nextImage() {
+        if (currentGalleryImages.length > 0) {
+            currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
+            updateGalleryImage();
+        }
+    }
+    
+    if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
+    if (prevBtn) prevBtn.onclick = prevImage;
+    if (nextBtn) nextBtn.onclick = nextImage;
+    
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+    
+    document.addEventListener('keydown', function(e) {
+        if (modal.style.display === 'flex') {
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'Escape') modal.style.display = 'none';
+        }
+    });
+    
+    window.openGallery = openGallery;
+    window.openGalleryFromData = openGalleryFromData;
+</script>
+
 {% endblock %}

@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Place, Review, Favorite
+from .models import Place, Review, ReviewImage, Favorite
 from django.http import JsonResponse
 from django.utils import timezone
 from datetime import timedelta
 import difflib
+import os
 
 def main_menu(request):
     """Стартовая страница с выбором: заведения или рулетка"""
@@ -72,7 +73,7 @@ def place_detail(request, place_id):
         review.stars_display = "⭐" * review.rating
         review.is_old = timezone.now() - review.created_at > timedelta(hours=24)
 
-    # Сообщение только для этой страницы
+    # сообщение только для этой страницы
     review_message = request.session.pop('review_message', None)
 
     return render(request, 'places/place_detail.html', {
@@ -85,7 +86,7 @@ def place_detail(request, place_id):
 
 @login_required
 def add_review(request, place_id):
-    """Добавление отзыва (только для авторизованных)"""
+    """Добавление отзыва с возможностью загрузить несколько фото (до 5)"""
     place = get_object_or_404(Place, id=place_id)
     
     if Review.objects.filter(place=place, user=request.user).exists():
@@ -94,17 +95,25 @@ def add_review(request, place_id):
     
     if request.method == 'POST':
         rating = request.POST.get('rating')
-        text = request.POST.get('text')
-        photo_url = request.POST.get('photo_url', '')
+        text = request.POST.get('text', '')  # текст необязательный
+        images = request.FILES.getlist('images')
         
-        if rating:
-            Review.objects.create(
+        if rating:  # только оценка обязательна
+            review = Review.objects.create(
                 place=place,
                 user=request.user,
                 rating=int(rating),
-                text=text,
-                photo_url=photo_url
+                text=text or ''  # если текст пустой — сохраняем пустую строку
             )
+            
+            # Сохраняем все загруженные фото (максимум 5)
+            for order, img in enumerate(images[:5]):
+                if img:
+                    ReviewImage.objects.create(
+                        review=review,
+                        image=img,
+                        order=order
+                    )
             
             all_reviews = place.reviews.all()
             total_rating = sum(r.rating for r in all_reviews)
@@ -115,7 +124,7 @@ def add_review(request, place_id):
             
             request.session['review_message'] = {'type': 'success', 'text': 'Отзыв добавлен!'}
         else:
-            request.session['review_message'] = {'type': 'error', 'text': 'Заполните все поля'}
+            request.session['review_message'] = {'type': 'error', 'text': 'Пожалуйста, поставьте оценку!'}
         
         return redirect('place_detail', place_id=place.id)
     
@@ -151,6 +160,13 @@ def delete_review(request, review_id):
         return JsonResponse({'error': 'Нельзя удалить чужой отзыв'}, status=403)
     
     place = review.place
+    
+    # Удаляем все фото отзыва
+    for img in review.images.all():
+        if img.image and os.path.isfile(img.image.path):
+            os.remove(img.image.path)
+        img.delete()
+    
     review.delete()
     
     all_reviews = place.reviews.all()
@@ -169,7 +185,7 @@ def delete_review(request, review_id):
 
 @login_required
 def edit_review(request, review_id):
-    """Редактирование отзыва"""
+    """Редактирование отзыва с возможностью добавлять/удалять фото"""
     review = get_object_or_404(Review, id=review_id)
     
     if review.user != request.user:
@@ -182,26 +198,60 @@ def edit_review(request, review_id):
     
     if request.method == 'POST':
         rating = request.POST.get('rating')
-        text = request.POST.get('text')
-        photo_url = request.POST.get('photo_url', '')
+        text = request.POST.get('text', '')
+        images = request.FILES.getlist('images')
+        delete_images_str = request.POST.get('delete_images', '')
+        
+        # Преобразуем строку "1,2,3" в список целых чисел
+        delete_images = [int(x) for x in delete_images_str.split(',') if x]
         
         if rating:
-            # Проверяем, изменилось ли что-то
-            if (int(rating) == review.rating and 
-                text == review.text and 
-                photo_url == review.photo_url):
+            changed = False
+            
+            if int(rating) != review.rating:
+                review.rating = int(rating)
+                changed = True
+            
+            if text != review.text:
+                review.text = text
+                changed = True
+            
+            # Удаляем отмеченные фото
+            for img_id in delete_images:
+                try:
+                    img = ReviewImage.objects.get(id=img_id, review=review)
+                    if img.image and os.path.isfile(img.image.path):
+                        os.remove(img.image.path)
+                    img.delete()
+                    changed = True
+                except ReviewImage.DoesNotExist:
+                    pass
+            
+            # Добавляем новые фото (только если их ещё нет)
+            current_count = review.images.count()
+            for order, img in enumerate(images[:5]):
+                if img:
+                    # Проверяем, нет ли уже такого же фото (по содержимому)
+                    # Простая проверка: не добавляем, если файл с таким же именем уже есть
+                    existing_names = [os.path.basename(existing.image.name) for existing in review.images.all()]
+                    if img.name not in existing_names:
+                        ReviewImage.objects.create(
+                            review=review,
+                            image=img,
+                            order=current_count + order
+                        )
+                        changed = True
+            
+            if not changed:
                 request.session['review_message'] = {'type': 'warning', 'text': '⚠️ Ничего не изменилось'}
                 return redirect('place_detail', place_id=review.place.id)
             
-            review.rating = int(rating)
-            review.text = text
-            review.photo_url = photo_url
             review.save()
             
             place = review.place
             all_reviews = place.reviews.all()
             total_rating = sum(r.rating for r in all_reviews)
-            place.rating = total_rating / all_reviews.count()
+            place.rating = total_rating / all_reviews.count() if all_reviews.count() > 0 else 0
             place.save()
             
             request.session['review_message'] = {'type': 'success', 'text': '✅ Отзыв обновлён!'}

@@ -157,3 +157,9 @@
 .empty-messages a:hover {
     color: #f99039;
 }
+
+/* Иконка завершённого обеда */
+.meal-completed-icon {
+    color: #2ecc71;
+    margin-left: 8px;
+}
