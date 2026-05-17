@@ -10,9 +10,18 @@
 {% block content %}
 
 <div class="detail-container">
+    <!-- УВЕДОМЛЕНИЕ -->
+    {% if review_message %}
+        <div class="review-notification {% if review_message.type == 'success' %}success{% elif review_message.type == 'error' %}error{% elif review_message.type == 'warning' %}warning{% endif %}">
+            {{ review_message.text }}
+        </div>
+    {% endif %}
     <!-- ДЕТАЛИ ЗАВЕДЕНИЯ -->
     <div class="place-header">
-        <h1>{{ place.name }}</h1>
+        <div class="place-header-left">
+            <a href="javascript:history.back()" class="back-arrow">←</a>
+            <h1>{{ place.name }}</h1>
+        </div>
         <button id="favorite-detail-btn" class="favorite-detail-btn {% if is_favorited %}active{% endif %}" data-place-id="{{ place.id }}">
             {% if is_favorited %}❤️{% else %}🤍{% endif %}
         </button>
@@ -20,7 +29,11 @@
 
     <div class="place-info-detail">
         <p>📍 {{ place.address }}</p>
-        <p>💰 {{ place.avg_price|default:"—" }} ₽ | ⭐ {{ place.rating|floatformat:1 }}</p>
+        <p>💰 {{ place.avg_price|default:"—" }} ₽</p>
+        {% if place.student_discount %}
+            <p>🎓 Скидка для студентов: {{ place.student_discount }}</p>
+        {% endif %}
+        <p>⭐ {{ place.rating|floatformat:1 }}</p>
     </div>
 
     <!-- ОТЗЫВЫ -->
@@ -30,7 +43,7 @@
             <div class="review-card">
                 <div class="review-header">
                     <strong>{{ review.user.username }}</strong>
-                    <span class="review-rating">⭐ {{ review.rating }}</span>
+                    <span class="review-rating">{{ review.stars_display }}</span>
                     <small>{{ review.created_at|date:"d.m.Y" }}</small>
                 </div>
                 <p class="review-text">{{ review.text }}</p>
@@ -39,6 +52,20 @@
                         <img src="{{ review.photo_url }}" alt="Фото" width="200">
                     </div>
                 {% endif %}
+                <div class="review-menu">
+                    <button class="review-menu-btn" onclick="toggleReviewMenu(event, {{ review.id }})">⋮</button>
+                    <div class="review-dropdown" id="review-dropdown-{{ review.id }}">
+                        <button onclick="copyReviewText('{{ review.text|escapejs }}')">📋 Копировать</button>
+                        {% if user == review.user %}
+                            {% if not review.is_old %}
+                                <button onclick="editReview({{ review.id }})">✏️ Изменить</button>
+                                <button onclick="deleteReview({{ review.id }})" class="danger">🗑️ Удалить</button>
+                            {% endif %}
+                        {% else %}
+                            <button onclick="reportReview({{ review.id }})" class="danger">🚩 Пожаловаться</button>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         {% empty %}
             <div class="empty-reviews">
@@ -49,33 +76,49 @@
 
     <!-- ФОРМА ДОБАВЛЕНИЯ ОТЗЫВА -->
     {% if user.is_authenticated %}
-        <div class="add-review-form">
+    <!-- Проверяем, писал ли пользователь отзыв -->
+    {% if not has_reviewed %}
+        
+        <form method="post" action="{% url 'add_review' place.id %}" class="add-review-form">
+            {% csrf_token %}
             <h3>✍️ Добавить отзыв</h3>
-            <form method="post" action="{% url 'add_review' place.id %}">
-                {% csrf_token %}
-                <select name="rating" required>
-                    <option value="5">5 ⭐</option>
-                    <option value="4">4 ⭐</option>
-                    <option value="3">3 ⭐</option>
-                    <option value="2">2 ⭐</option>
-                    <option value="1">1 ⭐</option>
-                </select>
-                <textarea name="text" rows="3" placeholder="Ваш отзыв..." required></textarea>
-                <input type="url" name="photo_url" placeholder="🔗 Ссылка на фото (необязательно)">
-                <button type="submit" class="submit-review-btn">📤 Отправить</button>
-            </form>
-        </div>
+            
+            <!-- Звёздный рейтинг -->
+            <div class="rating-input">
+                <label class="rating-label">Ваша оценка:</label>
+                <div class="stars">
+                    <input type="radio" name="rating" value="5" id="star5" required>
+                    <label for="star5" title="5 звезд"></label>
+                    <input type="radio" name="rating" value="4" id="star4">
+                    <label for="star4" title="4 звезды"></label>
+                    <input type="radio" name="rating" value="3" id="star3">
+                    <label for="star3" title="3 звезды"></label>
+                    <input type="radio" name="rating" value="2" id="star2">
+                    <label for="star2" title="2 звезды"></label>
+                    <input type="radio" name="rating" value="1" id="star1">
+                    <label for="star1" title="1 звезда"></label>
+                </div>
+            </div>
+
+            <textarea name="text" placeholder="Ваш отзыв"></textarea>
+            <input type="text" name="photo_url" placeholder="📎 Ссылка на фото (необязательно)">
+            
+            <button type="submit" class="submit-review-btn"> Отправить</button>
+        </form>
+
     {% else %}
-        <div class="login-link">
-            <p><a href="/accounts/login/">🔑 Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв</p>
+        <!-- Если отзыв уже есть -->
+        <div class="already-reviewed-message">
+            <h3>Спасибо за отзыв!</h3>
+            <p>Вы уже оставляли отзыв для этого заведения. Больше одного отзыва от одного пользователя нельзя.</p>
         </div>
     {% endif %}
 
-    <!-- КНОПКА НАЗАД -->
-    <div class="back-link">
-        <a href="/places/">← Назад к заведениям</a>
+{% else %}
+    <div class="login-link">
+        <a href="/accounts/login/"> Войдите или зарегистрируйтесь</a>, чтобы оставить отзыв
     </div>
-</div>
+{% endif %}
 
 <script src="{% static 'js/place_detail.js' %}"></script>
 

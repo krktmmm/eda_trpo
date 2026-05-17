@@ -1,4 +1,4 @@
-/* Контейнер с двумя колонками */
+/* КОНТЕЙНЕР С ДВУМЯ КОЛОНКАМИ */
 .profile-container {
     display: flex;
     gap: 50px;
@@ -8,7 +8,7 @@
     flex-wrap: wrap;
 }
 
-/* ЛЕВАЯ КОЛОНКА - АВАТАР */
+/* ЛЕВАЯ КОЛОНКА (аватар) */
 .profile-left {
     flex: 1;
     min-width: 280px;
@@ -45,7 +45,7 @@
     box-sizing: border-box;
 }
 
-/* Информация в левой колонке */
+/* Информация (дата регистрации) */
 .profile-left-info {
     margin-top: 20px;
     text-align: left;
@@ -63,7 +63,7 @@
     color: #4b8082;
 }
 
-/* Кнопка редактирования */
+/* Кнопки действий */
 .edit-profile-btn {
     background: #f99039;
     color: white;
@@ -84,7 +84,7 @@
     transform: scale(1.02);
 }
 
-/* ПРАВАЯ КОЛОНКА - ДАННЫЕ */
+/* ПРАВАЯ КОЛОНКА (данные) */
 .profile-right {
     flex: 2;
     min-width: 400px;
@@ -95,6 +95,7 @@
     border: 1px solid #e0e0e0;
 }
 
+/* Заголовок */
 .profile-right h2 {
     color: #2c3e50;
     font-size: 28px;
@@ -126,13 +127,14 @@
     color: #4b8082;
 }
 
-/* ===== ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ ===== */
+/* ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ */
 .reviews-section {
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
+/* Заголовок */
 .reviews-section h2 {
     color: #2c3e50;
     font-size: 28px;
@@ -144,12 +146,14 @@
     width: auto;
 }
 
+/* Сетка отзывов */
 .reviews-grid {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
+/* Карточка отзыва */
 .review-card {
     border: 1px solid #e0e0e0;
     border-radius: 20px;
@@ -170,6 +174,15 @@
     margin-bottom: 10px;
 }
 
+.review-place-link {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.review-place-link:hover {
+    color: #f99039 !important;
+}
+
 .review-rating {
     color: #f99039;
     margin-bottom: 10px;
@@ -186,6 +199,7 @@
     font-size: 12px;
 }
 
+/* Пустые отзывы */
 .empty-reviews {
     text-align: center;
     color: #999;

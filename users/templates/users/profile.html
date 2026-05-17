@@ -24,7 +24,6 @@
         
         <div class="profile-left-info">
             <p><strong>📅 На сайте с:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
-            <p><strong>🆔 ID:</strong> {{ user.id }}</p>
         </div>
         
         <a href="{% url 'edit_profile' %}" class="edit-profile-btn">
@@ -82,7 +81,11 @@
     <div class="reviews-grid">
         {% for review in reviews %}
         <div class="review-card">
-            <div class="review-place">{{ review.place.name }}</div>
+            <div class="review-place">
+                <a href="{% url 'place_detail' review.place.id %}" class="review-place-link">
+                    {{ review.place.name }}
+                </a>
+            </div>
             <div class="review-rating">⭐ {{ review.rating }}/5</div>
             <div class="review-text">{{ review.text }}</div>
             <div class="review-date">{{ review.created_at|date:"d.m.Y H:i" }}</div>

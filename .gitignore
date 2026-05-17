@@ -9,12 +9,10 @@ venv/
 env/
 ENV/
 .venv
+.env
 
 # База данных
-<<<<<<< HEAD
 # db.sqlite3
-=======
->>>>>>> origin/feature/frontend
 db.sqlite3-journal
 
 # Бинарники
@@ -41,5 +39,3 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
-
-.env

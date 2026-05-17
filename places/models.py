@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 
 class Place(models.Model):
@@ -15,6 +15,7 @@ class Place(models.Model):
     
     cuisine_type = models.CharField(max_length=100, blank=True, verbose_name="Вид заведения")
     avg_price = models.IntegerField(blank=True, null=True, verbose_name="Средний чек (₽)")
+    student_discount = models.CharField(max_length=20, blank=True, verbose_name="Скидка для студентов")
     opening_hours = models.CharField(max_length=200, blank=True, verbose_name="Часы работы")
     
     # пока только ссылка
@@ -35,12 +36,11 @@ class Place(models.Model):
         verbose_name = "Заведение"
         verbose_name_plural = "Заведения"
 
-
 class Review(models.Model):
     """Отзыв о заведении"""
     
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='reviews', verbose_name="Заведение")
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name="Автор")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор")
 
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], verbose_name="Оценка (1-5)")
     text = models.TextField(verbose_name="Текст отзыва")
@@ -59,7 +59,7 @@ class Review(models.Model):
 
 class Favorite(models.Model):
     """Избранные заведения пользователя"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='favorited_by')
     created_at = models.DateTimeField(auto_now_add=True)
 

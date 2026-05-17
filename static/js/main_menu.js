@@ -1,20 +1,19 @@
-// Функция проверки, включены ли анимации
+/** Проверяет, включены ли анимации */
 function areAnimationsEnabled() {
     const localSetting = localStorage.getItem('animations');
     if (localSetting !== null) {
         return localSetting !== 'off';
     }
-    const body = document.body;
-    if (body && body.classList) {
-        return !body.classList.contains('animations-off');
+    if (document.body && document.body.classList) {
+        return !document.body.classList.contains('animations-off');
     }
     return true;
 }
 
-// Загрузка статичного Lottie (замороженного на определённом кадре)
+/** Загружает статичный Lottie, замороженный на определённом кадре */
 function loadStaticLottie(container, path, frame = 0) {
     container.innerHTML = '';
-    
+
     const animation = lottie.loadAnimation({
         container: container,
         renderer: 'svg',
@@ -22,9 +21,8 @@ function loadStaticLottie(container, path, frame = 0) {
         autoplay: false,
         path: path
     });
-    
+
     animation.addEventListener('DOMLoaded', () => {
-        // Останавливаем на нужном кадре (0 - первый, totalFrames-1 - последний)
         if (frame === 'last') {
             animation.goToAndStop(animation.totalFrames - 1, true);
         } else {
@@ -32,18 +30,17 @@ function loadStaticLottie(container, path, frame = 0) {
         }
         container.style.pointerEvents = 'none';
     });
-    
+
     return animation;
 }
 
-// Загрузка анимаций
+// Загрузка анимаций главного меню
 function loadAnimationsIfEnabled() {
     const plateContainer = document.getElementById('plate-animation');
     const diceContainer = document.getElementById('dice-animation');
-    
+
+    // Анимации выключены — статичные заглушки
     if (!areAnimationsEnabled()) {
-        // Анимации выключены — показываем статичные Lottie
-        // Хинкали — первый кадр, Кубик — последний кадр
         if (plateContainer) {
             loadStaticLottie(plateContainer, '/static/animations/glavnaya/chpic.su_-_unkib2w_005.json', 0);
         }
@@ -52,8 +49,8 @@ function loadAnimationsIfEnabled() {
         }
         return;
     }
-    
-    // Анимации включены — грузим с возможностью проигрыша
+
+    // Тарелка
     if (plateContainer && !plateContainer.hasAttribute('data-lottie-loaded')) {
         const plateAnimation = lottie.loadAnimation({
             container: plateContainer,
@@ -62,7 +59,7 @@ function loadAnimationsIfEnabled() {
             autoplay: false,
             path: '/static/animations/glavnaya/chpic.su_-_unkib2w_005.json'
         });
-        
+
         const plateCard = plateContainer.closest('.menu-card');
         if (plateCard) {
             plateCard.addEventListener('mouseenter', () => {
@@ -71,7 +68,8 @@ function loadAnimationsIfEnabled() {
         }
         plateContainer.setAttribute('data-lottie-loaded', 'true');
     }
-    
+
+    // Кубик
     if (diceContainer && !diceContainer.hasAttribute('data-lottie-loaded')) {
         const diceAnimation = lottie.loadAnimation({
             container: diceContainer,
@@ -80,12 +78,11 @@ function loadAnimationsIfEnabled() {
             autoplay: false,
             path: '/static/animations/glavnaya/chpic.su_-_DiceCubeEmoji_001.json'
         });
-        
-        // Ставим на последний кадр (чтобы кубик был виден в нормальном положении)
+
         diceAnimation.addEventListener('DOMLoaded', () => {
             diceAnimation.goToAndStop(diceAnimation.totalFrames - 1, true);
         });
-        
+
         const diceCard = diceContainer.closest('.menu-card');
         if (diceCard) {
             diceCard.addEventListener('mouseenter', () => {
@@ -96,18 +93,22 @@ function loadAnimationsIfEnabled() {
     }
 }
 
+// Проверка авторизации для рулетки
+function checkRouletteAuth() {
+    const rouletteLink = document.querySelector('a[href="/roulette/"]');
+    if (!rouletteLink) return;
+
+    rouletteLink.addEventListener('click', function(e) {
+        if (document.body.getAttribute('data-user-authenticated') !== 'true') {
+            e.preventDefault();
+            alert('Войдите или зарегистрируйтесь, чтобы найти компанию для обеда');
+            window.location.href = '/accounts/login/';
+        }
+    });
+}
+
+// Инициализация
 document.addEventListener('DOMContentLoaded', function() {
     loadAnimationsIfEnabled();
-    
-    // Проверка авторизации для кнопки "Обед-рулетка" на главной
-    const rouletteLink = document.querySelector('a[href="/roulette/"]');
-    if (rouletteLink) {
-        rouletteLink.addEventListener('click', function(e) {
-            if (document.body.getAttribute('data-user-authenticated') !== 'true') {
-                e.preventDefault();
-                alert('Войдите или зарегистрируйтесь, чтобы найти компанию для обеда');
-                window.location.href = '/accounts/login/';
-            }
-        });
-    }
+    checkRouletteAuth();
 });

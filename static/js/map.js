@@ -1,59 +1,44 @@
+const MAP_CENTER = [55.0080, 82.9512];
+const MAP_ZOOM = 16;
+
+const BUILDINGS = [
+    { coords: [55.013159, 82.950629], label: '1', popup: '🏰 СибГУТИ — корпус №1' },
+    { coords: [55.013816, 82.948528], label: '3', popup: '⛪️ СибГУТИ — корпус №3' },
+    { coords: [55.016970, 82.949707], label: '5', popup: '🏨 СибГУТИ — корпус №5' },
+];
+
+// Инициализация карты
 const mapContainer = document.getElementById('places-map');
 
 if (mapContainer) {
-    const map = L.map('places-map').setView([55.0080, 82.9512], 16);
-    const isDarkTheme = document.body.classList.contains('dark-theme');
+    const map = L.map('places-map').setView(MAP_CENTER, MAP_ZOOM);
 
-    const tileUrl = isDarkTheme
-        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-
-    const attribution = isDarkTheme
-        ? '&copy; OpenStreetMap &copy; CARTO'
-        : '© OpenStreetMap';
-
-    L.tileLayer(tileUrl, {
-        attribution: attribution,
-        subdomains: 'abcd',
-        maxZoom: 20
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // ===== КОРПУСА =====
-    // Корпус №1
-    L.marker([55.013159, 82.950629], {
-        icon: L.divIcon({
-            className: 'building-marker',
-            html: '<div class="building-label">1</div>',
-            iconSize: [30, 30]
-        })
-    }).addTo(map).bindPopup('🏰 СибГУТИ — корпус №1');
+    // Маркеры корпусов
+    BUILDINGS.forEach(building => {
+        L.marker(building.coords, {
+            icon: L.divIcon({
+                className: 'building-marker',
+                html: `<div class="building-label">${building.label}</div>`,
+                iconSize: [30, 30]
+            })
+        }).addTo(map).bindPopup(building.popup);
+    });
 
-    // Корпус №3
-    L.marker([55.013816, 82.948528], {
-        icon: L.divIcon({
-            className: 'building-marker',
-            html: '<div class="building-label">3</div>',
-            iconSize: [30, 30]
-        })
-    }).addTo(map).bindPopup('⛪️ СибГУТИ — корпус №3');
-
-    // Корпус №5
-    L.marker([55.016970, 82.949707], {
-        icon: L.divIcon({
-            className: 'building-marker',
-            html: '<div class="building-label">5</div>',
-            iconSize: [30, 30]
-        })
-    }).addTo(map).bindPopup('🏨 СибГУТИ — корпус №5');
-
-    // ===== ЗАВЕДЕНИЯ =====
+    // Маркеры заведений
     const dataElement = document.getElementById('places-map-data');
+
     if (dataElement) {
         const places = JSON.parse(dataElement.textContent);
         const markerBounds = [];
+
         places.forEach(place => {
             const marker = L.marker([place.lat, place.lng]).addTo(map);
             markerBounds.push([place.lat, place.lng]);
+
             marker.bindPopup(`
                 <b>${place.name}</b><br>
                 ${place.address || ''}<br><br>
@@ -61,8 +46,8 @@ if (mapContainer) {
                     Открыть заведение
                 </button>
             `);
-
         });
+
         if (markerBounds.length > 0) {
             map.fitBounds(markerBounds, {
                 padding: [30, 30],
@@ -70,6 +55,8 @@ if (mapContainer) {
             });
         }
     }
+
+    // Фикс размера карты
     setTimeout(() => {
         map.invalidateSize();
     }, 300);

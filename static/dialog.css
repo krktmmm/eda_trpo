@@ -1,3 +1,4 @@
+/* КОНТЕЙНЕР ЧАТА */
 .chat-container {
     max-width: 800px;
     margin: 20px auto;
@@ -11,6 +12,7 @@
     min-height: 500px;
 }
 
+/* ШАПКА ЧАТА */
 .chat-header {
     background: #5F9EA0;
     padding: 15px 20px;
@@ -23,6 +25,7 @@
     color: white;
     text-decoration: none;
     font-size: 18px;
+    transition: 0.3s;
 }
 
 .chat-header .back-link:hover {
@@ -35,6 +38,61 @@
     font-size: 20px;
 }
 
+/* Аватар в шапке */
+.chat-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: #5F9EA0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    flex-shrink: 0;
+    border: 3px solid #4b8082;
+}
+
+.chat-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.chat-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: normal;
+    overflow: hidden;
+}
+
+/* Имена участников в шапке */
+.participants-names {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    margin-top: 3px;
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Кнопка "Завершить обед" */
+.end-meal-link {
+    color: #f99039;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.end-meal-link:hover {
+    color: #e08530;
+    text-decoration: underline;
+}
+
+/* ОБЛАСТЬ СООБЩЕНИЙ */
 .chat-messages {
     flex: 1;
     overflow-y: auto;
@@ -45,26 +103,12 @@
     background: #f5f5f5;
 }
 
+/* Базовый стиль сообщения */
 .message {
     max-width: 70%;
-    padding: 10px 15px;
+    padding: 8px 15px;
     border-radius: 20px;
     position: relative;
-}
-
-.message-mine {
-    background: #5F9EA0;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 5px;
-}
-
-.message-other {
-    background: white;
-    color: #333;
-    align-self: flex-start;
-    border-bottom-left-radius: 5px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .message-text {
@@ -77,13 +121,81 @@
     opacity: 0.7;
 }
 
+/* Моё сообщение */
+.message-mine {
+    background: #5F9EA0;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.message-mine .message-sender {
+    display: none;
+}
+
+/* Чужое сообщение */
+.message-other {
+    background: white;
+    color: #333;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Системное сообщение */
+.message-system {
+    background: transparent !important;
+    color: #888 !important;
+    font-style: italic;
+    font-size: 13px;
+    text-align: center;
+    max-width: 100% !important;
+    padding: 5px 15px !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.message-system .message-text {
+    color: #888;
+}
+
+.message-system .message-time {
+    display: none;
+}
+
+.message-system .message-sender {
+    display: none;
+}
+
+/* Подпись ника над сообщением */
+.message-sender {
+    font-size: 12px;
+    font-weight: bold;
+    color: #f99039;
+    margin-bottom: 4px;
+    padding-left: 2px;
+}
+
+/* ПОЛЕ ВВОДА */
 .chat-input {
     display: flex;
     padding: 15px;
     background: white;
     border-top: 1px solid #e0e0e0;
     gap: 10px;
-    align-items: center;      /* ← выравниваем элементы по центру */
+    align-items: center;
+    position: relative;
+}
+
+.message-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+#message-input {
+    width: 100%;
+    padding-right: 65px;
+    box-sizing: border-box;
 }
 
 .chat-input textarea {
@@ -112,95 +224,39 @@
     font-size: 14px;
 }
 
+/* Кнопка стикеров */
+#stickers-btn {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+    z-index: 5;
+}
+
+/* Кнопка отправки */
 .chat-input button {
     background: #f99039;
     color: white;
     border: none;
     padding: 0 25px;
-    border-radius: 15px; 
+    border-radius: 15px;
     cursor: pointer;
     font-family: 'Tobi';
     font-size: 16px;
     transition: 0.3s;
-    height: 44px; 
+    height: 44px;
 }
 
 .chat-input button:hover {
     background: #5F9EA0;
 }
 
-.chat-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    cursor: pointer;
-    overflow: hidden;
-    background-color: #5F9EA0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s;
-    flex-shrink: 0;
-    border: 3px solid #4b8082;
-}
-
-.chat-avatar img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.chat-user-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: normal; 
-}
-
-/* ЦВЕТ НИКА В ШАПКЕ ЧАТА */
-.chat-user-info h2 {
-    color: #2c3e50;
-}
-
-/* ЦВЕТ КНОПКИ "НАЗАД" */
-.chat-header .back-link {
-    color: #2c3e50;
-}
-
-
-/* СТИКЕРЫ */
-.chat-input {
-    position: relative;
-}
-
-.message-input-wrapper {
-    position: relative;
-    flex: 1;
-}
-
-#message-input {
-    width: 100%;
-    padding-right: 65px;
-    box-sizing: border-box;
-}
-
-#stickers-btn {
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-
-    background: none;
-    border: none;
-
-    font-size: 28px;
-    cursor: pointer;
-
-    padding: 0;
-    z-index: 5;
-}
-
+/* ПАНЕЛЬ СТИКЕРОВ */
 .stickers-panel {
     position: absolute;
     left: 340px;
@@ -231,6 +287,82 @@
     cursor: pointer;
 }
 
-.hidden {
-    display: none !important;
+/* ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ ШАПКИ ЧАТА */
+
+.chat-header {
+    position: relative;
+}
+
+.chat-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.chat-info-container {
+    flex: 1;
+}
+
+.chat-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Кнопка завершения обеда / оценки */
+.meal-action-btn {
+    background: #f99039;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Tobi';
+    font-size: 14px;
+    transition: 0.3s;
+    flex-shrink: 0;
+}
+
+.meal-action-btn:hover {
+    background: #e08530;
+    transform: scale(1.02);
+}
+
+.meal-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Бейдж "Оценено" */
+.rated-badge {
+    background: #2c3f51;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: 'Tobi';
+    flex-shrink: 0;
+}
+
+/* Бейдж "Обед завершён" под именем */
+.meal-completed-badge {
+    color: #2c3f51;
+    font-size: 13px;
+    margin-top: 4px;
+    display: inline-block;
+}
+
+/* Имена участников в шапке (переопределение) */
+.participants-names {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    margin-top: 5px;
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

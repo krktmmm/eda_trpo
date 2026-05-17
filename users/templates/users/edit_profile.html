@@ -13,20 +13,19 @@
     <!-- ЛЕВАЯ КОЛОНКА: АВАТАР -->
     <div class="edit-profile-left">
         <div class="profile-avatar">
-        <img id="avatar-preview" 
-             src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}?v={{ user.id }}{% elif user.profile.theme == 'dark' %}{% static 'images/default_avatar_dark_theme.jpg' %}{% else %}{% static 'images/default_avatar.jpg' %}{% endif %}"
-             alt="Аватар">
-    </div>
+            <img id="avatar-preview" 
+                 src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}?v={{ user.id }}{% elif user.profile.theme == 'dark' %}{% static 'images/default_avatar_dark_theme.jpg' %}{% else %}{% static 'images/default_avatar.jpg' %}{% endif %}"
+                 alt="Аватар">
+        </div>
         
         <!-- КНОПКИ ДЛЯ АВАТАРКИ -->
-        <div class="avatar-buttons" style="display: flex; gap: 10px; margin-top: 15px; justify-content: center;">
-            <label for="avatar-upload" class="avatar-upload-label" style="background: #5F9EA0; color: white; padding: 8px 20px; border-radius: 30px; cursor: pointer; font-family: 'Tobi'; transition: 0.3s;">📷 Сменить</label>
-            <button type="button" id="delete-avatar" class="avatar-delete-btn" style="background: #e74c3c; color: white; padding: 8px 20px; border-radius: 30px; cursor: pointer; border: none; font-family: 'Tobi'; transition: 0.3s;">🗑️ Удалить</button>
+        <div class="avatar-buttons">
+            <label for="avatar-upload" class="avatar-upload-label">📷 Сменить</label>
+            <button type="button" id="delete-avatar" class="avatar-delete-btn">🗑️ Удалить</button>
         </div>
         
         <div class="edit-profile-info">
             <p><strong>📅 На сайте с:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
-            <p><strong>🆔 ID:</strong> {{ user.id }}</p>
         </div>
     </div>
 
@@ -37,7 +36,7 @@
         <form method="post" class="edit-profile-form" enctype="multipart/form-data" id="profile-form">
             {% csrf_token %}
 
-            <input type="file" name="avatar" id="avatar-upload" accept="image/*" style="display: none;">
+            <input type="file" name="avatar" id="avatar-upload" accept="image/*" class="hidden-file-input">
             
             <div class="form-group">
                 <label>👤 Имя пользователя</label>

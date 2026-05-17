@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+/* ШРИФТ */
 @font-face {
     font-family: 'Tobi';
     src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
@@ -7,18 +8,16 @@
     font-style: normal;
 }
 
+/* ОБНУЛЕНИЕ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* BODY */
 body {
-    background-image: url("/static/images/1.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background: url("/static/images/1.jpg") center/cover no-repeat fixed;
     font-family: 'Tobi';
     min-height: 100vh;
     display: flex;
@@ -26,7 +25,7 @@ body {
     align-items: center;
 }
 
-/* ФОРМЫ */
+/* 4. ФОРМЫ (контейнер) */
 .auth-form {
     background: #fefcfc;
     padding: 40px;
@@ -36,11 +35,9 @@ body {
     text-align: center;
 }
 
-.auth-form.hidden {
-    display: none;
-}
+.auth-form.hidden { display: none; }
 
-/* Заголовок */
+/* ЗАГОЛОВОК ФОРМЫ */
 h2 {
     margin-bottom: 30px;
     color: #5a9a9c;
@@ -49,13 +46,12 @@ h2 {
     font-weight: bold;
 }
 
-/* Блок с полем ввода */
+/* ПОЛЯ ВВОДА */
 .input-box {
     position: relative;
     margin: 20px 0;
 }
 
-/* Подпись над полем */
 .input-box span {
     display: block;
     margin-bottom: 8px;
@@ -64,25 +60,20 @@ h2 {
     width: 100%;
 }
 
-/* Поля ввода */
 .input-box input {
     width: 100%;
     padding: 12px 15px;
     border: none;
+    border-bottom: 2px solid #4b8082;
     outline: none;
     background: none;
     font-size: 18px;
-    border-bottom: 2px solid #4b8082;
     transition: 0.4s;
-    background-color: transparent;
 }
 
-.input-box input:focus {
-    outline: none;
-    border-color: #4b8082;
-}
+.input-box input:focus { border-color: #4b8082; }
 
-/* Кнопка */
+/* КНОПКА ОТПРАВКИ */
 .submit-bin {
     width: 100%;
     padding: 12px;
@@ -102,21 +93,21 @@ h2 {
     box-shadow: 0 4px 15px #0000004d;
 }
 
-/* Текст и ссылки */
-p {
-    margin-top: 20px;
-    color: #787371;
+/* ТЕКСТ И ССЫЛКИ (под формой) */
+p { margin-top: 20px; color: #787371; }
+
+a { color: #787371; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.switch-link {
+    color: #f99039;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-a {
-    color: #787371;
-    text-decoration: none;
-}
+.switch-link:hover { text-decoration: underline; }
 
-a:hover {
-    text-decoration: underline;
-}
-
+/* ОШИБКИ (внутри полей) */
 .error-message {
     color: red;
     font-size: 12px;
@@ -126,15 +117,5 @@ a:hover {
 
 .input-box.error input {
     border-color: red;
-    background-color: #fff0f0;
-}
-
-.switch-link {
-    color: #f99039;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.switch-link:hover {
-    text-decoration: underline;
+    background: #fff0f0;
 }

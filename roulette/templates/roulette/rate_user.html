@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Оценить пользователя | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'rate_user.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    <h1>⭐ Оценить собеседника</h1>
+    
+    <p style="margin-bottom: 20px; color: #666;">
+        Как прошла встреча с <strong>{{ to_user.username }}</strong>?
+    </p>
+
+    <form method="post" class="add-review-form">
+        {% csrf_token %}
+        
+        <div class="rating-input">
+            <label class="rating-label">Ваша оценка:</label>
+            <div class="stars">
+                <input type="radio" name="rating" value="5" id="star5" required>
+                <label for="star5" title="5 звезд"></label>
+                <input type="radio" name="rating" value="4" id="star4">
+                <label for="star4" title="4 звезды"></label>
+                <input type="radio" name="rating" value="3" id="star3">
+                <label for="star3" title="3 звезды"></label>
+                <input type="radio" name="rating" value="2" id="star2">
+                <label for="star2" title="2 звезды"></label>
+                <input type="radio" name="rating" value="1" id="star1">
+                <label for="star1" title="1 звезда"></label>
+            </div>
+        </div>
+        
+        <textarea name="text" placeholder="Комментарий"></textarea>
+        <input type="text" name="photo_url" placeholder="📎 Ссылка на фото (необязательно)">
+        
+        <button type="submit" class="submit-review-btn">✅ Отправить</button>
+        <a href="javascript:history.back()" class="back-btn">← Назад</a>
+    </form>
+</div>
+{% endblock %}

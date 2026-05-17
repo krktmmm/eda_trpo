@@ -16,7 +16,9 @@
         <div class="dialog-card-wrapper" data-dialog-id="{{ d.dialog.id }}">
             <a href="{% url 'dialog_detail' d.dialog.id %}" class="dialog-card">
                 <div class="dialog-avatar">
-                    {% if d.other_user.profile.avatar %}
+                    {% if d.is_group %}
+                        <img src="{% static 'images/default_avatar.jpg' %}" alt="Группа">
+                    {% elif d.other_user and d.other_user.profile.avatar %}
                         <img src="{{ d.other_user.profile.avatar.url }}?v={{ d.other_user.id }}" 
                              alt="{{ d.other_user.username }}"
                              onerror="this.onerror=null; this.src=document.body.classList.contains('dark-theme') ? '/static/images/default_avatar_dark_theme.jpg' : '/static/images/default_avatar.jpg';">
@@ -25,11 +27,18 @@
                     {% endif %}
                 </div>
                 <div class="dialog-info">
-                    <div class="dialog-name">{{ d.other_user.username }}</div>
+                    <div class="dialog-name">
+                        {{ d.chat_name }}
+                        {% if d.dialog.is_meal_completed %}
+                            <span style="color: #2ecc71; margin-left: 8px;" title="Обед завершён">🍽️</span>
+                        {% endif %}
+                    </div>
                     <div class="dialog-last-message">
                         {% if d.last_message %}
                             {% if '[sticker]' in d.last_message.text %}
-                                {{ d.last_message.sender.username }}: Emoji
+                                {{ d.last_message.sender.username }}: 🎭 Стикер
+                            {% elif d.last_message.text|slice:":8" == '[system]' %}
+                                {{ d.last_message.text|slice:"8:" }}
                             {% else %}
                                 {{ d.last_message.sender.username }}: {{ d.last_message.text|truncatechars:50 }}
                             {% endif %}
@@ -59,18 +68,15 @@
 function deleteDialog(btn) {
     const wrapper = btn.closest('.dialog-card-wrapper');
     const dialogId = wrapper.dataset.dialogId;
-    
     if (!confirm('Удалить этот диалог? Все сообщения будут потеряны.')) {
         return;
     }
-    
     btn.disabled = true;
     btn.innerHTML = '<span>⏳ Удаление...</span>';
-    
     fetch(`/roulette/api/dialog/delete/${dialogId}/`, {
         method: 'POST',
         headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'X-CSRFToken': window.CSRF_TOKEN,
         },
     })
     .then(response => response.json())

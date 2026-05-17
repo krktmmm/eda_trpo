@@ -1,18 +1,24 @@
+// Удаление из избранного
 document.querySelectorAll('.remove-favorite').forEach(btn => {
     btn.addEventListener('click', function() {
         const placeId = this.dataset.placeId;
-        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        
+
         fetch(`/favorites/toggle/${placeId}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrf
+                'X-CSRFToken': window.CSRF_TOKEN
             },
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error('Ошибка');
+            return response.json();
+        })
         .then(() => {
             location.reload();
+        })
+        .catch(() => {
+            alert('Ошибка при удалении из избранного');
         });
     });
 });
