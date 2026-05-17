@@ -37,6 +37,29 @@ function filterPlaces() {
             card.style.display = 'block';
         }
     });
+    const cards = Array.from(placeCards);
+
+    cards.sort((a, b) => {
+        let timeA = 999;
+        let timeB = 999;
+
+        if (selectedBuilding === '1') {
+            timeA = parseInt(a.dataset.time1 || 999);
+            timeB = parseInt(b.dataset.time1 || 999);
+        } else if (selectedBuilding === '3') {
+            timeA = parseInt(a.dataset.time3 || 999);
+            timeB = parseInt(b.dataset.time3 || 999);
+        } else if (selectedBuilding === '5') {
+            timeA = parseInt(a.dataset.time5 || 999);
+            timeB = parseInt(b.dataset.time5 || 999);
+        }
+
+        return timeA - timeB;
+    });
+
+    cards.forEach(card => {
+        placesContainer.appendChild(card);
+    });
 }
 
 // Выбор корпуса
