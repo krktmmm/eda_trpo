@@ -232,39 +232,79 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const starsContainer = document.querySelector('.stars');
-    if (!starsContainer) return;
-
-    const labels = starsContainer.querySelectorAll('label');
-    const inputs = starsContainer.querySelectorAll('input[type="radio"]');
     const ratingDisplay = document.getElementById('rating-value');
+    if (!starsContainer || !ratingDisplay) return;
 
-    function setRating(val) {
-        ratingDisplay.textContent = val.toFixed(2);
+    // Создаём скрытое поле для точного значения
+    let hiddenInput = document.querySelector('input[name="exact_rating"]');
+    if (!hiddenInput) {
+        hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'exact_rating';
+        starsContainer.closest('form').appendChild(hiddenInput);
     }
 
-    // Из-за flex-direction: row-reverse порядок в DOM обратный: 5, 4, 3, 2, 1
-    labels.forEach((label, index) => {
-        const value = 5 - index; // Преобразуем индекс DOM в рейтинг
+    let lockedRating = 0;
+
+    function renderRating(val) {
+        const safeVal = Math.max(0, Math.min(5, val));
+        ratingDisplay.textContent = safeVal.toFixed(2);
+        hiddenInput.value = safeVal.toFixed(2);
+    }
+
+    function calculateRating(clientX) {
+        // Получаем все звёзды (labels)
+        const labels = Array.from(starsContainer.querySelectorAll('label'));
+        if (labels.length === 0) return 0;
+
+        // Из-за row-reverse порядок обратный: [5, 4, 3, 2, 1]
+        // Первая звезда визуально (слева) — это labels[4] (значение 1)
+        // Последняя звезда визуально (справа) — это labels[0] (значение 5)
+        const firstStar = labels[labels.length - 1]; // Визуально первая (слева)
+        const lastStar = labels[0]; // Визуально последняя (справа)
+
+        const firstRect = firstStar.getBoundingClientRect();
+        const lastRect = lastStar.getBoundingClientRect();
+
+        // Левая граница первой звезды и правая граница последней
+        const leftBound = firstRect.left;
+        const rightBound = lastRect.right;
+        const totalWidth = rightBound - leftBound;
+
+        // Позиция курсора
+        let position = clientX - leftBound;
         
-        label.addEventListener('mouseover', () => setRating(value));
+        // Нормализуем от 0 до 1
+        let percent = position / totalWidth;
+        percent = Math.max(0, Math.min(1, percent));
+
+        // Преобразуем в рейтинг 0-5
+        return percent * 5;
+    }
+
+    // Движение мыши
+    starsContainer.addEventListener('mousemove', function(e) {
+        const rating = calculateRating(e.clientX);
+        renderRating(rating);
     });
 
-    // При уходе курсора возвращаем к выбранному значению или 0
-    starsContainer.addEventListener('mouseout', () => {
-        const checked = starsContainer.querySelector('input:checked');
-        if (checked) {
-            setRating(parseInt(checked.value));
-        } else {
-            setRating(0);
-        }
+    // Уход курсора
+    starsContainer.addEventListener('mouseleave', function() {
+        renderRating(lockedRating);
     });
 
-    // Фиксация при клике
-    inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            setRating(parseInt(input.value));
-        });
+    // Клик
+    starsContainer.addEventListener('click', function(e) {
+        lockedRating = calculateRating(e.clientX);
+        renderRating(lockedRating);
     });
+
+    // Инициализация
+    const checkedRadio = document.querySelector('.stars input[type="radio"]:checked');
+    if (checkedRadio) {
+        lockedRating = parseFloat(checkedRadio.value);
+        renderRating(lockedRating);
+    }
 });
 </script>
 {% endblock %}
