@@ -31,8 +31,14 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '172.31.147.236',
-    ]
+    'sytguti.ru',
+    'www.sytguti.ru',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://sytguti.ru',
+    'http://sytguti.ru',
+]
 
 # Application definition
 
@@ -43,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sslserver',
     'places',
     'users',
     'roulette',
