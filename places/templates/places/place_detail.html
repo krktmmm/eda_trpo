@@ -100,7 +100,7 @@
                 <div class="rating-input">
                     <label class="rating-label">Ваша оценка: <span class="required-star">*</span></label>
                     <div class="stars">
-                        <input type="radio" name="rating" value="5" id="star5" required>
+                        <input type="radio" name="rating" value="5" id="star5">
                         <label for="star5" title="5 звезд"></label>
                         <input type="radio" name="rating" value="4" id="star4">
                         <label for="star4" title="4 звезды"></label>
@@ -141,7 +141,7 @@
 <script src="{% static 'js/place_detail.js' %}"></script>
 <script src="{% static 'js/reviews.js' %}"></script>
 <script>
-    // Только ПРЕДПРОСМОТР ФОТО ПРИ ДОБАВЛЕНИИ
+    // ПРЕДПРОСМОТР ФОТО ПРИ ДОБАВЛЕНИИ НОВОГО ОТЗЫВА
     const imagesInput = document.getElementById('review-images-input');
     const previewContainer = document.getElementById('image-preview-container');
     
@@ -181,30 +181,76 @@
         }
     }
     
+    // Удаление из предпросмотра
+    previewContainer.addEventListener('click', function(e) {
+        const removeBtn = e.target.closest('.remove-preview');
+        if (removeBtn) {
+            e.stopPropagation();
+            const index = parseInt(removeBtn.dataset.index);
+            removeAddPreviewItem(index);
+        }
+    });
+    
     if (imagesInput) {
         imagesInput.addEventListener('change', function(e) {
             const newFiles = Array.from(e.target.files);
-            newFiles.forEach(file => {
-                if (!selectedFiles.some(f => f.name === file.name)) {
-                    selectedFiles.push(file);
+            const remainingSlots = 5 - selectedFiles.length;
+            
+            // Проверка на превышение лимита
+            if (newFiles.length > remainingSlots) {
+                alert(`❌ Можно загрузить не более ${remainingSlots} фотографий (всего максимум 5)`);
+                imagesInput.value = '';
+                return;
+            }
+            
+            // Проверка на дубликаты
+            const duplicates = [];
+            const validFiles = [];
+            
+            for (const file of newFiles) {
+                // Проверка на дубликат среди уже выбранных
+                if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    duplicates.push(file.name);
+                    continue;
                 }
-            });
+                validFiles.push(file);
+            }
+            
+            if (duplicates.length > 0) {
+                alert(`⚠️ Следующие фото уже добавлены и не будут добавлены повторно:\n${duplicates.join('\n')}`);
+            }
+            
+            // Добавляем валидные файлы
+            selectedFiles.push(...validFiles);
+            
+            // Ограничиваем до 5
             if (selectedFiles.length > 5) {
                 selectedFiles = selectedFiles.slice(0, 5);
-                alert('Можно загрузить не более 5 фотографий');
+                alert('⚠️ Можно загрузить не более 5 фотографий');
             }
+            
+            // Обновляем input
             const dataTransfer = new DataTransfer();
             selectedFiles.forEach(file => dataTransfer.items.add(file));
             imagesInput.files = dataTransfer.files;
             updateAddPreview();
         });
-        
-        previewContainer.addEventListener('click', function(e) {
-            const removeBtn = e.target.closest('.remove-preview');
-            if (removeBtn) {
-                e.stopPropagation();
-                const index = parseInt(removeBtn.dataset.index);
-                removeAddPreviewItem(index);
+    }
+    
+    // ========== ПРОСТАЯ ПРОВЕРКА ЗВЁЗД ПЕРЕД ОТПРАВКОЙ ==========
+    const addReviewForm = document.getElementById('add-review-form');
+    
+    if (addReviewForm) {
+        addReviewForm.addEventListener('submit', function(e) {
+            // Проверяем, выбран ли рейтинг
+            const selectedRating = document.querySelector('input[name="rating"]:checked');
+            
+            console.log('Выбранная оценка:', selectedRating); // Для отладки в консоли
+            
+            if (!selectedRating) {
+                e.preventDefault();
+                alert('⭐ Пожалуйста, поставьте оценку (от 1 до 5 звёзд) перед публикацией отзыва!');
+                return false;
             }
         });
     }

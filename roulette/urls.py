@@ -29,4 +29,7 @@ urlpatterns = [
     path('api/group-rate/save/<int:dialog_id>/', views.save_group_rating, name='save_group_rating'),
     path('api/group-rate/skip/<int:dialog_id>/', views.skip_group_rating, name='skip_group_rating'),
     path('api/group-rate/progress/<int:dialog_id>/', views.get_group_rating_progress, name='get_group_rating_progress'),
+    path('api/notifications/', views.get_notifications, name='get_notifications'),
+    path('api/notifications/mark-read/<int:notif_id>/', views.mark_notification_read, name='mark_notification_read'),
+    path('api/notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
 ]

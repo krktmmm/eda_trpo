@@ -22,6 +22,41 @@ function markAsRead(id) {
     }
 }
 
+// Получение уведомлений с сервера (каждые 5 секунд)
+function fetchNotifications() {
+    if (document.body.getAttribute('data-user-authenticated') !== 'true') return;
+    
+    fetch('/roulette/api/notifications/')
+        .then(r => r.json())
+        .then(data => {
+            if (data.notifications.length > 0) {
+                // Добавляем новые уведомления
+                data.notifications.forEach(notif => {
+                    // Проверяем, нет ли уже такого (по id)
+                    if (!notifications.find(n => n.id === notif.id)) {
+                        addNotification(
+                            notif.text,
+                            () => { if (notif.link) window.location.href = notif.link; }
+                        );
+                    }
+                });
+                
+                // Обновляем бейдж
+                const notifBadge = document.getElementById('notifBadge');
+                if (data.unread_count > 0) {
+                    notifBadge.classList.remove('hidden');
+                    notifBadge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
+                } else {
+                    notifBadge.classList.add('hidden');
+                }
+            }
+        })
+        .catch(err => console.error('Ошибка получения уведомлений:', err));
+}
+
+// Запускаем polling каждые 5 секунд
+setInterval(fetchNotifications, 5000);
+
 // Открытие/закрытие меню профиля
 if (profileBtn) {
     profileBtn.addEventListener('click', (event) => {
@@ -92,6 +127,13 @@ function renderNotifications() {
     if (!notificationsList || !notifBadge) return;
 
     const unreadCount = notifications.filter(n => !n.read).length;
+    
+    const typeIcons = {
+        'message': '💬',
+        'match': '🎲',
+        'group_join': '👥',
+        'rating': '⭐'
+    };
 
     // Обновляем кружок
     if (unreadCount > 0) {

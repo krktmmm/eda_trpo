@@ -599,6 +599,11 @@
     display: none;
 }
 
+.required-star {
+    color: #e74c3c;
+    font-weight: normal;
+}
+
 /* ЗВЁЗДНЫЙ РЕЙТИНГ */
 .rating-input {
     margin-bottom: 20px;

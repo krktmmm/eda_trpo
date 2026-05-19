@@ -93,10 +93,16 @@
 
 <script src="{% static 'js/gallery.js' %}"></script>
 <script>
-    // Получаем имена существующих фото
-    const existingPhotoNames = [
+    // Получаем данные существующих фото
+    const existingPhotoIds = [
         {% for img in review.images.all %}
-            "{{ img.image.name|cut:'review_photos/' }}",
+            "{{ img.id }}",
+        {% endfor %}
+    ];
+    
+    const existingPhotoUrls = [
+        {% for img in review.images.all %}
+            "{{ img.image.url }}",
         {% endfor %}
     ];
     
@@ -141,17 +147,53 @@
         });
     });
     
-    // ДОБАВЛЕНИЕ НОВЫХ ФОТО
+    // ДОБАВЛЕНИЕ НОВЫХ ФОТО С ЗАЩИТОЙ ОТ ДУБЛИКАТОВ
     let uniqueFilesToAdd = [];
     const imagesInput = document.getElementById('review-images-input');
     const previewContainer = document.getElementById('image-preview-container');
     const duplicateWarning = document.getElementById('duplicate-warning');
+    
+    // Функция для получения хеша файла (сравнение содержимого)
+    async function getFileHash(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                // Берём первые 200 символов base64 для сравнения
+                const hash = e.target.result.slice(0, 200);
+                resolve(hash);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // Функция для проверки, есть ли уже такое фото (по URL из БД)
+    async function isDuplicateWithExisting(file) {
+        const fileHash = await getFileHash(file);
+        for (const existingUrl of existingPhotoUrls) {
+            try {
+                const response = await fetch(existingUrl);
+                const blob = await response.blob();
+                const existingHash = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result.slice(0, 200));
+                    reader.readAsDataURL(blob);
+                });
+                if (fileHash === existingHash) {
+                    return true;
+                }
+            } catch(e) {
+                console.error('Ошибка сравнения:', e);
+            }
+        }
+        return false;
+    }
     
     function updatePreview() {
         previewContainer.innerHTML = '';
         if (uniqueFilesToAdd.length === 0) return;
         
         const filesToShow = uniqueFilesToAdd.slice(0, 5);
+        
         filesToShow.forEach((file, index) => {
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
@@ -185,21 +227,64 @@
     });
     
     if (imagesInput) {
-        imagesInput.addEventListener('change', function(e) {
+        imagesInput.addEventListener('change', async function(e) {
             const newFiles = Array.from(e.target.files);
-            const duplicates = [];
+            const currentPhotoCount = existingContainer ? existingContainer.children.length : 0;
+            const maxNewPhotos = 5 - currentPhotoCount;
             
-            newFiles.forEach(file => {
-                if (existingPhotoNames.includes(file.name)) {
-                    duplicates.push(file.name);
-                } else if (!uniqueFilesToAdd.some(f => f.name === file.name)) {
+            if (maxNewPhotos <= 0) {
+                duplicateWarning.classList.remove('hidden');
+                duplicateWarning.innerHTML = `⚠️ Нельзя добавить больше 5 фотографий. Удалите некоторые фото перед добавлением новых.`;
+                imagesInput.value = '';
+                return;
+            }
+            
+            // Проверяем каждый файл
+            const duplicates = [];
+            const validFiles = [];
+            
+            for (const file of newFiles) {
+                // Проверка лимита
+                if (validFiles.length >= maxNewPhotos) {
+                    duplicateWarning.classList.remove('hidden');
+                    duplicateWarning.innerHTML = `⚠️ Можно добавить не более ${maxNewPhotos} фото. Остальные не добавлены.`;
+                    break;
+                }
+                
+                // Проверка на дубликат среди уже добавленных в этой сессии
+                const isDuplicateInSession = uniqueFilesToAdd.some(f => 
+                    f.name === file.name && f.size === file.size
+                );
+                
+                if (isDuplicateInSession) {
+                    duplicates.push(`${file.name} (уже добавлено)`);
+                    continue;
+                }
+                
+                // Проверка на дубликат с существующими фото в БД (сравнение содержимого)
+                const isDuplicateWithExistingDb = await isDuplicateWithExisting(file);
+                if (isDuplicateWithExistingDb) {
+                    duplicates.push(`${file.name} (уже есть в отзыве)`);
+                    continue;
+                }
+                
+                validFiles.push(file);
+            }
+            
+            // Добавляем валидные файлы
+            for (const file of validFiles) {
+                if (uniqueFilesToAdd.length < maxNewPhotos) {
                     uniqueFilesToAdd.push(file);
                 }
-            });
+            }
             
+            // Показываем предупреждения о дубликатах
             if (duplicates.length > 0) {
                 duplicateWarning.classList.remove('hidden');
-                duplicateWarning.innerHTML = `⚠️ Следующие фото уже есть в отзыве и не будут добавлены:<br> ${duplicates.join(', ')}`;
+                duplicateWarning.innerHTML = `⚠️ Следующие фото не будут добавлены:<br> ${duplicates.join('<br> ')}`;
+            } else if (validFiles.length === 0 && newFiles.length > 0) {
+                duplicateWarning.classList.remove('hidden');
+                duplicateWarning.innerHTML = `⚠️ Все выбранные фото уже есть в отзыве.`;
             } else {
                 duplicateWarning.classList.add('hidden');
             }
@@ -220,6 +305,17 @@
             input.name = 'delete_images';
             input.value = deleteIds;
             this.appendChild(input);
+        }
+        
+        // Проверка на превышение лимита
+        const currentCount = existingContainer ? existingContainer.children.length : 0;
+        const newCount = uniqueFilesToAdd.length;
+        const finalCount = currentCount - deletePhotos.length + newCount;
+        
+        if (finalCount > 5) {
+            e.preventDefault();
+            alert('❌ Нельзя сохранить больше 5 фотографий! Удалите лишние фото перед сохранением.');
+            return false;
         }
     });
 </script>

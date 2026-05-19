@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.utils import timezone
+from .models import Notification
 from django.db import models
 import random
 import json
@@ -176,6 +177,14 @@ def accept_solo_match(request):
     
     User = get_user_model()
     match_user = get_object_or_404(User, id=match_user_id)
+
+    create_notification(
+        user=match_user,
+        notif_type='match',
+        title='Собеседник найден!',
+        text=f'{request.user.username} согласился(лась) пойти с вами на обед!',
+        link=f'/roulette/messages/{dialog.id}/'
+    )
     
     SoloRequest.objects.filter(user=match_user, is_active=True).update(is_active=False)
     SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
@@ -408,6 +417,15 @@ def join_group(request, group_id):
         return JsonResponse({'error': 'Группа уже заполнена'}, status=400)
     
     request.session['active_meeting'] = True
+
+    # Уведомить создателя группы
+    create_notification(
+        user=group.user,
+        notif_type='group_join',
+        title='Новый участник!',
+        text=f'{request.user.username} присоединился к вашей компании',
+        link=f'/roulette/messages/{group.dialog.id}/'
+    )
     
     if not group.dialog:
         dialog = Dialog.objects.create()
@@ -489,6 +507,15 @@ def rate_user(request, user_id):
             to_user.profile.rating = total / count if count > 0 else 0
             to_user.profile.rating_count = count
             to_user.profile.save()
+
+            # Уведомляем пользователя об оценке
+            create_notification(
+                user=to_user,
+                notif_type='rating',
+                title='Вас оценили!',
+                text=f'{request.user.username} поставил(а) вам {rating} ⭐',
+                link=f'/profile/'
+            )
             
             # Завершаем встречу — разрешаем новый поиск
             request.session.pop('active_meeting', None)
@@ -579,6 +606,16 @@ def send_message(request, dialog_id):
         
         if request.user not in dialog.participants.all():
             return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+        
+        # Уведомление всем участникам диалога (кроме отправителя)
+        for participant in dialog.participants.exclude(id=request.user.id):
+            create_notification(
+                user=participant,
+                notif_type='message',
+                title=f'Новое сообщение от {request.user.username}',
+                text=text[:100],
+                link=f'/roulette/messages/{dialog_id}/'
+            )
         
         message = Message.objects.create(
             dialog=dialog,
@@ -960,6 +997,15 @@ def save_group_rating(request, dialog_id):
     to_user.profile.rating = total / count if count > 0 else 0
     to_user.profile.rating_count = count
     to_user.profile.save()
+
+    # Уведомление пользователя об оценке в группе
+    create_notification(
+        user=to_user,
+        notif_type='rating',
+        title='Вас оценили в группе!',
+        text=f'{request.user.username} поставил(а) вам {rating} ⭐',
+        link=f'/profile/'
+    )
     
     # Обновляем прогресс
     progress = GroupRatingProgress.objects.get(dialog=dialog, user=request.user)
@@ -1053,3 +1099,41 @@ def get_group_rating_progress(request, dialog_id):
         'total_remaining': len(remaining),
         'rated_count': rated_ids.count()
     })
+
+@login_required
+def get_notifications(request):
+    """Получить уведомления пользователя"""
+    notifications = Notification.objects.filter(user=request.user, is_read=False)[:20]
+    data = [{
+        'id': n.id,
+        'type': n.type,
+        'title': n.title,
+        'text': n.text,
+        'link': n.link,
+        'created_at': n.created_at.strftime('%H:%M %d.%m.%Y'),
+    } for n in notifications]
+    return JsonResponse({'notifications': data, 'unread_count': notifications.count()})
+
+@login_required
+def mark_notification_read(request, notif_id):
+    """Отметить уведомление как прочитанное"""
+    notification = get_object_or_404(Notification, id=notif_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return JsonResponse({'status': 'ok'})
+
+@login_required
+def mark_all_notifications_read(request):
+    """Отметить все уведомления как прочитанные"""
+    Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+    return JsonResponse({'status': 'ok'})
+
+def create_notification(user, notif_type, title, text, link=''):
+    """Вспомогательная функция для создания уведомления"""
+    Notification.objects.create(
+        user=user,
+        type=notif_type,
+        title=title,
+        text=text,
+        link=link
+    )
