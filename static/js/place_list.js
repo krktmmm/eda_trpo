@@ -148,7 +148,6 @@ document.querySelectorAll('.favorite-btn').forEach(btn => {
         fetch(`/favorites/toggle/${placeId}/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRFToken': window.CSRF_TOKEN
             },
         })

@@ -137,21 +137,11 @@
     {% endif %}
 </div>
 
-<!-- Модальное окно галереи -->
-<div id="gallery-modal" class="gallery-modal">
-    <div class="gallery-modal-content">
-        <div class="gallery-close">&times;</div>
-        <div class="gallery-prev">&#10094;</div>
-        <div class="gallery-next">&#10095;</div>
-        <img id="gallery-image" src="">
-        <div class="gallery-counter"></div>
-    </div>
-</div>
-
+<script src="{% static 'js/gallery.js' %}"></script>
 <script src="{% static 'js/place_detail.js' %}"></script>
 <script src="{% static 'js/reviews.js' %}"></script>
 <script>
-    // Предпросмотр фото перед отправкой
+    // Только ПРЕДПРОСМОТР ФОТО ПРИ ДОБАВЛЕНИИ
     const imagesInput = document.getElementById('review-images-input');
     const previewContainer = document.getElementById('image-preview-container');
     
@@ -159,13 +149,9 @@
     
     function updateAddPreview() {
         previewContainer.innerHTML = '';
-        
-        if (selectedFiles.length === 0) {
-            return;
-        }
+        if (selectedFiles.length === 0) return;
         
         const filesToShow = selectedFiles.slice(0, 5);
-        
         filesToShow.forEach((file, index) => {
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
@@ -188,11 +174,9 @@
     function removeAddPreviewItem(index) {
         if (index >= 0 && index < selectedFiles.length) {
             selectedFiles.splice(index, 1);
-            
             const dataTransfer = new DataTransfer();
             selectedFiles.forEach(file => dataTransfer.items.add(file));
             imagesInput.files = dataTransfer.files;
-            
             updateAddPreview();
         }
     }
@@ -200,22 +184,18 @@
     if (imagesInput) {
         imagesInput.addEventListener('change', function(e) {
             const newFiles = Array.from(e.target.files);
-            
             newFiles.forEach(file => {
                 if (!selectedFiles.some(f => f.name === file.name)) {
                     selectedFiles.push(file);
                 }
             });
-            
             if (selectedFiles.length > 5) {
                 selectedFiles = selectedFiles.slice(0, 5);
                 alert('Можно загрузить не более 5 фотографий');
             }
-            
             const dataTransfer = new DataTransfer();
             selectedFiles.forEach(file => dataTransfer.items.add(file));
             imagesInput.files = dataTransfer.files;
-            
             updateAddPreview();
         });
         
@@ -228,71 +208,6 @@
             }
         });
     }
-    
-    // Галерея
-    let currentGalleryImages = [];
-    let currentGalleryIndex = 0;
-    const modal = document.getElementById('gallery-modal');
-    const modalImg = document.getElementById('gallery-image');
-    const closeBtn = document.querySelector('.gallery-close');
-    const prevBtn = document.querySelector('.gallery-prev');
-    const nextBtn = document.querySelector('.gallery-next');
-    const counter = document.querySelector('.gallery-counter');
-    
-    function openGallery(images, index) {
-        currentGalleryImages = images;
-        currentGalleryIndex = index;
-        updateGalleryImage();
-        modal.style.display = 'flex';
-    }
-    
-    function openGalleryFromData(element) {
-        const images = JSON.parse(element.getAttribute('data-gallery'));
-        const index = parseInt(element.getAttribute('data-index'));
-        openGallery(images, index);
-    }
-    
-    function updateGalleryImage() {
-        if (currentGalleryImages.length > 0) {
-            modalImg.src = currentGalleryImages[currentGalleryIndex].url;
-            counter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
-        }
-    }
-    
-    function prevImage() {
-        if (currentGalleryImages.length > 0) {
-            currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
-            updateGalleryImage();
-        }
-    }
-    
-    function nextImage() {
-        if (currentGalleryImages.length > 0) {
-            currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
-            updateGalleryImage();
-        }
-    }
-    
-    if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
-    if (prevBtn) prevBtn.onclick = prevImage;
-    if (nextBtn) nextBtn.onclick = nextImage;
-    
-    modal.onclick = function(e) {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    };
-    
-    document.addEventListener('keydown', function(e) {
-        if (modal.style.display === 'flex') {
-            if (e.key === 'ArrowLeft') prevImage();
-            if (e.key === 'ArrowRight') nextImage();
-            if (e.key === 'Escape') modal.style.display = 'none';
-        }
-    });
-    
-    window.openGallery = openGallery;
-    window.openGalleryFromData = openGalleryFromData;
 </script>
 
 {% endblock %}

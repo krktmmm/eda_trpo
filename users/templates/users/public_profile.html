@@ -29,11 +29,11 @@
                 ({{ target_user.profile.rating_count }} оценок)
             </p>
             <p>
-                <strong>Статус:</strong>
+                <strong>📱 Статус:</strong>
                 {% if target_user.profile.is_online %}
                     <span class="online-text">онлайн</span>
                 {% else %}
-                    <span class="offline-text">был(а) {{ user.profile.get_last_activity_display }}</span>
+                    <span class="offline-text">был(а) {{ target_user.profile.get_last_activity_display }}</span>
                 {% endif %}
             </p>
             <p><strong>📅 На сайте с:</strong> {{ target_user.date_joined|date:"d.m.Y" }}</p>

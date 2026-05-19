@@ -83,7 +83,6 @@ class UserRating(models.Model):
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ratings_received', verbose_name="Кого оценили")
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], verbose_name="Оценка (1-5)")
     text = models.TextField(blank=True, verbose_name="Комментарий")
-    photo_url = models.URLField(blank=True, verbose_name="Ссылка на фото")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -158,7 +157,6 @@ class GroupUserRating(models.Model):
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='group_ratings_received')
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], verbose_name="Оценка (1-5)")
     text = models.TextField(blank=True, verbose_name="Комментарий")
-    photo_url = models.URLField(blank=True, verbose_name="Ссылка на фото")
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:

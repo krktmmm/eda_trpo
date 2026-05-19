@@ -91,35 +91,28 @@
     </form>
 </div>
 
-<!-- Модальное окно галереи -->
-<div id="gallery-modal" class="gallery-modal">
-    <div class="gallery-modal-content">
-        <div class="gallery-close">&times;</div>
-        <div class="gallery-prev">&#10094;</div>
-        <div class="gallery-next">&#10095;</div>
-        <img id="gallery-image" src="">
-        <div class="gallery-counter"></div>
-    </div>
-</div>
-
+<script src="{% static 'js/gallery.js' %}"></script>
 <script>
-    // Получаем имена существующих фото (без пути)
+    // Получаем имена существующих фото
     const existingPhotoNames = [
         {% for img in review.images.all %}
             "{{ img.image.name|cut:'review_photos/' }}",
         {% endfor %}
     ];
     
-    // ========== УДАЛЕНИЕ СУЩЕСТВУЮЩИХ ФОТО (сразу из DOM) ==========
+    // УДАЛЕНИЕ СУЩЕСТВУЮЩИХ ФОТО
     let deletePhotos = [];
     const existingContainer = document.getElementById('existing-images-container');
+    const deleteImagesInput = document.getElementById('delete_images_input');
     
-    function removeExistingPhoto(btn, imgId, container) {
+    function removeExistingPhoto(btn, imgId) {
         const item = btn.closest('.image-edit-item');
         if (item) {
             item.remove();
             deletePhotos.push(imgId);
-            document.getElementById('delete_images_input').value = deletePhotos.join(',');
+            if (deleteImagesInput) {
+                deleteImagesInput.value = deletePhotos.join(',');
+            }
             
             // Обновляем data-gallery для оставшихся фото
             const remainingItems = existingContainer.querySelectorAll('.image-edit-item');
@@ -127,9 +120,7 @@
                 const remainingUrls = [];
                 remainingItems.forEach(item => {
                     const img = item.querySelector('img');
-                    if (img) {
-                        remainingUrls.push({url: img.src});
-                    }
+                    if (img) remainingUrls.push({url: img.src});
                 });
                 remainingItems.forEach((item, newIndex) => {
                     const img = item.querySelector('img');
@@ -146,26 +137,21 @@
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
             const imgId = parseInt(this.dataset.imgId);
-            removeExistingPhoto(this, imgId, existingContainer);
+            removeExistingPhoto(this, imgId);
         });
     });
     
-    // ========== ДОБАВЛЕНИЕ НОВЫХ ФОТО ==========
+    // ДОБАВЛЕНИЕ НОВЫХ ФОТО
     let uniqueFilesToAdd = [];
-    
     const imagesInput = document.getElementById('review-images-input');
     const previewContainer = document.getElementById('image-preview-container');
     const duplicateWarning = document.getElementById('duplicate-warning');
     
     function updatePreview() {
         previewContainer.innerHTML = '';
-        
-        if (uniqueFilesToAdd.length === 0) {
-            return;
-        }
+        if (uniqueFilesToAdd.length === 0) return;
         
         const filesToShow = uniqueFilesToAdd.slice(0, 5);
-        
         filesToShow.forEach((file, index) => {
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
@@ -185,18 +171,15 @@
         });
     }
     
-    // Делегирование для удаления новых фото из предпросмотра
     previewContainer.addEventListener('click', function(e) {
         const removeBtn = e.target.closest('.remove-preview');
         if (removeBtn) {
             e.stopPropagation();
             const index = parseInt(removeBtn.dataset.index);
             uniqueFilesToAdd.splice(index, 1);
-            
             const dataTransfer = new DataTransfer();
             uniqueFilesToAdd.forEach(file => dataTransfer.items.add(file));
             imagesInput.files = dataTransfer.files;
-            
             updatePreview();
         }
     });
@@ -224,14 +207,13 @@
             const dataTransfer = new DataTransfer();
             uniqueFilesToAdd.forEach(file => dataTransfer.items.add(file));
             imagesInput.files = dataTransfer.files;
-            
             updatePreview();
         });
     }
     
-    // ========== ОТПРАВКА ФОРМЫ ==========
+    // ОТПРАВКА ФОРМЫ
     document.getElementById('edit-review-form')?.addEventListener('submit', function(e) {
-        const deleteIds = document.getElementById('delete_images_input').value;
+        const deleteIds = deleteImagesInput?.value;
         if (deleteIds) {
             const input = document.createElement('input');
             input.type = 'hidden';
@@ -240,71 +222,6 @@
             this.appendChild(input);
         }
     });
-    
-    // ========== ГАЛЕРЕЯ ==========
-    let currentGalleryImages = [];
-    let currentGalleryIndex = 0;
-    const modal = document.getElementById('gallery-modal');
-    const modalImg = document.getElementById('gallery-image');
-    const closeBtn = document.querySelector('.gallery-close');
-    const prevBtn = document.querySelector('.gallery-prev');
-    const nextBtn = document.querySelector('.gallery-next');
-    const counter = document.querySelector('.gallery-counter');
-    
-    function openGallery(images, index) {
-        currentGalleryImages = images;
-        currentGalleryIndex = index;
-        updateGalleryImage();
-        modal.style.display = 'flex';
-    }
-    
-    function openGalleryFromData(element) {
-        const images = JSON.parse(element.getAttribute('data-gallery'));
-        const index = parseInt(element.getAttribute('data-index'));
-        openGallery(images, index);
-    }
-    
-    function updateGalleryImage() {
-        if (currentGalleryImages.length > 0) {
-            modalImg.src = currentGalleryImages[currentGalleryIndex].url;
-            counter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
-        }
-    }
-    
-    function prevImage() {
-        if (currentGalleryImages.length > 0) {
-            currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
-            updateGalleryImage();
-        }
-    }
-    
-    function nextImage() {
-        if (currentGalleryImages.length > 0) {
-            currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
-            updateGalleryImage();
-        }
-    }
-    
-    if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
-    if (prevBtn) prevBtn.onclick = prevImage;
-    if (nextBtn) nextBtn.onclick = nextImage;
-    
-    modal.onclick = function(e) {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    };
-    
-    document.addEventListener('keydown', function(e) {
-        if (modal.style.display === 'flex') {
-            if (e.key === 'ArrowLeft') prevImage();
-            if (e.key === 'ArrowRight') nextImage();
-            if (e.key === 'Escape') modal.style.display = 'none';
-        }
-    });
-    
-    window.openGallery = openGallery;
-    window.openGalleryFromData = openGalleryFromData;
 </script>
 
 {% endblock %}
