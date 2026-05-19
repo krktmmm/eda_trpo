@@ -17,14 +17,26 @@ source venv/Scripts/activate
 source venv/bin/activate
 ```
 
-### Запустить сервер:
+### Запустить сервер и открыть в браузере:
+**Для локального использования**
 ```bash
+Для работы добавьте в файл C:\Windows\System32\drivers\etc\hosts
+строку: 127.0.0.1 sytguti.ru
+-------------------------------------
 python manage.py runsslserver 443
+-------------------------------------
+• Сайт: <https://sytguti.ru>
+• Админка: <https://sytguti.ru/admin>
 ```
-
-### Открыть в браузере:
-* Сайт: <https://sytguti.ru>
-* Админка: <https://sytguti.ru/admin>
+**Для доступа с других устройств (в одной Wi-Fi сети)**
+```bash
+Узнайте IP с помощью ipconfig
+------------------------------------------
+python manage.py runsslserver 0.0.0.0:8000
+------------------------------------------
+на другом устройстве:
+https://192.168.1.100:8000 (где 192.168.1.100 - ваш IP)
+```
 
 ## Ссылки
 [Таблица с данными](https://docs.google.com/spreadsheets/d/19ZbCNwey56sR1troG2zU1oD9qAo8UvFcQXuq8eYzBbE/edit?usp=sharing)
