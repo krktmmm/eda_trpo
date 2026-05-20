@@ -7,7 +7,25 @@
 - Найти место, где можно успеть поесть во время большого перерыва
 - Найти компанию для обеда (Обед-рулетка)
 
-### Активировать окружение:
+## 🚀 Как запустить проект (для разрабов)
+
+### 1. Клонировать репозиторий:
+```bash
+git clone https://github.com/krktmmm/trpo_project.git
+cd trpo_project
+```
+
+### 2. Создать виртуальное окружение:
+**Windows:**
+```bash
+python -m venv venv
+```
+**Mac/Linux:**
+```bash
+python3 -m venv venv
+```
+
+### 3. Активировать окружение:
 **Windows (Git Bash):**
 ```bash
 source venv/Scripts/activate
@@ -17,26 +35,31 @@ source venv/Scripts/activate
 source venv/bin/activate
 ```
 
-### Запустить сервер и открыть в браузере:
-**Для локального использования**
+### 4. Установить зависимости:
 ```bash
-Для работы добавьте в файл C:\Windows\System32\drivers\etc\hosts
-строку: 127.0.0.1 sytguti.ru
--------------------------------------
-python manage.py runsslserver 443
--------------------------------------
-• Сайт: <https://sytguti.ru>
-• Админка: <https://sytguti.ru/admin>
+pip install -r requirements.txt
 ```
-**Для доступа с других устройств (в одной Wi-Fi сети)**
+
+### 5. Вставить актуальный файл db.sqlite3
+
+### 6. Применить миграции (на всякий случай):
 ```bash
-Узнайте IP с помощью ipconfig
-------------------------------------------
-python manage.py runsslserver 0.0.0.0:8000
-------------------------------------------
-на другом устройстве:
-https://192.168.1.100:8000 (где 192.168.1.100 - ваш IP)
+python manage.py migrate
 ```
+
+### 7. Создать суперпользователя (если нет):
+```bash
+python manage.py createsuperuser
+```
+
+### 8. Запустить сервер:
+```bash
+python manage.py runserver
+```
+
+### 9. Открыть в браузере:
+* Сайт: <http://127.0.0.1:8000>
+* Админка: <http://127.0.0.1:8000/admin>
 
 ## Ссылки
 [Таблица с данными](https://docs.google.com/spreadsheets/d/19ZbCNwey56sR1troG2zU1oD9qAo8UvFcQXuq8eYzBbE/edit?usp=sharing)

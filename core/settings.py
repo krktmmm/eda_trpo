@@ -31,13 +31,6 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    'sytguti.ru',
-    'www.sytguti.ru',
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://sytguti.ru',
-    'http://sytguti.ru',
 ]
 
 # Application definition
