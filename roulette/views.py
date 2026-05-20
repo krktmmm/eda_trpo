@@ -178,6 +178,8 @@ def accept_solo_match(request):
     User = get_user_model()
     match_user = get_object_or_404(User, id=match_user_id)
 
+    dialog, created = Dialog.get_or_create_dialog(request.user, match_user)
+
     create_notification(
         user=match_user,
         notif_type='match',
@@ -189,7 +191,6 @@ def accept_solo_match(request):
     SoloRequest.objects.filter(user=match_user, is_active=True).update(is_active=False)
     SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
     
-    dialog, created = Dialog.get_or_create_dialog(request.user, match_user)
     request.session['active_meeting'] = True
     
     request.session.pop('match_user_id', None)
