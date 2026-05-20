@@ -13,17 +13,17 @@ import json
 
 @login_required
 def roulette(request):
-    # Проверяем, есть ли активная встреча по диалогам в БД
+    # Проверяем наличие НЕзавершённых диалогов у пользователя
     has_active_meeting = Dialog.objects.filter(
         participants=request.user,
         is_meal_completed=False
     ).exists()
     
     # Синхронизируем с сессией
-    if not has_active_meeting:
-        request.session.pop('active_meeting', None)
-    else:
+    if has_active_meeting:
         request.session['active_meeting'] = True
+    else:
+        request.session.pop('active_meeting', None)
     
     return render(request, 'roulette/roulette.html', {
         'has_active_meeting': has_active_meeting
@@ -282,7 +282,17 @@ def create_company(request):
         ).first()
         
         if not group:
-            return JsonResponse({'error': 'Нет активной заявки'}, status=404)
+            profile = request.user.profile
+            group = GroupRequest.objects.create(
+                user=request.user,
+                building=request.session.get('search_building', '1'),
+                budget=request.session.get('search_budget', 'any'),
+                needed_people=size,
+                telegram=profile.telegram,
+                vk=profile.vk,
+                is_active=True
+            )
+            GroupMember.objects.create(group=group, user=request.user)
         
         group.needed_people = size
         group.save()
@@ -298,6 +308,8 @@ def create_company(request):
                 sender=request.user,
                 text=f'[system] 🎉 Компания создана! {request.user.username} ищет компанию из {size} человек!'
             )
+        else:
+            dialog = group.dialog
         
         return JsonResponse({
             'status': 'ok',
@@ -409,74 +421,82 @@ def find_group_match(request):
 @login_required
 @require_http_methods(["POST"])
 def join_group(request, group_id):
-    group = get_object_or_404(GroupRequest, id=group_id, is_active=True)
-    
-    if GroupMember.objects.filter(group=group, user=request.user).exists():
-        return JsonResponse({'error': 'Вы уже в этой группе'}, status=400)
-    
-    if group.current_members >= group.needed_people:
-        return JsonResponse({'error': 'Группа уже заполнена'}, status=400)
-    
-    request.session['active_meeting'] = True
+    try:
+        group = get_object_or_404(GroupRequest, id=group_id, is_active=True)
+        
+        if GroupMember.objects.filter(group=group, user=request.user).exists():
+            return JsonResponse({'error': 'Вы уже в этой группе'}, status=400)
+        
+        if group.current_members >= group.needed_people:
+            return JsonResponse({'error': 'Группа уже заполнена'}, status=400)
+        
+        request.session['active_meeting'] = True
+        
+        if not group.dialog:
+            dialog = Dialog.objects.create(is_group_chat=True)
+            # Добавляем существующих участников
+            existing_members = GroupMember.objects.filter(group=group).values_list('user', flat=True)
+            for user_id in existing_members:
+                dialog.participants.add(user_id)
+            dialog.participants.add(request.user)
+            group.dialog = dialog
+            group.save()
+            
+            Message.objects.create(
+                dialog=dialog,
+                sender=request.user,
+                text=f'[system] Чат создан! {request.user.username} присоединился к компании! ({group.current_members + 1}/{group.needed_people})'
+            )
+        else:
+            group.dialog.participants.add(request.user)
+            Message.objects.create(
+                dialog=group.dialog,
+                sender=request.user,
+                text=f'[system] {request.user.username} присоединился к компании! ({group.current_members + 1}/{group.needed_people})'
+            )
 
-    # Уведомить создателя группы
-    create_notification(
-        user=group.user,
-        notif_type='group_join',
-        title='Новый участник!',
-        text=f'{request.user.username} присоединился к вашей компании',
-        link=f'/roulette/messages/{group.dialog.id}/'
-    )
-    
-    if not group.dialog:
-        dialog = Dialog.objects.create()
-        existing_members = GroupMember.objects.filter(group=group).values_list('user', flat=True)
-        for user_id in existing_members:
-            dialog.participants.add(user_id)
-        dialog.participants.add(request.user)
-        group.dialog = dialog
+        create_notification(
+            user=group.user,
+            notif_type='group_join',
+            title='Новый участник!',
+            text=f'{request.user.username} присоединился к вашей компании',
+            link=f'/roulette/messages/{group.dialog.id}/'
+        )
+        
+        # Деактивируем заявку текущего пользователя
+        GroupRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
+        
+        # Добавляем участника
+        GroupMember.objects.create(group=group, user=request.user)
+        group.current_members += 1
+        
+        is_full = group.current_members >= group.needed_people
+        
+        if is_full:
+            group.is_active = False
+            all_members = GroupMember.objects.filter(group=group).values_list('user', flat=True)
+            GroupRequest.objects.filter(user__in=all_members, is_active=True).update(is_active=False)
+            
+            Message.objects.create(
+                dialog=group.dialog,
+                sender=request.user,
+                text=f'[system] 🎉 Группа собрана! Всем приятного обеда!'
+            )
+        
         group.save()
         
-        Message.objects.create(
-            dialog=dialog,
-            sender=request.user,
-            text=f'[system] Чат создан! {request.user.username} присоединился к компании! ({group.current_members + 1}/{group.needed_people})'
-        )
-    else:
-        group.dialog.participants.add(request.user)
-        
-        Message.objects.create(
-            dialog=group.dialog,
-            sender=request.user,
-            text=f'[system] {request.user.username} присоединился к компании! ({group.current_members + 1}/{group.needed_people})'
-        )
-    
-    GroupRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
-    GroupMember.objects.create(group=group, user=request.user)
-    group.current_members += 1
-    
-    is_full = group.current_members >= group.needed_people
-    
-    if is_full:
-        group.is_active = False
-        all_members = GroupMember.objects.filter(group=group).values_list('user', flat=True)
-        GroupRequest.objects.filter(user__in=all_members, is_active=True).update(is_active=False)
-        
-        Message.objects.create(
-            dialog=group.dialog,
-            sender=request.user,
-            text=f'[system] 🎉 Группа собрана! Всем приятного обеда!'
-        )
-    
-    group.save()
-    
-    return JsonResponse({
-        'status': 'ok',
-        'current_members': group.current_members,
-        'dialog_id': group.dialog.id,
-        'is_full': is_full,
-        'slots_left': group.needed_people - group.current_members,
-    })
+        return JsonResponse({
+            'status': 'ok',
+            'current_members': group.current_members,
+            'dialog_id': group.dialog.id,
+            'is_full': is_full,
+            'slots_left': group.needed_people - group.current_members,
+        })
+    except Exception as e:
+        print(f"Ошибка в join_group: {e}")
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 def rate_user(request, user_id):
@@ -677,6 +697,8 @@ def delete_dialog(request, dialog_id):
     if request.user not in dialog.participants.all():
         return JsonResponse({'error': 'Доступ запрещен'}, status=403)
     
+    Notification.objects.filter(link__contains=f'/messages/{dialog_id}/').delete()
+    
     is_group = dialog.participants.count() > 2 or dialog.is_group_chat
     
     if is_group:
@@ -751,6 +773,15 @@ def delete_dialog(request, dialog_id):
     if dialog.participants.count() == 0:
         dialog.delete()
     
+    # После удаления диалога проверяем, остались ли активные диалоги у пользователя
+    remaining_active = Dialog.objects.filter(
+        participants=request.user,
+        is_meal_completed=False
+    ).exists()
+
+    if not remaining_active:
+        request.session.pop('active_meeting', None)
+    
     return JsonResponse({'status': 'ok'})
 
 # ==================== УПРАВЛЕНИЕ ЗАЯВКАМИ ====================
@@ -818,7 +849,6 @@ def clear_skipped(request):
 @login_required
 @require_http_methods(["POST"])
 def complete_meal(request, dialog_id):
-    """Завершение обеда (личный и групповой чат)"""
     dialog = get_object_or_404(Dialog, id=dialog_id)
     
     if request.user not in dialog.participants.all():
@@ -832,6 +862,30 @@ def complete_meal(request, dialog_id):
     dialog.completed_by = request.user
     dialog.completed_at = timezone.now()
     dialog.save()
+    
+    # ОБНОВЛЯЕМ СЕССИЮ для ВСЕХ участников
+    for participant in dialog.participants.all():
+        # Проверяем, есть ли у участника другие активные диалоги
+        has_other_active = Dialog.objects.filter(
+            participants=participant,
+            is_meal_completed=False
+        ).exclude(id=dialog.id).exists()
+        
+        if not has_other_active:
+            # Если нет других активных диалогов - удаляем флаг из сессии
+            try:
+                from django.contrib.sessions.models import Session
+                sessions = Session.objects.filter(
+                    session_key__in=participant.session_set.all().values_list('session_key', flat=True)
+                )
+                for session in sessions:
+                    session_data = session.get_decoded()
+                    if 'active_meeting' in session_data:
+                        del session_data['active_meeting']
+                        session.session_data = Session().encode(session_data)
+                        session.save()
+            except:
+                pass
     
     # Системное сообщение
     Message.objects.create(
@@ -1125,8 +1179,10 @@ def mark_notification_read(request, notif_id):
 
 @login_required
 def mark_all_notifications_read(request):
-    """Отметить все уведомления как прочитанные"""
+    """Отметить все уведомления как прочитанные и удалить их из списка"""
+    # Отмечаем как прочитанные
     Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+    # Возвращаем статус, фронт сам очистит список
     return JsonResponse({'status': 'ok'})
 
 def create_notification(user, notif_type, title, text, link=''):
