@@ -11,10 +11,21 @@ const BUILDINGS = [
 const mapContainer = document.getElementById('places-map');
 
 if (mapContainer) {
-    const map = L.map('places-map').setView(MAP_CENTER, MAP_ZOOM);
+    const map = L.map('places-map').setView([55.0080, 82.9512], 16);
+    const isDarkTheme = document.body.classList.contains('dark-theme');
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
+    const tileUrl = isDarkTheme
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    const attribution = isDarkTheme
+        ? '&copy; OpenStreetMap &copy; CARTO'
+        : '© OpenStreetMap';
+
+    L.tileLayer(tileUrl, {
+        attribution: attribution,
+        subdomains: 'abcd',
+        maxZoom: 20
     }).addTo(map);
 
     // Маркеры корпусов

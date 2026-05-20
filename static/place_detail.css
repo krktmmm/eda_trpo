@@ -7,7 +7,7 @@
     padding: 20px;
 }
 
-/* ШАПКА (название + избранное) */
+/* ШАПКА */
 .place-header {
     display: flex;
     justify-content: space-between;
@@ -27,7 +27,6 @@
     margin: 0;
 }
 
-/* Левая часть шапки (стрелка + название) */
 .place-header-left {
     display: flex;
     align-items: center;
@@ -50,7 +49,6 @@
     flex-shrink: 0;
 }
 
-/* Кнопка избранного */
 .favorite-detail-btn {
     background: none;
     border: none;
@@ -84,7 +82,20 @@
     font-size: 18px;
 }
 
-/* БЛОК С ОТЗЫВАМИ */
+.place-photo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.place-photo img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 15px;
+    cursor: pointer;
+    border: 2px solid #e0e0e0;
+}
+
+/* БЛОК ОТЗЫВОВ */
 .reviews-section {
     background: #fefcfc;
     border-radius: 15px;
@@ -105,7 +116,6 @@
     padding-bottom: 10px;
 }
 
-/* Карточка отзыва */
 .review-card {
     border: 1px solid #e0e0e0;
     margin: 15px 0;
@@ -122,7 +132,6 @@
     box-shadow: 0 5px 15px #0000000d;
 }
 
-/* Шапка отзыва */
 .review-header {
     display: flex;
     justify-content: space-between;
@@ -145,13 +154,11 @@
     font-family: 'Tobi';
 }
 
-/* Рейтинг */
 .review-rating {
     color: #f39c12;
     font-weight: bold;
 }
 
-/* Текст */
 .review-text {
     color: #2c3e50;
     font-family: 'Tobi';
@@ -160,19 +167,15 @@
     line-height: 1.4;
 }
 
-/* Фото */
-.review-photo {
-    margin-top: 10px;
+.empty-reviews {
+    text-align: center;
+    color: #999;
+    padding: 30px;
+    font-family: 'Tobi';
+    font-size: 18px;
 }
 
-.review-photo img {
-    border-radius: 15px;
-    border: 2px solid #e0e0e0;
-    max-width: 100%;
-    height: auto;
-}
-
-/* Меню отзыва */
+/* МЕНЮ ОТЗЫВА */
 .review-menu {
     position: absolute;
     top: 10px;
@@ -207,7 +210,7 @@
     background: white;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px #0000001a;
     min-width: 160px;
     z-index: 999;
     margin-top: 5px;
@@ -249,17 +252,108 @@
     color: #e74c3c;
 }
 
-.review-dropdown .danger:hover {
-    background: #fde8e8;
+/* ГАЛЕРЕЯ ФОТО */
+.review-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-/* Пустые отзывы */
-.empty-reviews {
-    text-align: center;
-    color: #999;
-    padding: 30px;
-    font-family: 'Tobi';
-    font-size: 18px;
+.review-thumb {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid #e0e0e0;
+}
+
+.review-thumb:hover {
+    transform: scale(1.05);
+    border-color: #f99039;
+}
+
+.gallery-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000f2;
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.gallery-modal-content img {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+}
+
+.gallery-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+    z-index: 10001;
+}
+
+.gallery-close:hover {
+    color: #f99039;
+}
+
+.gallery-prev,
+.gallery-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 45px;
+    cursor: pointer;
+    padding: 20px 10px;
+    user-select: none;
+    z-index: 10001;
+    transition: 0.3s;
+}
+
+.gallery-prev {
+    left: -60px;
+}
+
+.gallery-next {
+    right: -60px;
+}
+
+.gallery-prev:hover,
+.gallery-next:hover {
+    color: #f99039;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-counter {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 16px;
+    background: #00000080;
+    padding: 5px 15px;
+    border-radius: 20px;
 }
 
 /* ФОРМА ДОБАВЛЕНИЯ ОТЗЫВА */
@@ -283,7 +377,6 @@
     padding-bottom: 8px;
 }
 
-/* Поля ввода */
 .add-review-form select,
 .add-review-form textarea,
 .add-review-form input {
@@ -312,7 +405,6 @@
     box-shadow: 0 0 5px #f9903980;
 }
 
-/* Кнопка отправки */
 .submit-review-btn {
     background: #5F9EA0;
     color: white;
@@ -332,7 +424,6 @@
     transform: scale(1.02);
 }
 
-/* Сообщение "уже оставлен" */
 .already-reviewed-message {
     background-color: #f5f5f5;
     color: #6e6e6e;
@@ -354,21 +445,240 @@
     font-size: 16px;
 }
 
-/* ССЫЛКА НА ВХОД */
-.login-link {
-    text-align: center;
-    margin: 20px 0;
+/* ПРЕДПРОСМОТР ФОТО */
+.images-upload {
+    margin: 15px 0;
 }
 
-.login-link a {
-    color: #f99039;
-    text-decoration: none;
+.images-upload label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.review-photo-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 15px;
+    border: 1px solid #ccc;
     font-family: 'Tobi';
-    font-size: 18px;
+    font-size: 14px;
+    background: #fefcfc;
+    box-sizing: border-box;
 }
 
-.login-link a:hover {
-    text-decoration: underline;
+.photo-hint {
+    display: block;
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.image-preview-item {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+}
+
+.remove-preview {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 2px 4px #00000033;
+}
+
+.remove-preview:hover {
+    transform: scale(1.1);
+    background: #c0392b;
+}
+
+/* РЕДАКТИРОВАНИЕ ОТЗЫВА */
+.review-place-name {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.review-edit-hint {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 15px;
+    font-family: 'Tobi';
+}
+
+.back-to-place-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-align: center;
+    width: auto;
+    padding: 10px 24px;
+}
+
+.current-photos {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 15px;
+}
+
+.current-photos label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.image-edit-item {
+    position: relative;
+    display: inline-block;
+    margin: 5px;
+}
+
+.delete-photo-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 2px 4px #00000033;
+}
+
+.delete-photo-btn:hover {
+    transform: scale(1.1);
+    background: #c0392b;
+}
+
+.delete-photo-btn.active {
+    background: #2ecc71;
+}
+
+.delete-image-checkbox {
+    display: none;
+}
+
+.required-star {
+    color: #e74c3c;
+    font-weight: normal;
+}
+
+/* ЗВЁЗДНЫЙ РЕЙТИНГ */
+.rating-input {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.rating-label {
+    display: block;
+    color: #2c3e50;
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    gap: 10px;
+}
+
+.stars input[type="radio"] {
+    display: none;
+}
+
+.stars label {
+    position: relative;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stars label::before,
+.stars label::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: opacity 0.3s ease;
+}
+
+.stars label::before {
+    background-image: url('/static/images/star-empty.png');
+    opacity: 1;
+}
+
+.stars label::after {
+    background-image: url('/static/images/star-filled.png');
+    opacity: 0;
+}
+
+.stars label:hover::after,
+.stars label:hover ~ label::after {
+    opacity: 1;
+}
+
+.stars label:hover::before,
+.stars label:hover ~ label::before {
+    opacity: 0;
+}
+
+.stars input[type="radio"]:checked ~ label::after {
+    opacity: 1;
+}
+
+.stars input[type="radio"]:checked ~ label::before {
+    opacity: 0;
 }
 
 /* УВЕДОМЛЕНИЯ */
@@ -399,28 +709,20 @@
     border: 1px solid #ffeaa7;
 }
 
-/* СТРАНИЦА РЕДАКТИРОВАНИЯ ОТЗЫВА */
-.review-place-name {
-    margin-bottom: 20px;
-    color: #666;
-}
-
-.review-edit-hint {
+/* ПРЕДУПРЕЖДЕНИЕ О ДУБЛИКАТАХ */
+.duplicate-warning {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
     font-size: 14px;
-    color: #999;
-    margin-bottom: 15px;
-    font-family: 'Tobi';
+    border: 1px solid #ffeaa7;
 }
 
-.back-to-place-link {
-    display: inline-block;
-    margin-top: 20px;
-    text-align: center;
-    width: auto;
-    padding: 10px 24px;
+.duplicate-warning.hidden {
+    display: none;
 }
 
-/* КНОПКА "НАЗАД" */
+/* ССЫЛКИ */
 .back-link {
     margin-top: 30px;
     text-align: center;
@@ -436,5 +738,21 @@
 
 .back-link a:hover {
     color: #f99039;
+    text-decoration: underline;
+}
+
+.login-link {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.login-link a {
+    color: #f99039;
+    text-decoration: none;
+    font-family: 'Tobi';
+    font-size: 18px;
+}
+
+.login-link a:hover {
     text-decoration: underline;
 }

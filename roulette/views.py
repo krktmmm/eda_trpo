@@ -6,14 +6,25 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.utils import timezone
+from .models import Notification
 from django.db import models
 import random
 import json
 
 @login_required
 def roulette(request):
-    # Проверяем, есть ли активная встреча
-    has_active_meeting = request.session.get('active_meeting', False)
+    # Проверяем, есть ли активная встреча по диалогам в БД
+    has_active_meeting = Dialog.objects.filter(
+        participants=request.user,
+        is_meal_completed=False
+    ).exists()
+    
+    # Синхронизируем с сессией
+    if not has_active_meeting:
+        request.session.pop('active_meeting', None)
+    else:
+        request.session['active_meeting'] = True
+    
     return render(request, 'roulette/roulette.html', {
         'has_active_meeting': has_active_meeting
     })
@@ -166,6 +177,14 @@ def accept_solo_match(request):
     
     User = get_user_model()
     match_user = get_object_or_404(User, id=match_user_id)
+
+    create_notification(
+        user=match_user,
+        notif_type='match',
+        title='Собеседник найден!',
+        text=f'{request.user.username} согласился(лась) пойти с вами на обед!',
+        link=f'/roulette/messages/{dialog.id}/'
+    )
     
     SoloRequest.objects.filter(user=match_user, is_active=True).update(is_active=False)
     SoloRequest.objects.filter(user=request.user, is_active=True).update(is_active=False)
@@ -268,7 +287,7 @@ def create_company(request):
         group.save()
         
         if not group.dialog:
-            dialog = Dialog.objects.create()
+            dialog = Dialog.objects.create(is_group_chat=True)
             dialog.participants.add(request.user)
             group.dialog = dialog
             group.save()
@@ -398,6 +417,15 @@ def join_group(request, group_id):
         return JsonResponse({'error': 'Группа уже заполнена'}, status=400)
     
     request.session['active_meeting'] = True
+
+    # Уведомить создателя группы
+    create_notification(
+        user=group.user,
+        notif_type='group_join',
+        title='Новый участник!',
+        text=f'{request.user.username} присоединился к вашей компании',
+        link=f'/roulette/messages/{group.dialog.id}/'
+    )
     
     if not group.dialog:
         dialog = Dialog.objects.create()
@@ -479,6 +507,15 @@ def rate_user(request, user_id):
             to_user.profile.rating = total / count if count > 0 else 0
             to_user.profile.rating_count = count
             to_user.profile.save()
+
+            # Уведомляем пользователя об оценке
+            create_notification(
+                user=to_user,
+                notif_type='rating',
+                title='Вас оценили!',
+                text=f'{request.user.username} поставил(а) вам {rating} ⭐',
+                link=f'/profile/'
+            )
             
             # Завершаем встречу — разрешаем новый поиск
             request.session.pop('active_meeting', None)
@@ -511,8 +548,9 @@ def messages_list(request):
         unread_count = dialog.messages.filter(is_read=False).exclude(sender=request.user).count()
         other_users = dialog.participants.exclude(id=request.user.id)
         
-        if other_users.count() > 1:
-            chat_name = f'Группа ({dialog.participants.count()} чел.)'
+        # Определяем название чата
+        if dialog.is_group_chat or other_users.count() > 1:
+            chat_name = 'Группа'
         else:
             other_user = other_users.first()
             chat_name = other_user.username if other_user else 'Чат'
@@ -522,7 +560,7 @@ def messages_list(request):
             'last_message': last_message,
             'unread_count': unread_count,
             'chat_name': chat_name,
-            'is_group': other_users.count() > 1,
+            'is_group': dialog.is_group_chat or other_users.count() > 1,
             'other_user': other_users.first() if other_users.count() == 1 else None,
         })
     
@@ -550,7 +588,7 @@ def dialog_detail(request, dialog_id):
         'dialog': dialog,
         'messages': messages,
         'other_user': other_user,
-        'is_group': is_group,
+        'is_group': is_group or dialog.is_group_chat,
         'participants': dialog.participants.all(),
     })
 
@@ -568,6 +606,16 @@ def send_message(request, dialog_id):
         
         if request.user not in dialog.participants.all():
             return JsonResponse({'error': 'Доступ запрещен'}, status=403)
+        
+        # Уведомление всем участникам диалога (кроме отправителя)
+        for participant in dialog.participants.exclude(id=request.user.id):
+            create_notification(
+                user=participant,
+                notif_type='message',
+                title=f'Новое сообщение от {request.user.username}',
+                text=text[:100],
+                link=f'/roulette/messages/{dialog_id}/'
+            )
         
         message = Message.objects.create(
             dialog=dialog,
@@ -622,10 +670,86 @@ def get_new_messages(request, dialog_id):
 @login_required
 @require_http_methods(["POST"])
 def delete_dialog(request, dialog_id):
+    """Удаление диалога с правильной логикой для личных и групповых чатов"""
     dialog = get_object_or_404(Dialog, id=dialog_id)
+    
     if request.user not in dialog.participants.all():
         return JsonResponse({'error': 'Доступ запрещен'}, status=403)
-    dialog.delete()
+    
+    is_group = dialog.participants.count() > 2 or dialog.is_group_chat
+    
+    if is_group:
+        # ГРУППОВОЙ ЧАТ
+        group_request = GroupRequest.objects.filter(dialog=dialog).first()
+        
+        if group_request:
+            # Удаляем пользователя из участников группы
+            GroupMember.objects.filter(group=group_request, user=request.user).delete()
+            
+            # Уменьшаем счётчик участников
+            group_request.current_members -= 1
+            group_request.save()
+            
+            # Системное сообщение для остальных участников
+            if group_request.current_members > 0:
+                Message.objects.create(
+                    dialog=dialog,
+                    sender=request.user,
+                    text=f'[system] 🚪 {request.user.username} покинул компанию. ({group_request.current_members}/{group_request.needed_people})'
+                )
+            
+            # Удаляем пользователя из прогресса оценки у других участников
+            for other_user in dialog.participants.exclude(id=request.user.id):
+                progress = GroupRatingProgress.objects.filter(dialog=dialog, user=other_user).first()
+                if progress:
+                    progress.rated_users.remove(request.user)
+                    progress.skipped_users.remove(request.user)
+                    progress.save()
+            
+            # Удаляем прогресс самого пользователя
+            GroupRatingProgress.objects.filter(dialog=dialog, user=request.user).delete()
+            
+            # Если никого не осталось — удаляем всё
+            if group_request.current_members <= 0:
+                group_request.delete()
+                dialog.delete()
+                request.session.pop('active_meeting', None)
+                return JsonResponse({'status': 'ok'})
+            
+            # Если группа не заполнена — делаем её снова активной для поиска
+            if group_request.current_members < group_request.needed_people:
+                group_request.is_active = True
+                group_request.save()
+                
+                # Активируем заявки оставшихся участников
+                remaining_members = GroupMember.objects.filter(group=group_request).values_list('user_id', flat=True)
+                GroupRequest.objects.filter(user_id__in=remaining_members, is_active=False).update(is_active=True)
+    
+    else:
+        # ЛИЧНЫЙ ЧАТ
+        other_user = dialog.participants.exclude(id=request.user.id).first()
+        
+        # Системное сообщение для другого пользователя
+        if other_user:
+            Message.objects.create(
+                dialog=dialog,
+                sender=request.user,
+                text=f'[system] 🚪 {request.user.username} покинул чат. Обед завершён.'
+            )
+        
+        # Снимаем active_meeting у обоих
+        request.session.pop('active_meeting', None)
+        
+        # У другого пользователя тоже снимаем флаг active_meeting
+        # (при следующем заходе на рулетку подхватится через БД)
+    
+    # Удаляем пользователя из диалога
+    dialog.participants.remove(request.user)
+    
+    # Если участников не осталось — удаляем диалог полностью
+    if dialog.participants.count() == 0:
+        dialog.delete()
+    
     return JsonResponse({'status': 'ok'})
 
 # ==================== УПРАВЛЕНИЕ ЗАЯВКАМИ ====================
@@ -873,6 +997,15 @@ def save_group_rating(request, dialog_id):
     to_user.profile.rating = total / count if count > 0 else 0
     to_user.profile.rating_count = count
     to_user.profile.save()
+
+    # Уведомление пользователя об оценке в группе
+    create_notification(
+        user=to_user,
+        notif_type='rating',
+        title='Вас оценили в группе!',
+        text=f'{request.user.username} поставил(а) вам {rating} ⭐',
+        link=f'/profile/'
+    )
     
     # Обновляем прогресс
     progress = GroupRatingProgress.objects.get(dialog=dialog, user=request.user)
@@ -966,3 +1099,41 @@ def get_group_rating_progress(request, dialog_id):
         'total_remaining': len(remaining),
         'rated_count': rated_ids.count()
     })
+
+@login_required
+def get_notifications(request):
+    """Получить уведомления пользователя"""
+    notifications = Notification.objects.filter(user=request.user, is_read=False)[:20]
+    data = [{
+        'id': n.id,
+        'type': n.type,
+        'title': n.title,
+        'text': n.text,
+        'link': n.link,
+        'created_at': n.created_at.strftime('%H:%M %d.%m.%Y'),
+    } for n in notifications]
+    return JsonResponse({'notifications': data, 'unread_count': notifications.count()})
+
+@login_required
+def mark_notification_read(request, notif_id):
+    """Отметить уведомление как прочитанное"""
+    notification = get_object_or_404(Notification, id=notif_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return JsonResponse({'status': 'ok'})
+
+@login_required
+def mark_all_notifications_read(request):
+    """Отметить все уведомления как прочитанные"""
+    Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+    return JsonResponse({'status': 'ok'})
+
+def create_notification(user, notif_type, title, text, link=''):
+    """Вспомогательная функция для создания уведомления"""
+    Notification.objects.create(
+        user=user,
+        type=notif_type,
+        title=title,
+        text=text,
+        link=link
+    )

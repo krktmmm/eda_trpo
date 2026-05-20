@@ -21,27 +21,34 @@
     <div class="chat-header">
         <a href="{% url 'messages_list' %}" class="back-link">←</a>
         <div class="chat-user-info">
-            <div class="chat-avatar">
-                {% if is_group %}
-                    <img src="{% static 'images/group_avatar.png' %}" alt="Группа"
-                         onerror="this.src='{% static 'images/default_avatar.jpg' %}'">
-                {% elif other_user and other_user.profile.avatar %}
-                    <img src="{{ other_user.profile.avatar.url }}?v={{ other_user.id }}" 
-                         alt="{{ other_user.username }}"
-                         onerror="this.onerror=null; this.src=document.body.classList.contains('dark-theme') ? '/static/images/default_avatar_dark_theme.jpg' : '/static/images/default_avatar.jpg';">
-                {% elif user.profile.theme == 'dark' %}
-                    <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Аватар">
-                {% else %}
-                    <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
-                {% endif %}
-            </div>
-            
+            {% if not is_group and other_user %}
+                <a href="{% url 'public_profile' other_user.username %}" class="chat-avatar-link">
+            {% endif %}
+                <div class="chat-avatar">
+                    {% if is_group %}
+                        {% if user.profile.theme == 'dark' %}
+                            <img src="{% static 'images/group_avatar_dark_theme.jpg' %}" alt="Группа">
+                        {% else %}
+                            <img src="{% static 'images/group_avatar.jpg' %}" alt="Группа">
+                        {% endif %}
+                    {% elif other_user and other_user.profile.avatar %}
+                        <img src="{{ other_user.profile.avatar.url }}?v={{ other_user.id }}" alt="{{ other_user.username }}"
+                            onerror="this.onerror=null; this.src='{% static 'images/default_avatar.jpg' %}'">
+                    {% elif user.profile.theme == 'dark' %}
+                        <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Аватар">
+                    {% else %}
+                        <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
+                    {% endif %}
+                </div>
+            {% if not is_group and other_user %}
+                </a>
+            {% endif %}
             <div class="chat-info-container">
                 <div class="chat-header-row">
                     <div>
-                        <h2 style="margin: 0;">
+                        <h2>
                             {% if is_group %}
-                                Группа ({{ participants.count }} чел.)
+                                Группа
                             {% elif other_user %}
                                 {{ other_user.username }}
                             {% else %}
@@ -50,7 +57,13 @@
                         </h2>
                         {% if is_group %}
                             <div class="participants-names">
-                                {{ participants.all|join:", " }}
+                                {% for participant in participants.all %}
+                                    {% if participant != user %}
+                                        <a href="{% url 'public_profile' participant.username %}" class="participant-link">{{ participant.username }}</a>{% if not forloop.last %}, {% endif %}
+                                    {% else %}
+                                        {{ participant.username }}{% if not forloop.last %}, {% endif %}
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         {% endif %}
                     </div>
@@ -77,7 +90,9 @@
             {% endif %}" 
             data-id="{{ msg.id }}">
             {% if msg.text|slice:':8' != '[system]' and msg.sender != user %}
-                <div class="message-sender">{{ msg.sender.username }}</div>
+                <div class="message-sender">
+                    {{ msg.sender.username }}
+                </div>
             {% endif %}
             {% if '[sticker]' in msg.text %}
                 <div class="message-text">
@@ -99,8 +114,8 @@
     <div class="chat-input">
         <div class="message-input-wrapper">
             <textarea id="message-input" placeholder="Введите сообщение..." rows="2"></textarea>
-            <button type="button" id="stickers-btn">🙂</button>
         </div>
+        <button type="button" id="stickers-btn">🐱</button>
         <button id="send-btn">📤 Отправить</button>
     </div>
 
@@ -255,7 +270,7 @@
                         }
                         
                         const senderName = (isGroup && !msg.is_mine && !msg.text.startsWith('[system]')) 
-                            ? `<div class="message-sender">${msg.sender}</div>` 
+                            ? `<div class="message-sender">${escapeHtml(msg.sender)}</div>` 
                             : '';
                         
                         div.innerHTML = `
@@ -359,9 +374,9 @@
                     }
                 }
             } else {
-                // Личный чат
+                // Личный чат - показывает бейдж после оценки
                 if (data.has_rated) {
-                    mealActionContainer.innerHTML = ''; // кнопка пропадает
+                    mealActionContainer.innerHTML = `<span class="rated-badge">⭐ Оценено</span>`;
                 } else {
                     mealActionContainer.innerHTML = `<button class="meal-action-btn" id="rate-user-btn">⭐ Оценить пользователя</button>`;
                     
@@ -389,7 +404,19 @@
     });
     
     setInterval(loadNewMessages, 3000);
-    stickersBtn.onclick = () => stickersPanel.classList.toggle('hidden');
+    stickersBtn.onclick = () => {
+        stickersPanel.classList.toggle('hidden');
+    };
+    document.addEventListener('click', (e) => {
+        const clickedInsidePanel = stickersPanel.contains(e.target);
+        const clickedStickerButton = stickersBtn.contains(e.target);
+
+        if (!clickedInsidePanel && !clickedStickerButton) {
+            stickersPanel.classList.add('hidden');
+        }
+    });
+
+    renderStickers();
     
     renderStickers();
     scrollToBottom();

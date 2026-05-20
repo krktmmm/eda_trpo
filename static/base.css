@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* ШРИФТ */
 @font-face {
     font-family: 'Tobi';
     src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
@@ -8,35 +7,28 @@
     font-style: normal;
 }
 
-/* ОБНУЛЕНИЕ ВСЕХ ОТСТУПОВ */
-* {                                /* (*) - все элементы на странице*/
-    margin: 0;                     /* Убираем внешние отступы у всех элементов */
-    padding: 0;                    /* Убираем внутренние отступы у всех элементов */
-    box-sizing: border-box;        /* Ширина элемента включает padding и border */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ЗАЩИТА ОТ КОПИРОВАНИЯ КАРТИНОК */
 img {
-    pointer-events: none;          /* Отключает правый клик на картинке */
-    user-select: none;             /* Запрет выделения */
-    -webkit-user-drag: none;       /* Запрет перетаскивания */
+    user-select: none;
+    -webkit-user-drag: none;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* ФОН И ШРИФТ ДЛЯ СТРАНИЦЫ */
 body {
-    background-color: #fefcfc;   /* Цвет фона страницы */
-    font-family: 'Tobi';           /* Шрифт для всего текста на странице */
-    overflow-x: hidden;            /* Запрещаем горизонтальный скролл */
-    margin: 0;
-    padding: 0;
+    background-color: #fefcfc;
+    font-family: 'Tobi';
+    overflow-x: hidden;
 }
 
 .content {
     min-height: 60vh;
 }
 
-/* ФОН ДЛЯ АВАТАРОК (если картинка не загрузилась) */
 .profile-avatar img,
 .profile-icon img,
 .panel .profile img,
@@ -47,8 +39,6 @@ body {
 }
 
 /* РАЗМЕРЫ ШРИФТА */
-
-/* Маленький */
 .font-small { font-size: 14px; }
 .font-small h1 { font-size: 36px !important; }
 .font-small h2 { font-size: 24px !important; }
@@ -58,7 +48,6 @@ body {
 .font-small .menu-card p { font-size: 16px !important; }
 .font-small .time-btn { font-size: 18px !important; }
 
-/* Средний шрифт (по умолчанию) */
 .font-medium { font-size: 16px; }
 .font-medium h1 { font-size: 48px !important; }
 .font-medium h2 { font-size: 28px !important; }
@@ -68,7 +57,6 @@ body {
 .font-medium .menu-card p { font-size: 20px !important; }
 .font-medium .time-btn { font-size: 22px !important; }
 
-/* Крупный шрифт */
 .font-large { font-size: 18px; }
 .font-large h1 { font-size: 58px !important; }
 .font-large h2 { font-size: 34px !important; }
@@ -80,58 +68,6 @@ body {
 .font-large .place-name { font-size: 1.5em !important; }
 .font-large .place-info { font-size: 16px !important; }
 
-/* ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ */
 .hidden {
     display: none !important;
-}
-
-/* КНОПКИ (общие стили) */
-.btn-primary {
-    background: #5F9EA0;
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 15px;
-    font-family: 'Tobi';
-    font-size: 18px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-primary:hover {
-    background: #f99039;
-    transform: scale(1.02);
-}
-
-.btn-secondary {
-    background: #f99039;
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 15px;
-    font-family: 'Tobi';
-    font-size: 18px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-secondary:hover {
-    background: #5F9EA0;
-    transform: scale(1.02);
-}
-
-.btn-danger {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 15px;
-    font-family: 'Tobi';
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-danger:hover {
-    background: #c0392b;
-    transform: scale(1.02);
 }

@@ -18,8 +18,7 @@ class Place(models.Model):
     student_discount = models.CharField(max_length=20, blank=True, verbose_name="Скидка для студентов")
     opening_hours = models.CharField(max_length=200, blank=True, verbose_name="Часы работы")
     
-    # пока только ссылка
-    photo_url = models.URLField(blank=True, verbose_name="Ссылка на фото")
+    image = models.ImageField(upload_to='place_photos/', blank=True, null=True, verbose_name="Фото заведения")
     
     # координаты для карты (фронт)
     latitude = models.FloatField(blank=True, null=True, verbose_name="Широта")
@@ -29,12 +28,28 @@ class Place(models.Model):
     rating_count = models.IntegerField(default=0, verbose_name="Количество оценок")
     
     def __str__(self):
-        """Как будет отображаться объект в админке"""
         return self.name
     
     class Meta:
         verbose_name = "Заведение"
         verbose_name_plural = "Заведения"
+
+
+class ReviewImage(models.Model):
+    """Фотографии к отзыву"""
+    review = models.ForeignKey('Review', on_delete=models.CASCADE, related_name='images', verbose_name="Отзыв")
+    image = models.ImageField(upload_to='review_photos/', verbose_name="Фото")
+    order = models.IntegerField(default=0, verbose_name="Порядок")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['order', 'created_at']
+        verbose_name = "Фото отзыва"
+        verbose_name_plural = "Фото отзывов"
+    
+    def __str__(self):
+        return f"Фото к отзыву #{self.review.id}"
+
 
 class Review(models.Model):
     """Отзыв о заведении"""
@@ -44,9 +59,6 @@ class Review(models.Model):
 
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], verbose_name="Оценка (1-5)")
     text = models.TextField(verbose_name="Текст отзыва")
-
-    # пока только ссылка
-    photo_url = models.URLField(blank=True, verbose_name="Ссылка на фото")
     
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     
@@ -57,6 +69,7 @@ class Review(models.Model):
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
 
+
 class Favorite(models.Model):
     """Избранные заведения пользователя"""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
@@ -64,7 +77,7 @@ class Favorite(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'place')  # чтобы нельзя было добавить одно заведение дважды
+        unique_together = ('user', 'place')
         verbose_name = "Избранное"
         verbose_name_plural = "Избранное"
 

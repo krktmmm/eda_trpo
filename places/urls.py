@@ -3,7 +3,9 @@ from . import views
 
 urlpatterns = [
     path('', views.main_menu, name='main_menu'),
-    path("api/search-places/", views.search_places_api, name="search_places_api"),
+    path('api/search-places/', views.search_places_api, name='search_places_api'),
+    path('api/save-roulette-selection/', views.save_roulette_selection, name='save_roulette_selection'),
+    path('api/get-selection/', views.get_roulette_selection, name='get_roulette_selection'),
     path('places/', views.place_list, name='place_list'),
     path('roulette/', views.roulette, name='roulette'),
     path('place/<int:place_id>/', views.place_detail, name='place_detail'),

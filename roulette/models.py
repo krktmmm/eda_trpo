@@ -83,7 +83,6 @@ class UserRating(models.Model):
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ratings_received', verbose_name="Кого оценили")
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], verbose_name="Оценка (1-5)")
     text = models.TextField(blank=True, verbose_name="Комментарий")
-    photo_url = models.URLField(blank=True, verbose_name="Ссылка на фото")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -103,6 +102,8 @@ class Dialog(models.Model):
     is_meal_completed = models.BooleanField(default=False)
     completed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='completed_dialogs')
     completed_at = models.DateTimeField(null=True, blank=True)
+
+    is_group_chat = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = "Диалог"
@@ -156,7 +157,6 @@ class GroupUserRating(models.Model):
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='group_ratings_received')
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], verbose_name="Оценка (1-5)")
     text = models.TextField(blank=True, verbose_name="Комментарий")
-    photo_url = models.URLField(blank=True, verbose_name="Ссылка на фото")
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -183,3 +183,27 @@ class Message(models.Model):
     
     def __str__(self):
         return f"{self.sender.username}: {self.text[:30]}"
+
+class Notification(models.Model):
+    NOTIFICATION_TYPES = [
+        ('message', 'Новое сообщение'),
+        ('match', 'Найден собеседник'),
+        ('group_join', 'Кто-то присоединился'),
+        ('rating', 'Вас оценили'),
+    ]
+    
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='notifications')
+    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+    title = models.CharField(max_length=200)
+    text = models.TextField()
+    link = models.CharField(max_length=500, blank=True)  # куда ведёт уведомление
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Уведомление"
+        verbose_name_plural = "Уведомления"
+    
+    def __str__(self):
+        return f"{self.user.username}: {self.title}"

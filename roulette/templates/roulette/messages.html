@@ -17,20 +17,28 @@
             <a href="{% url 'dialog_detail' d.dialog.id %}" class="dialog-card">
                 <div class="dialog-avatar">
                     {% if d.is_group %}
-                        <img src="{% static 'images/default_avatar.jpg' %}" alt="Группа">
+                        {% if user.profile.theme == 'dark' %}
+                            <img src="{% static 'images/group_avatar_dark_theme.jpg' %}" alt="Группа">
+                        {% else %}
+                            <img src="{% static 'images/group_avatar.jpg' %}" alt="Группа">
+                        {% endif %}
                     {% elif d.other_user and d.other_user.profile.avatar %}
                         <img src="{{ d.other_user.profile.avatar.url }}?v={{ d.other_user.id }}" 
-                             alt="{{ d.other_user.username }}"
-                             onerror="this.onerror=null; this.src=document.body.classList.contains('dark-theme') ? '/static/images/default_avatar_dark_theme.jpg' : '/static/images/default_avatar.jpg';">
+                            alt="{{ d.other_user.username }}"
+                            onerror="this.onerror=null; this.src=document.body.classList.contains('dark-theme') ? '/static/images/default_avatar_dark_theme.jpg' : '/static/images/default_avatar.jpg';">
                     {% else %}
-                        <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
+                        {% if user.profile.theme == 'dark' %}
+                            <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Аватар">
+                        {% else %}
+                            <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
+                        {% endif %}
                     {% endif %}
                 </div>
                 <div class="dialog-info">
                     <div class="dialog-name">
                         {{ d.chat_name }}
                         {% if d.dialog.is_meal_completed %}
-                            <span style="color: #2ecc71; margin-left: 8px;" title="Обед завершён">🍽️</span>
+                            <span class="meal-completed-icon" title="Обед завершён">🍽️</span>
                         {% endif %}
                     </div>
                     <div class="dialog-last-message">

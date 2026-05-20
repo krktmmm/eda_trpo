@@ -13,6 +13,42 @@ const placesContainer = document.getElementById('places-container');
 let selectedBuilding = null;
 let selectedTime = null;
 
+// Обновление активных кнопок
+function updateActiveButtons() {
+    // Корпуса
+    document.querySelectorAll('.building-btn').forEach(btn => {
+        if (selectedBuilding && btn.dataset.building === selectedBuilding) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    
+    // Время
+    document.querySelectorAll('.time-btn[data-time]').forEach(btn => {
+        if (selectedTime !== null && parseInt(btn.dataset.time) === selectedTime) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
+// Сохранение параметров в сессию
+function saveSelectionToSession(building, time) {
+    fetch('/api/save-roulette-selection/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': window.CSRF_TOKEN
+        },
+        body: JSON.stringify({
+            building: building,
+            time: time
+        })
+    }).catch(err => console.error('Ошибка сохранения параметров:', err));
+}
+
 // Фильтрация заведений
 function filterPlaces() {
     placeCards.forEach(card => {
@@ -68,6 +104,9 @@ buildingButtons.forEach(button => {
         selectedBuilding = this.dataset.building;
         selectedTime = null;
 
+        saveSelectionToSession(selectedBuilding, null);
+        updateActiveButtons();
+
         buildingScreen.classList.add('hidden');
         timeScreen.classList.remove('hidden');
         timeScreen.classList.add('show-flex');
@@ -88,15 +127,18 @@ buildingButtons.forEach(button => {
 timeButtons.forEach(button => {
     button.addEventListener('click', function () {
         selectedTime = parseInt(this.dataset.time);
+        saveSelectionToSession(selectedBuilding, selectedTime);
+        updateActiveButtons();
         filterPlaces();
     });
 });
 
-// Кнопка "назад"
+// Кнопка "назад" — сбрасываем ТОЛЬКО время
 if (backBtn) {
     backBtn.addEventListener('click', function () {
-        selectedBuilding = null;
-        selectedTime = null;
+        selectedTime = null;  // Сбрасываем только время
+        saveSelectionToSession(selectedBuilding, null);
+        updateActiveButtons();
 
         timeScreen.classList.add('hidden');
         timeScreen.classList.remove('show-flex');
@@ -117,7 +159,6 @@ document.querySelectorAll('.favorite-btn').forEach(btn => {
         e.preventDefault();
         e.stopPropagation();
 
-        // Проверка авторизации
         const isAuthenticated = document.body.getAttribute('data-user-authenticated') === 'true';
         if (!isAuthenticated) {
             alert('Войдите или зарегистрируйтесь, чтобы добавлять в избранное');
@@ -125,13 +166,11 @@ document.querySelectorAll('.favorite-btn').forEach(btn => {
             return;
         }
 
-        // Отправка запроса
         const placeId = this.dataset.placeId;
 
         fetch(`/favorites/toggle/${placeId}/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRFToken': window.CSRF_TOKEN
             },
         })

@@ -23,6 +23,19 @@
         </div>
         
         <div class="profile-left-info">
+            <p>
+                <strong>⭐ Мой рейтинг:</strong> 
+                {{ user.profile.rating|floatformat:1 }} 
+                ({{ user.profile.rating_count }} оценок)
+            </p>
+            <p>
+                <strong>📱 Статус:</strong>
+                {% if user.profile.is_online %}
+                    <span class="online-text">онлайн</span>
+                {% else %}
+                    <span class="offline-text">был(а) {{ user.profile.get_last_activity_display }}</span>
+                {% endif %}
+            </p>
             <p><strong>📅 На сайте с:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
         </div>
         

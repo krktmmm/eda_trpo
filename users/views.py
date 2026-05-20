@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import update_session_auth_hash, get_user_model
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.http import JsonResponse
 from django.contrib import messages
@@ -33,7 +33,6 @@ def register_view(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            Profile.objects.create(user=user)
             login(request, user)
             return redirect('/')
     else:
@@ -48,6 +47,25 @@ def register_view(request):
 def profile(request):
     user_reviews = Review.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'users/profile.html', {'user': request.user, 'reviews': user_reviews})
+
+User = get_user_model()
+
+@login_required
+def public_profile(request, username):
+    """Просмотр профиля другого пользователя"""
+    target_user = get_object_or_404(User, username=username)
+    
+    # Не даём смотреть свой профиль через эту страницу
+    if target_user == request.user:
+        return redirect('profile')
+    
+    # Отзывы пользователя
+    user_reviews = Review.objects.filter(user=target_user).order_by('-created_at')
+    
+    return render(request, 'users/public_profile.html', {
+        'target_user': target_user,
+        'reviews': user_reviews,
+    })
 
 @login_required
 def edit_profile(request):

@@ -135,7 +135,10 @@
         <!-- Соло-матч -->
         <div class="match-card" id="single-match-card">
             <div class="match-avatar">
-                <img src="{% static 'images/default_avatar.jpg' %}" alt="avatar" id="match-avatar-img">
+                <img src="{% if user.profile.theme == 'dark' %}{% static 'images/default_avatar_dark_theme.jpg' %}{% else %}{% static 'images/default_avatar.jpg' %}{% endif %}" 
+                    alt="avatar" 
+                    id="match-avatar-img"
+                    onerror="this.src='{% static 'images/default_avatar.jpg' %}'">
             </div>
             <div class="match-info">
                 <p class="match-username"><span id="screen-username"></span></p>

@@ -26,7 +26,7 @@ function editReview(reviewId) {
     window.location.href = `/place/review/${reviewId}/edit/`;
 }
 
-/** Открыть/закрыть выпадающее меню отзыва */
+// Открыть/закрыть выпадающее меню отзыва
 function toggleReviewMenu(event, reviewId) {
     event.stopPropagation();
 

@@ -1,4 +1,4 @@
-/* БАЗОВЫЕ */
+/* Базовые стили */
 body.dark-theme {
     background-color: #0f172a !important;
     color: #e2e8f0 !important;
@@ -67,7 +67,6 @@ body.dark-theme .notifications-icon {
     background-color: #334155 !important;
 }
 
-/* Профиль в шапке */
 body.dark-theme .profile-icon img,
 body.dark-theme .panel .profile img {
     border-color: #475569 !important;
@@ -132,13 +131,13 @@ body.dark-theme .messages-badge {
     background-color: #ef4444 !important;
 }
 
-/* ПРИВЕТСТВИЕ */
+/* Приветствие */
 body.dark-theme .greeting h1,
 body.dark-theme .greeting p {
     color: #e2e8f0 !important;
 }
 
-/* ГЛАВНОЕ МЕНЮ (карточки) */
+/* Главное меню (карточки) */
 body.dark-theme .menu-card-inner {
     background-color: #334155 !important;
 }
@@ -261,7 +260,7 @@ body.dark-theme .places-panel {
     scrollbar-color: #f97316 transparent !important;
 }
 
-/* ДЕТАЛИ ЗАВЕДЕНИЯ */
+/* Детали заведения */
 body.dark-theme .place-header {
     border-bottom-color: #f97316 !important;
 }
@@ -475,7 +474,57 @@ body.dark-theme .back-to-place-link:hover {
     color: #f97316;
 }
 
-/* Карточки выбора */
+/* Галерея фото */
+body.dark-theme .gallery-modal {
+    background: #000000fa !important;
+}
+
+body.dark-theme .gallery-close,
+body.dark-theme .gallery-prev,
+body.dark-theme .gallery-next {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .gallery-close:hover,
+body.dark-theme .gallery-prev:hover,
+body.dark-theme .gallery-next:hover {
+    color: #f97316 !important;
+}
+
+body.dark-theme .gallery-counter {
+    background: #000000b3 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .review-thumb {
+    border-color: #475569 !important;
+}
+
+body.dark-theme .image-preview-item img {
+    border-color: #475569 !important;
+}
+
+body.dark-theme .remove-preview,
+body.dark-theme .delete-photo-btn {
+    background: #ef4444 !important;
+}
+
+body.dark-theme .remove-preview:hover,
+body.dark-theme .delete-photo-btn:hover {
+    background: #dc2626 !important;
+}
+
+body.dark-theme .delete-photo-btn.active {
+    background: #2ecc71 !important;
+}
+
+body.dark-theme .duplicate-warning {
+    background: #3b3000 !important;
+    color: #fbbf24 !important;
+    border-color: #5a4a00 !important;
+}
+
+/* Обед-рулетка */
 body.dark-theme .roulette-mode-btn .btn-inner {
     background-color: #334155 !important;
 }
@@ -484,7 +533,6 @@ body.dark-theme .roulette-mode-btn:last-child .btn-inner {
     background-color: #f97316 !important;
 }
 
-/* Форма */
 body.dark-theme .roulette-form {
     background-color: #1e293b !important;
 }
@@ -513,7 +561,6 @@ body.dark-theme .roulette-form small {
     color: #94a3b8;
 }
 
-/* Процесс поиска */
 body.dark-theme .search-process,
 body.dark-theme #match-screen,
 body.dark-theme #not-found-screen {
@@ -545,7 +592,6 @@ body.dark-theme .back-btn:hover {
     background-color: #f97316 !important;
 }
 
-/* Экран "Не найдено" */
 body.dark-theme #not-found-screen h2 {
     color: #e2e8f0 !important;
     border-bottom-color: #f97316 !important;
@@ -576,7 +622,6 @@ body.dark-theme #not-found-create {
     color: white !important;
 }
 
-/* Экран матча */
 body.dark-theme .match-avatar img {
     border-color: #f97316 !important;
 }
@@ -610,7 +655,6 @@ body.dark-theme .match-buttons button:hover {
     background-color: #ea580c !important;
 }
 
-/* Группа */
 body.dark-theme .group-members-list {
     color: #e2e8f0 !important;
 }
@@ -646,14 +690,12 @@ body.dark-theme .group-info {
     color: white !important;
 }
 
-/* Поле размера группы */
 body.dark-theme #group-size-input {
     background: #334155;
     color: #e2e8f0;
     border-color: #475569;
 }
 
-/* Модальное окно */
 body.dark-theme .modal-content {
     background-color: #1e293b !important;
     color: #e2e8f0 !important;
@@ -668,150 +710,11 @@ body.dark-theme .modal-content button:hover {
     background-color: #ea580c !important;
 }
 
-/* Колонки */
-body.dark-theme .profile-left,
-body.dark-theme .profile-right,
-body.dark-theme .edit-profile-left,
-body.dark-theme .edit-profile-right,
-body.dark-theme .settings-container {
-    background-color: #1e293b !important;
-    border-color: #334155 !important;
-}
-
-body.dark-theme .profile-right h2,
-body.dark-theme .edit-profile-right h2,
-body.dark-theme .settings-container h2 {
-    color: #e2e8f0 !important;
-    border-bottom-color: #f97316 !important;
-}
-
-/* Аватар */
-body.dark-theme .profile-avatar img {
-    border-color: #475569 !important;
-}
-
-/* Инфо */
-body.dark-theme .profile-left-info,
-body.dark-theme .edit-profile-info {
-    border-top-color: #334155 !important;
-}
-
-body.dark-theme .profile-left-info p,
-body.dark-theme .edit-profile-info p {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .profile-left-info strong,
-body.dark-theme .edit-profile-info strong {
-    color: #f97316 !important;
-}
-
-/* Таблица */
-body.dark-theme .info-table td {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .info-table td:first-child {
-    color: #f97316 !important;
-}
-
-body.dark-theme .info-table tr {
-    border-bottom-color: #334155 !important;
-}
-
-/* Кнопки */
-body.dark-theme .edit-profile-btn {
-    background-color: #f97316 !important;
-    color: white !important;
-}
-
-body.dark-theme .edit-profile-btn:hover {
-    background-color: #ea580c !important;
-}
-
-body.dark-theme .avatar-upload-label {
-    background: #f97316 !important;
-    color: white !important;
-}
-
-body.dark-theme .avatar-upload-label:hover {
-    background: #ea580c !important;
-}
-
-body.dark-theme .avatar-delete-btn {
-    background: #475569 !important;
-    color: white !important;
-}
-
-body.dark-theme .avatar-delete-btn:hover {
-    background: #334155 !important;
-}
-
-/* Формы */
-body.dark-theme .edit-profile-form .form-group label {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .edit-profile-form input,
-body.dark-theme .edit-profile-form textarea,
-body.dark-theme .edit-profile-form select {
-    background-color: #334155 !important;
-    color: #e2e8f0 !important;
-    border-color: #475569 !important;
-}
-
-body.dark-theme .edit-profile-form input:focus,
-body.dark-theme .edit-profile-form textarea:focus,
-body.dark-theme .edit-profile-form select:focus {
-    border-color: #f97316 !important;
-}
-
-body.dark-theme .save-btn {
-    background-color: #f97316 !important;
-    color: white !important;
-}
-
-body.dark-theme .save-btn:hover {
-    background-color: #ea580c !important;
-}
-
-body.dark-theme .back-link {
-    color: #f97316 !important;
-}
-
-body.dark-theme .back-link:hover {
-    color: #ff8c42 !important;
-}
-
-/* Настройки */
-body.dark-theme .settings-section {
-    border-bottom-color: #334155 !important;
-}
-
-body.dark-theme .settings-section h3 {
-    color: #f97316 !important;
-}
-
-body.dark-theme .setting-label {
-    color: #e2e8f0 !important;
-}
-
-body.dark-theme .settings-container select {
-    background-color: #334155 !important;
-    color: #e2e8f0 !important;
-    border-color: #475569 !important;
-}
-
-body.dark-theme .settings-container select:focus {
-    border-color: #f97316 !important;
-}
-
-/* Контейнер */
+/* Чат и сообщения */
 body.dark-theme .chat-container {
     background: #1e293b !important;
 }
 
-/* Шапка чата */
 body.dark-theme .chat-header {
     background: #334155 !important;
 }
@@ -834,10 +737,9 @@ body.dark-theme .chat-avatar {
 }
 
 body.dark-theme .participants-names {
-    color: rgba(226, 232, 240, 0.85);
+    color: #e2e8f0d9 !important;
 }
 
-/* Кнопка "Завершить обед" */
 body.dark-theme .end-meal-link {
     color: #f97316;
 }
@@ -846,7 +748,6 @@ body.dark-theme .end-meal-link:hover {
     color: #ff8c42;
 }
 
-/* Сообщения */
 body.dark-theme .chat-messages {
     background: #0f172a !important;
 }
@@ -874,7 +775,6 @@ body.dark-theme .message-time {
     color: #94a3b8 !important;
 }
 
-/* Поле ввода */
 body.dark-theme .chat-input {
     background: #1e293b !important;
     border-top-color: #334155 !important;
@@ -895,25 +795,45 @@ body.dark-theme .chat-input textarea::placeholder {
 }
 
 body.dark-theme .chat-input button {
-    background-color: #f97316 !important;
     color: white !important;
-}
-
-body.dark-theme .chat-input button:hover {
-    background-color: #ea580c !important;
-}
-
-/* Стикеры */
-body.dark-theme .stickers-panel {
-    background: rgba(30, 41, 59, 0.9) !important;
-    border-color: #475569 !important;
 }
 
 body.dark-theme #stickers-btn {
     color: #e2e8f0 !important;
 }
 
-/* СПИСОК ДИАЛОГОВ */
+body.dark-theme #stickers-btn:hover {
+    background: #475569 !important;
+}
+
+body.dark-theme .meal-action-btn {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .meal-action-btn:hover {
+    background-color: #ea580c !important;
+}
+
+body.dark-theme .rated-badge {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .meal-completed-badge {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .stickers-panel {
+    background: #1e293bf2 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .chat-sticker svg {
+    filter: brightness(0.9);
+}
+
+/* Список диалогов */
 body.dark-theme .messages-container h1 {
     color: #e2e8f0 !important;
 }
@@ -968,7 +888,169 @@ body.dark-theme .empty-messages a:hover {
     color: #ff8c42 !important;
 }
 
-/* ИЗБРАННОЕ */
+body.dark-theme .meal-completed-icon {
+    color: #2ecc71 !important;
+}
+
+/* Профиль и настройки */
+body.dark-theme .profile-left,
+body.dark-theme .profile-right,
+body.dark-theme .edit-profile-left,
+body.dark-theme .edit-profile-right,
+body.dark-theme .settings-container {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-theme .profile-right h2,
+body.dark-theme .edit-profile-right h2,
+body.dark-theme .settings-container h2 {
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .profile-avatar img {
+    border-color: #475569 !important;
+}
+
+body.dark-theme .profile-left-info,
+body.dark-theme .edit-profile-info {
+    border-top-color: #334155 !important;
+}
+
+body.dark-theme .profile-left-info p,
+body.dark-theme .edit-profile-info p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .profile-left-info strong,
+body.dark-theme .edit-profile-info strong {
+    color: #f97316 !important;
+}
+
+body.dark-theme .info-table td {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .info-table td:first-child {
+    color: #f97316 !important;
+}
+
+body.dark-theme .info-table tr {
+    border-bottom-color: #334155 !important;
+}
+
+body.dark-theme .edit-profile-btn {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .edit-profile-btn:hover {
+    background-color: #ea580c !important;
+}
+
+body.dark-theme .avatar-upload-label {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .avatar-upload-label:hover {
+    background: #ea580c !important;
+}
+
+body.dark-theme .avatar-delete-btn {
+    background: #475569 !important;
+    color: white !important;
+}
+
+body.dark-theme .avatar-delete-btn:hover {
+    background: #334155 !important;
+}
+
+body.dark-theme .edit-profile-form .form-group label {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .edit-profile-form input,
+body.dark-theme .edit-profile-form textarea,
+body.dark-theme .edit-profile-form select {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .edit-profile-form input:focus,
+body.dark-theme .edit-profile-form textarea:focus,
+body.dark-theme .edit-profile-form select:focus {
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .save-btn {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .save-btn:hover {
+    background-color: #ea580c !important;
+}
+
+body.dark-theme .back-link {
+    color: #f97316 !important;
+}
+
+body.dark-theme .back-link:hover {
+    color: #ff8c42 !important;
+}
+
+body.dark-theme .settings-section {
+    border-bottom-color: #334155 !important;
+}
+
+body.dark-theme .settings-section h3 {
+    color: #f97316 !important;
+}
+
+body.dark-theme .setting-label {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .settings-container select {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .settings-container select:focus {
+    border-color: #f97316 !important;
+}
+
+/* Кастомный dropdown в тёмной теме */
+body.dark-theme .cd-wrapper .cd-trigger {
+    background: #334155 !important;
+    border-color: #475569 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .cd-wrapper .cd-list {
+    background: #1e293b !important;
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .cd-wrapper .cd-item {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .cd-wrapper .cd-item:hover,
+body.dark-theme .cd-wrapper .cd-item.cd-item--focused {
+    background: #334155 !important;
+}
+
+body.dark-theme .cd-wrapper .cd-item.cd-item--selected {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+/* Избранное */
 body.dark-theme .favorites-container h1 {
     color: #e2e8f0 !important;
 }
@@ -1019,7 +1101,74 @@ body.dark-theme .empty-favorites a:hover {
     color: #ff8c42 !important;
 }
 
-/* ССЫЛКИ */
+/* Групповая оценка */
+body.dark-theme .group-rate-container h1,
+body.dark-theme .group-rate-container .progress-header p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .user-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-theme .user-name {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .btn-rate,
+body.dark-theme .btn-skip {
+    background: #f97316 !important;
+}
+
+body.dark-theme .btn-rate:hover {
+    background: #ea580c !important;
+}
+
+body.dark-theme .btn-skip {
+    background: #334155 !important;
+}
+
+body.dark-theme .btn-skip:hover {
+    background: #475569 !important;
+}
+
+body.dark-theme .progress-info {
+    color: #94a3b8 !important;
+}
+
+/* Оценка пользователя */
+body.dark-theme .rate-user-text {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .back-btn-rating {
+    background: #334155 !important;
+    color: white !important;
+}
+
+body.dark-theme .back-btn-rating:hover {
+    background: #475569 !important;
+}
+
+body.dark-theme .submit-rating-btn {
+    background: #f97316 !important;
+}
+
+body.dark-theme .submit-rating-btn:hover {
+    background: #ea580c !important;
+}
+
+/* Публичный профиль */
+body.dark-theme .profile-left .edit-profile-btn {
+    background: #f97316 !important;
+}
+
+body.dark-theme .profile-left .edit-profile-btn:hover {
+    background: #ea580c !important;
+}
+
+/* Ссылки */
 body.dark-theme .back-link a {
     color: #f97316 !important;
 }
@@ -1036,15 +1185,7 @@ body.dark-theme .login-link a:hover {
     color: #ff8c42 !important;
 }
 
-body.dark-theme .empty-favorites a {
-    color: #f97316 !important;
-}
-
-body.dark-theme .empty-favorites a:hover {
-    color: #ff8c42 !important;
-}
-
-/* ФУТЕР */
+/* Футер */
 body.dark-theme .footer {
     background-color: #1e293b !important;
 }
@@ -1065,4 +1206,21 @@ body.dark-theme .social-links a {
 
 body.dark-theme .social-links a:hover {
     color: #f97316 !important;
+}
+
+/* Вспомогательные стили */
+body.dark-theme .online-text {
+    color: #2ecc71 !important;
+}
+
+body.dark-theme .offline-text {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .required-star {
+    color: #ef4444 !important;
+}
+
+body.dark-theme.animations-off .menu-icon.lottie-icon svg {
+    filter: brightness(0.8);
 }

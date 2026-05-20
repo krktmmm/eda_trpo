@@ -31,7 +31,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    ]
+]
 
 # Application definition
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sslserver',
     'places',
     'users',
     'roulette',
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.UpdateLastActivityMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -127,5 +129,5 @@ LOGOUT_REDIRECT_URL = '/'
 # Media files (загруженные пользователями файлы)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 MAX_UPLOAD_SIZE = 5242880  # 5MB
+DATA_UPLOAD_MAX_NUMBER_FILES = 5
