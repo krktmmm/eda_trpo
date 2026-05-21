@@ -26,7 +26,7 @@
             <p>
                 <strong>⭐ Рейтинг:</strong> 
                 {{ target_user.profile.rating|floatformat:1 }} 
-                ({{ target_user.profile.rating_count }} оценок)
+                ({{ target_user.profile.rating_count }}{% if target_user.profile.rating_count == 1 %} оценка{% elif target_user.profile.rating_count == 2 or target_user.profile.rating_count == 3 or target_user.profile.rating_count == 4 %} оценки{% else %} оценок{% endif %})
             </p>
             <p>
                 <strong>📱 Статус:</strong>
