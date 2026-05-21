@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Обед-рулетка | СытГУТИ{% endblock %}
+
+{% block content %}
+
+<div class="greeting">
+    <h1>🎲 Обед - рулетка</h1>
+    {% if user.is_authenticated %}
+        <p>
+            {% if user.profile.greeting_style == 'sweet' %}
+                Малышочек, {{ user.username }}! выбери себе компанию для ням-нямки
+            {% elif user.profile.greeting_style == 'formal' %}
+                Уважаемый студент {{ user.username }}, выберите себе компанию для обеда
+            {% elif user.profile.greeting_style == 'friend' %}
+                Друн {{ user.username }}, найди себе кого-нибудь уже
+            {% elif user.profile.greeting_style == 'comrade' %}
+                Товарищ {{ user.username }}, вы должны выбрать компанию для обеда
+            {% elif user.profile.greeting_style == 'none' %}
+                {{ user.username }}, выбери компанию для обеда
+            {% else %}
+                {{ user.username }}, выбери себе компанию для обеда
+            {% endif %}
+        </p>
+    {% endif %}
+</div>
+
+<div class="roulette-container">
+    <!-- Уведомление об активной встрече -->
+    {% if has_active_meeting %}
+    <div class="active-meeting-warning">
+        <p>⚠️ У вас уже есть активная встреча! <a href="/roulette/messages/">Завершите её в чате</a>, чтобы начать новый поиск.</p>
+    </div>
+    {% endif %}
+
+    <!-- Кнопки выбора режима -->
+    <div class="roulette-buttons">
+        {% if has_active_meeting %}
+        <div class="meeting-blocked-message">
+            <p class="blocked-text">🔒 Сначала завершите текущую встречу</p>
+            <a href="/roulette/messages/" class="back-btn go-to-chat-btn">💬 Перейти в чат</a>
+        </div>
+        {% else %}
+        <button id="solo-btn" class="roulette-mode-btn">
+            <div class="btn-inner">
+                <div class="btn-icon lottie-roulette-icon" id="oneperson-animation"></div>
+                <h2>Найти сообедника</h2>
+                <p>Обед вдвоём</p>
+            </div>
+        </button>
+        <button id="group-btn" class="roulette-mode-btn">
+            <div class="btn-inner">
+                <div class="btn-icon lottie-roulette-icon" id="twoperson-animation"></div>
+                <h2>Найти сообедников</h2>
+                <p>Обед с компанией</p>
+            </div>
+        </button>
+        {% endif %}
+    </div>
+
+    <!-- ФОРМА ДЛЯ СОЛО-РЕЖИМА -->
+    <div id="solo-form" class="roulette-form hidden">
+        <h2>Настройки поиска сообедника</h2>
+        <form id="create-solo-form">
+            {% csrf_token %}
+            <select name="building" required>
+                <option value="1">Корпус №1</option>
+                <option value="3">Корпус №3</option>
+                <option value="5">Корпус №5</option>
+            </select>
+            <select name="budget">
+                <option value="economy">До 200 ₽</option>
+                <option value="medium">200-400 ₽</option>
+                <option value="high">От 400 ₽</option>
+                <option value="any">Не важно</option>
+            </select>
+            <button type="submit" id="start-solo">🎲 Начать поиск</button>
+        </form>
+    </div>
+
+    <!-- ФОРМА ДЛЯ ГРУППОВОГО РЕЖИМА -->
+    <div id="group-form" class="roulette-form hidden">
+        <h2>Настройки поиска компании</h2>
+        <form id="create-group-form">
+            {% csrf_token %}
+            <select name="building" required>
+                <option value="1">Корпус №1</option>
+                <option value="3">Корпус №3</option>
+                <option value="5">Корпус №5</option>
+            </select>
+            <select name="budget">
+                <option value="economy">До 200 ₽</option>
+                <option value="medium">200-400 ₽</option>
+                <option value="high">От 400 ₽</option>
+                <option value="any">Не важно</option>
+            </select>
+            <input type="number" 
+                   name="needed_people" 
+                   placeholder="Сколько всего человек (включая тебя)" 
+                   min="3" 
+                   max="10">
+            <small>Если оставить пустым — подберём любую компанию</small>
+            <button type="submit" id="start-group">🎲 Начать поиск</button>
+        </form>
+    </div>
+
+    <!-- ПРОЦЕСС ПОИСКА -->
+    <div id="search-process" class="search-process hidden">
+        <h1 class="main-title">🎲 Обед - рулетка</h1>
+        <h2 class="search-title">Поиск сообедника...</h2>
+        <div id="slot-animation" class="slot-search-icon"></div>
+        <p id="search-process-text">Подождите, ищем подходящую компанию...</p>
+        <button id="cancelSearchBtn" class="back-btn">← Назад</button>
+    </div>
+
+    <!-- НИКОГО НЕ НАЙДЕНО -->
+    <div id="not-found-screen" class="search-process hidden">
+        <h1 class="main-title">🎲 Обед - рулетка</h1>
+        <div class="not-found-emoji">😔</div>
+        <h2 id="not-found-title">Собеседник не найден!</h2>
+        <p id="not-found-text">Попробуйте изменить параметры поиска</p>
+        <div class="not-found-buttons">
+            <button id="not-found-cancel">❌ Не искать</button>
+            <button id="not-found-again">🔄 Попробовать ещё раз</button>
+            <button id="not-found-create">🚀 Создать компанию</button>
+        </div>
+    </div>
+
+    <!-- НАЙДЕН СООБЕСЕДНИК / КОМПАНИЯ -->
+    <div id="match-screen" class="search-process hidden">
+        <h1 class="main-title">🎲 Обед - рулетка</h1>
+        <h2 class="match-title" id="match-title-text">Найден сообедник!</h2>
+
+        <!-- Соло-матч -->
+        <div class="match-card" id="single-match-card">
+            <div class="match-avatar">
+                <img src="{% if user.profile.theme == 'dark' %}{% static 'images/default_avatar_dark_theme.jpg' %}{% else %}{% static 'images/default_avatar.jpg' %}{% endif %}" 
+                    alt="avatar" 
+                    id="match-avatar-img"
+                    onerror="this.src='{% static 'images/default_avatar.jpg' %}'">
+            </div>
+            <div class="match-info">
+                <p class="match-username"><span id="screen-username"></span></p>
+                <p><strong>Корпус:</strong> <span id="screen-building"></span></p>
+                <p><strong>Бюджет:</strong> <span id="screen-budget"></span></p>
+                <p><strong>Telegram:</strong> <span id="screen-telegram"></span></p>
+                <p><strong>VK:</strong> <span id="screen-vk"></span></p>
+            </div>
+        </div>
+
+        <!-- Групповые участники -->
+        <div id="group-members-container" class="hidden">
+            <h3>👥 Участники компании:</h3>
+            <div id="group-members-list" class="group-members-list"></div>
+        </div>
+
+        <div class="match-buttons">
+            <button id="screen-accept">✅ Пойду</button>
+            <button id="screen-again">🔄 Искать другого</button>
+            <button id="screen-cancel">❌ Выйти</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ПОСЛЕ "ПОЙДУ" -->
+    <div id="match-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>🎉 Вы договорились об обеде!</h3>
+            <p id="modal-match-text">Хотите связаться с <strong id="modal-username"></strong>?</p>
+            <div class="modal-buttons">
+                <button id="modal-chat-btn" class="back-btn">💬 Написать в чат</button>
+                <button id="modal-later-btn" class="back-btn">⏰ Позже</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/roulette.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,454 @@
+@charset "UTF-8";
+
+/* ПЛАНШЕТЫ (ширина меньше 1024px) */
+@media (max-width: 1024px) {
+
+    /* Контейнеры */
+    .main-container { gap: 30px; }
+    .profile-container { gap: 30px; }
+    .edit-profile-container { gap: 30px; }
+
+    /* Максимальная ширина */
+    .chat-container,
+    .messages-container,
+    .favorites-container,
+    .detail-container,
+    .settings-container {
+        max-width: 90%;
+    }
+    .chat-container { height: calc(100vh - 200px); }
+
+    /* Рулетка */
+    .roulette-buttons { gap: 30px; }
+    .roulette-mode-btn .btn-inner {
+        width: 300px;
+        height: 300px;
+        padding: 40px 30px;
+    }
+    .roulette-form { max-width: 60%; }
+
+    /* Главное меню */
+    .menu-card-inner {
+        width: 300px;
+        height: 300px;
+        padding: 40px 30px;
+    }
+
+    /* Матч */
+    .match-card { gap: 30px; }
+    .match-avatar { width: 200px; }
+    .match-avatar img { width: 180px; height: 180px; }
+}
+
+/* МАЛЕНЬКИЕ ПЛАНШЕТЫ (ширина меньше 900px) */
+@media (max-width: 900px) {
+
+    /* Главный контейнер */
+    .main-container { flex-direction: column; }
+
+    /* Левая панель (выбор времени) */
+    .time-panel { min-height: auto; }
+    .time-buttons { flex-direction: row; flex-wrap: wrap; }
+    .time-btn { flex: 1; font-size: 16px; padding: 15px 10px; width: auto; }
+
+    /* Профиль */
+    .profile-container { flex-direction: column; }
+    .profile-left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+        text-align: left;
+        padding: 30px;
+    }
+    .profile-avatar { width: 120px; height: 120px; margin: 0; flex-shrink: 0; }
+    .profile-left-info { border-top: none; padding-top: 0; margin-top: 0; flex: 1; }
+    .profile-right { min-width: auto; }
+
+    /* Редактирование профиля */
+    .edit-profile-container { flex-direction: column; }
+    .edit-profile-right { min-width: auto; }
+    .edit-profile-left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+        text-align: left;
+        padding: 30px;
+    }
+    .edit-profile-info { border-top: none; padding-top: 0; margin-top: 0; flex: 1; }
+
+    /* Рулетка */
+    .roulette-buttons { min-height: 30vh; }
+    .roulette-mode-btn .btn-inner {
+        width: 280px;
+        height: 280px;
+        padding: 30px 20px;
+    }
+    .roulette-form { max-width: 80%; }
+
+    /* Главное меню */
+    .main-menu { min-height: 30vh; }
+    .menu-card-inner {
+        width: 280px;
+        height: 280px;
+        padding: 30px 20px;
+    }
+
+    /* Матч */
+    .match-card { flex-direction: column; text-align: center; }
+    .match-avatar { width: 180px; margin: 0 auto; }
+    .match-avatar img { width: 160px; height: 160px; }
+    .match-info { text-align: center; }
+    .match-info p { justify-content: center; text-align: center; }
+    .match-info p strong { min-width: auto; margin-right: 10px; }
+    .match-info p span { text-align: center; }
+    .match-buttons { gap: 15px; }
+    .match-buttons button { min-width: 140px; padding: 12px 20px; font-size: 16px; }
+
+    /* Процесс поиска */
+    .search-process,
+    #match-screen,
+    #not-found-screen {
+        padding: 30px 20px;
+    }
+
+    /* Чат */
+    .chat-container { height: calc(100vh - 180px); min-height: 400px; }
+    .chat-messages { padding: 15px; }
+    .message { max-width: 85%; }
+    .stickers-panel { width: 280px; max-height: 220px; }
+    .sticker-item,
+    .chat-sticker { width: 70px; height: 70px; }
+
+    /* Настройки */
+    .settings-section h3 { font-size: 20px; }
+    .setting-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .setting-item select { width: 100%; }
+
+    /* Отзывы */
+    .reviews-grid { gap: 10px; }
+    .review-card { padding: 15px; }
+
+    /* Избранное */
+    .favorite-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .remove-favorite { width: 100%; text-align: center; }
+
+    /* Диалоги */
+    .dialog-card-wrapper { flex-direction: column; align-items: stretch; }
+    .delete-dialog-btn { width: 100%; justify-content: center; }
+
+    /* Уведомления */
+    .notification-item { padding: 10px 12px; font-size: 13px; }
+    .notifications-content { width: 260px; right: -50px; }
+}
+
+/* ТЕЛЕФОНЫ (ширина меньше 700px) */
+@media (max-width: 700px) {
+
+    /* Футер */
+    .footer-content { flex-direction: column; text-align: center; gap: 30px; }
+    .social-links { align-items: center; }
+    .social-links a:hover { transform: scale(1.1); }
+
+    /* Шапка */
+    .menu { display: none; }
+    .panel { gap: 15px; height: auto; padding: 10px 0; }
+    .navigation { padding: 10px; }
+    .logo img { height: clamp(60px, 15vw, 200px); }
+    .search { max-width: 100%; margin: 0; }
+    .search input { padding: 10px 15px; font-size: 14px; }
+    .search button { padding: 10px 15px; }
+    .search button span { font-size: 14px; }
+
+    /* Рулетка */
+    .roulette-buttons { flex-direction: column; gap: 20px; min-height: auto; padding: 20px 0; }
+    .roulette-mode-btn .btn-inner {
+        width: 100%;
+        max-width: 350px;
+        height: 220px;
+        padding: 25px 20px;
+    }
+    .roulette-form { max-width: 95%; padding: 15px; }
+    .roulette-form h2 { font-size: 20px; }
+    .roulette-form select,
+    .roulette-form input { padding: 8px; font-size: 14px; }
+    .roulette-form button { padding: 10px; font-size: 16px; }
+
+    /* Главное меню */
+    .main-menu { flex-direction: column; gap: 20px; min-height: auto; padding: 20px 0; }
+    .menu-card-inner {
+        width: 100%;
+        max-width: 350px;
+        height: 220px;
+        padding: 25px 20px;
+    }
+    .menu-icon.lottie-icon { width: 100px !important; height: 100px !important; margin: 0 auto 15px auto; }
+    .lottie-roulette-icon { width: 100px; height: 100px; }
+
+    /* Процесс поиска */
+    .search-process { padding: 20px 15px; }
+    .search-title { font-size: 22px !important; }
+    .slot-search-icon { width: 140px; height: 140px; }
+    .search-process p { font-size: 16px; }
+
+    /* Матч */
+    #match-screen { padding: 20px 15px; }
+    .match-title { font-size: 22px !important; }
+    .match-avatar img { width: 140px; height: 140px; }
+    .match-info p { font-size: 16px; }
+    .match-username { font-size: 24px !important; }
+    .match-username span { font-size: 24px; }
+    .match-buttons { flex-direction: column; gap: 10px; }
+    .match-buttons button { width: 100%; min-width: auto; }
+
+    /* Не найдено */
+    #not-found-screen h2 { font-size: 22px; }
+    .not-found-emoji { font-size: 60px; }
+    .not-found-buttons { flex-direction: column; gap: 10px; width: 100%; }
+    .not-found-buttons button { width: 100%; min-width: auto; }
+    .back-btn { width: 100%; padding: 12px; font-size: 16px; }
+
+    /* Чат */
+    .chat-container { height: calc(100vh - 150px); min-height: 350px; margin: 10px auto; }
+    .chat-header { padding: 10px 15px; }
+    .chat-header h2 { font-size: 16px; }
+    .chat-avatar { width: 40px; height: 40px; }
+    .chat-messages { padding: 10px; gap: 8px; }
+    .message { max-width: 90%; padding: 8px 12px; }
+    .chat-input { padding: 10px; gap: 8px; }
+    .chat-input textarea { height: 38px; line-height: 38px; font-size: 13px; padding: 0 12px; }
+    .chat-input textarea::placeholder { line-height: 38px; font-size: 13px; }
+    .chat-input button { height: 38px; padding: 0 15px; font-size: 14px; }
+    #stickers-btn { padding: 10px; font-size: 18px; }
+    .stickers-panel { width: 250px; max-height: 200px; right: 40px; bottom: 80px; }
+    .sticker-item,
+    .chat-sticker { width: 60px; height: 60px; }
+
+    /* Профиль */
+    .profile-container { padding: 0 10px; margin: 20px auto; }
+    .profile-left { flex-direction: column; text-align: center; padding: 25px 20px; }
+    .profile-avatar { width: 150px; height: 150px; margin: 0 auto 15px; }
+    .profile-right { padding: 25px 20px; }
+    .profile-right h2 { font-size: 24px; }
+    .info-table td { padding: 10px 8px; font-size: 14px; }
+
+    /* Редактирование профиля */
+    .edit-profile-container { padding: 0 10px; margin: 20px auto; }
+    .edit-profile-left { flex-direction: column; text-align: center; padding: 25px 20px; }
+    .edit-profile-right { padding: 25px 20px; }
+    .edit-profile-right h2 { font-size: 24px; }
+    .form-group label { font-size: 14px; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select { padding: 10px 12px; font-size: 14px; }
+    .save-btn { padding: 12px 20px; font-size: 16px; }
+    .edit-profile-btn { padding: 12px 25px; font-size: 16px; }
+
+    /* Сообщения */
+    .messages-container { margin: 20px auto; padding: 0 10px; }
+    .messages-container h1 { font-size: 24px; margin-bottom: 20px; }
+    .dialog-card { padding: 12px; gap: 10px; }
+    .dialog-avatar { width: 50px; height: 50px; }
+    .dialog-name { font-size: 16px; }
+    .dialog-last-message { font-size: 13px; }
+    .dialog-unread { min-width: 24px; height: 24px; font-size: 12px; }
+    .delete-dialog-btn { padding: 6px 12px; font-size: 13px; }
+
+    /* Избранное */
+    .favorites-container { margin: 20px auto; padding: 0 10px; }
+    .favorites-container h1 { font-size: 24px; margin-bottom: 20px; }
+    .favorite-name { font-size: 16px; }
+    .favorite-address { font-size: 13px; }
+    .favorite-price { font-size: 13px; }
+
+    /* Детали заведения */
+    .detail-container { margin: 20px auto; padding: 15px; }
+    .place-header h1 { font-size: 24px; }
+    .place-header { flex-direction: column; align-items: flex-start; }
+    .favorite-detail-btn { align-self: flex-end; margin-top: -40px; }
+    .place-info-detail { padding: 15px; }
+    .place-info-detail p { font-size: 16px; }
+    .reviews-section { padding: 15px; }
+    .reviews-section h2 { font-size: 20px; }
+    .review-header { flex-direction: column; align-items: flex-start; gap: 5px; }
+    .review-header strong { font-size: 16px; }
+    .review-text { font-size: 14px; }
+    .add-review-form { padding: 20px 15px; }
+    .add-review-form h3 { font-size: 18px; }
+    .add-review-form select,
+    .add-review-form textarea,
+    .add-review-form input { padding: 10px; font-size: 14px; }
+    .submit-review-btn { width: 100%; padding: 12px; font-size: 16px; }
+
+    /* Настройки */
+    .settings-container { margin: 20px auto; padding: 20px 15px; border-radius: 15px; }
+    .settings-container h2 { font-size: 24px; }
+    .settings-section h3 { font-size: 18px; }
+    .setting-label { font-size: 14px; }
+    .setting-item select { font-size: 14px; }
+
+    /* Футер */
+    .footer { margin-top: 40px; padding: 30px 15px 15px; }
+    .footer-content { gap: 25px; }
+    .footer-section h3 { font-size: 18px; }
+    .footer-section p { font-size: 13px; }
+    .social-links a { font-size: 14px; }
+    .footer-bottom { padding-top: 20px; margin-top: 20px; }
+    .footer-bottom p { font-size: 11px; }
+
+    /* Приветствие */
+    .greeting h1 { font-size: 40px !important; }
+    .greeting p { font-size: 20px !important; }
+
+    /* Модалка */
+    .modal-content { max-width: 90%; padding: 25px 20px; }
+    .modal-content h3 { font-size: 20px; }
+    .modal-content button { padding: 10px 15px; font-size: 14px; margin: 5px; }
+    .modal-buttons { display: flex; flex-direction: column; gap: 10px; }
+
+    /* Выпадашки */
+    .dropdown-content { min-width: 160px; right: -20px; }
+    .dropdown-content a,
+    .dropdown-content form .dropdown-link { padding: 10px 14px; font-size: 14px; }
+    .notifications-content { width: 240px; right: -60px; }
+    .notifications-header { font-size: 14px; padding: 10px 14px; }
+
+    /* Панели и карта */
+    .time-panel h2 { font-size: 22px; }
+    .places-panel { max-height: 400px; }
+    .places-panel h2 { font-size: 20px; }
+    .place-name { font-size: 1.1em; }
+    .place-address { font-size: 13px; }
+    .place-info { gap: 15px; }
+    .place-info span { font-size: 13px; }
+    #places-map { height: 300px; }
+    .map-placeholder-inner { height: 300px; }
+    .back-link { font-size: 16px; }
+}
+
+/* МАЛЕНЬКИЕ ТЕЛЕФОНЫ (ширина меньше 550px) */
+@media (max-width: 550px) {
+
+    /* Шапка */
+    .logo { display: none; }
+    .search { max-width: 100%; margin: 0 10px; }
+    .navigation { padding: 10px; }
+    .panel { gap: 10px; justify-content: center; }
+    .panel .profile { width: 50px; height: 50px; }
+    .panel .profile img { border-width: 2px; }
+    .profile-icon { width: 50px; height: 50px; }
+    .profile-icon img { border-width: 2px; }
+
+    /* Рулетка */
+    .roulette-mode-btn .btn-inner { height: 180px; padding: 20px 15px; }
+    .roulette-mode-btn h2 { font-size: 20px; margin-top: 10px; }
+    .roulette-mode-btn p { font-size: 14px; }
+
+    /* Главное меню */
+    .menu-card-inner { height: 180px; padding: 20px 15px; }
+    .menu-card h2 { font-size: 20px; margin-top: 10px; }
+    .menu-card p { font-size: 14px; }
+    .menu-icon.lottie-icon { width: 80px !important; height: 80px !important; margin: 0 auto 10px auto; }
+    .lottie-roulette-icon { width: 80px; height: 80px; }
+
+    /* Чат */
+    .chat-container { height: calc(100vh - 120px); min-height: 300px; border-radius: 10px; }
+    .message { max-width: 95%; font-size: 14px; }
+    .stickers-panel { width: 220px; max-height: 180px; right: 20px; bottom: 70px; padding: 10px; gap: 8px; }
+    .sticker-item,
+    .chat-sticker { width: 50px; height: 50px; }
+
+    /* Профиль */
+    .profile-avatar { width: 120px; height: 120px; }
+    .profile-avatar img { border-width: 3px; }
+    .profile-left { padding: 20px 15px; }
+    .profile-right { padding: 20px 15px; }
+
+    /* Редактирование профиля */
+    .edit-profile-left { padding: 20px 15px; }
+    .edit-profile-right { padding: 20px 15px; }
+
+    /* Диалоги */
+    .dialog-avatar { width: 45px; height: 45px; }
+
+    /* Матч */
+    .match-avatar img { width: 120px; height: 120px; border-width: 3px; }
+    .match-info p { font-size: 14px; }
+
+    /* Настройки */
+    .settings-container { padding: 15px 12px; }
+
+    /* Поиск */
+    .search-suggestions { border-radius: 15px; }
+    .suggestion-item { padding: 10px 14px; font-size: 14px; }
+    .suggestion-item span { font-size: 12px; }
+
+    /* Отзывы */
+    .review-card { padding: 12px; }
+
+    /* Избранное */
+    .favorite-card { padding: 15px; }
+
+    /* Форма отзыва */
+    .add-review-form { padding: 15px; }
+
+    /* Приветствие */
+    .greeting h1 { font-size: 32px !important; }
+    .greeting p { font-size: 18px !important; }
+}
+
+/* ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (ширина меньше 400px) */
+@media (max-width: 400px) {
+
+    /* Шапка */
+    .panel .profile,
+    .profile-icon { width: 42px; height: 42px; }
+
+    /* Рулетка */
+    .roulette-mode-btn .btn-inner { height: 160px; padding: 15px 10px; }
+    .roulette-mode-btn h2 { font-size: 18px; }
+    .roulette-mode-btn p { font-size: 13px; }
+
+    /* Главное меню */
+    .menu-card-inner { height: 160px; padding: 15px 10px; }
+    .menu-card h2 { font-size: 18px; }
+    .menu-card p { font-size: 13px; }
+    .menu-icon.lottie-icon { width: 70px !important; height: 70px !important; }
+    .lottie-roulette-icon { width: 70px; height: 70px; }
+
+    /* Чат */
+    .chat-messages { padding: 8px; gap: 6px; }
+    .message { padding: 6px 10px; font-size: 13px; }
+    .chat-input { padding: 8px; gap: 6px; }
+    .chat-input textarea { height: 34px; line-height: 34px; font-size: 12px; }
+    .chat-input button { height: 34px; padding: 0 12px; font-size: 13px; }
+    #stickers-btn { padding: 8px; font-size: 16px; }
+    .stickers-panel { width: 200px; right: 10px; gap: 6px; }
+    .sticker-item,
+    .chat-sticker { width: 45px; height: 45px; }
+
+    /* Диалоги */
+    .dialog-card { padding: 10px; gap: 8px; }
+    .dialog-avatar { width: 40px; height: 40px; }
+    .dialog-name { font-size: 14px; }
+    .dialog-last-message { font-size: 12px; }
+
+    /* Аватар */
+    .profile-avatar { width: 100px; height: 100px; }
+    .match-avatar img { width: 100px; height: 100px; }
+
+    /* Приветствие */
+    .greeting h1 { font-size: 28px !important; }
+    .greeting p { font-size: 16px !important; }
+
+    /* Кнопки */
+    .time-btn { font-size: 14px; padding: 12px 8px; }
+
+    /* Заведения */
+    .place-name { font-size: 1em; }
+
+    /* Карта */
+    #places-map { height: 250px; }
+    .map-placeholder-inner { height: 250px; }
+}

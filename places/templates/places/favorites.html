@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Избранное | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'favorites.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="favorites-container">
+    <h1>❤️ Избранные заведения</h1>
+    
+    {% if favorites %}
+        <div class="favorites-list">
+            {% for fav in favorites %}
+            <div class="favorite-card">
+                <div class="favorite-info">
+                    <a href="{% url 'place_detail' fav.place.id %}" class="favorite-name">
+                        {{ fav.place.name }}
+                    </a>
+                    <div class="favorite-address">📍 {{ fav.place.address }}</div>
+                    <div class="favorite-price">💰 {{ fav.place.avg_price|default:"—" }} ₽</div>
+                </div>
+                <button class="remove-favorite" data-place-id="{{ fav.place.id }}">🗑️ Удалить</button>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-favorites">У вас пока нет избранных заведений. Добавьте их на странице <a href="/places/">заведений</a>!</p>
+    {% endif %}
+</div>
+
+<script src="{% static 'js/favorites.js' %}"></script>
+
+{% endblock %}

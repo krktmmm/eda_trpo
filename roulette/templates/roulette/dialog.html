@@ -1,0 +1,426 @@
+{% extends 'base.html' %}
+{% load tz %}
+{% load static %}
+
+{% block title %}
+    {% if is_group %}
+        Групповой чат | СытГУТИ
+    {% elif other_user %}
+        Чат с {{ other_user.username }} | СытГУТИ
+    {% else %}
+        Чат | СытГУТИ
+    {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'dialog.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <a href="{% url 'messages_list' %}" class="back-link">←</a>
+        <div class="chat-user-info">
+            {% if not is_group and other_user %}
+                <a href="{% url 'public_profile' other_user.username %}" class="chat-avatar-link">
+            {% endif %}
+                <div class="chat-avatar">
+                    {% if is_group %}
+                        {% if user.profile.theme == 'dark' %}
+                            <img src="{% static 'images/group_avatar_dark_theme.jpg' %}" alt="Группа">
+                        {% else %}
+                            <img src="{% static 'images/group_avatar.jpg' %}" alt="Группа">
+                        {% endif %}
+                    {% elif other_user and other_user.profile.avatar %}
+                        <img src="{{ other_user.profile.avatar.url }}?v={{ other_user.id }}" alt="{{ other_user.username }}"
+                            onerror="this.onerror=null; this.src='{% static 'images/default_avatar.jpg' %}'">
+                    {% elif user.profile.theme == 'dark' %}
+                        <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Аватар">
+                    {% else %}
+                        <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
+                    {% endif %}
+                </div>
+            {% if not is_group and other_user %}
+                </a>
+            {% endif %}
+            <div class="chat-info-container">
+                <div class="chat-header-row">
+                    <div>
+                        <h2>
+                            {% if is_group %}
+                                Группа
+                            {% elif other_user %}
+                                {{ other_user.username }}
+                            {% else %}
+                                Чат
+                            {% endif %}
+                        </h2>
+                        {% if is_group %}
+                            <div class="participants-names">
+                                {% for participant in participants.all %}
+                                    {% if participant != user %}
+                                        <a href="{% url 'public_profile' participant.username %}" class="participant-link">{{ participant.username }}</a>{% if not forloop.last %}, {% endif %}
+                                    {% else %}
+                                        {{ participant.username }}{% if not forloop.last %}, {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Контейнер для кнопки -->
+                    <div id="meal-action-container"></div>
+                </div>
+                {% if dialog.is_meal_completed %}
+                    <div class="meal-completed-badge">🍽️ Обед завершён</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="chat-messages" id="chat-messages">
+        {% for msg in messages %}
+        <div class="message 
+            {% if msg.text|slice:':8' == '[system]' %}
+                message-system
+            {% elif msg.sender == user %}
+                message-mine
+            {% else %}
+                message-other
+            {% endif %}" 
+            data-id="{{ msg.id }}">
+            {% if msg.text|slice:':8' != '[system]' and msg.sender != user %}
+                <div class="message-sender">
+                    {{ msg.sender.username }}
+                </div>
+            {% endif %}
+            {% if '[sticker]' in msg.text %}
+                <div class="message-text">
+                    <div class="chat-sticker" data-sticker="{{ msg.text|cut:'[sticker]' }}"></div>
+                </div>
+            {% elif msg.text|slice:':8' == '[system]' %}
+                <div class="message-text">{{ msg.text|slice:'8:' }}</div>
+            {% else %}
+                <div class="message-text">{{ msg.text }}</div>
+            {% endif %}
+            {% load tz %}
+            {% if msg.text|slice:':8' != '[system]' %}
+                <div class="message-time">{{ msg.created_at|localtime|date:'H:i' }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="chat-input">
+        <div class="message-input-wrapper">
+            <textarea id="message-input" placeholder="Введите сообщение..." rows="2"></textarea>
+        </div>
+        <button type="button" id="stickers-btn">🐱</button>
+        <button id="send-btn">📤 Отправить</button>
+    </div>
+
+    <div id="stickers-panel" class="stickers-panel hidden">
+        <div class="sticker-item" data-sticker="1.json"></div>
+        <div class="sticker-item" data-sticker="2.json"></div>
+        <div class="sticker-item" data-sticker="3.json"></div>
+        <div class="sticker-item" data-sticker="4.json"></div>
+        <div class="sticker-item" data-sticker="5.json"></div>
+        <div class="sticker-item" data-sticker="6.json"></div>
+        <div class="sticker-item" data-sticker="7.json"></div>
+        <div class="sticker-item" data-sticker="9.json"></div>
+        <div class="sticker-item" data-sticker="10.json"></div>
+        <div class="sticker-item" data-sticker="11.json"></div>
+        <div class="sticker-item" data-sticker="12.json"></div>
+        <div class="sticker-item" data-sticker="13.json"></div>
+        <div class="sticker-item" data-sticker="14.json"></div>
+        <div class="sticker-item" data-sticker="15.json"></div>
+        <div class="sticker-item" data-sticker="16.json"></div>
+        <div class="sticker-item" data-sticker="18.json"></div>
+        <div class="sticker-item" data-sticker="19.json"></div>
+        <div class="sticker-item" data-sticker="20.json"></div>
+        <div class="sticker-item" data-sticker="22.json"></div>
+        <div class="sticker-item" data-sticker="23.json"></div>
+        <div class="sticker-item" data-sticker="26.json"></div>
+        <div class="sticker-item" data-sticker="27.json"></div>
+        <div class="sticker-item" data-sticker="28.json"></div>
+        <div class="sticker-item" data-sticker="29.json"></div>
+        <div class="sticker-item" data-sticker="30.json"></div>
+        <div class="sticker-item" data-sticker="31.json"></div>
+        <div class="sticker-item" data-sticker="33.json"></div>
+        <div class="sticker-item" data-sticker="34.json"></div>
+        <div class="sticker-item" data-sticker="35.json"></div>
+        <div class="sticker-item" data-sticker="36.json"></div>
+        <div class="sticker-item" data-sticker="37.json"></div>
+        <div class="sticker-item" data-sticker="38.json"></div>
+        <div class="sticker-item" data-sticker="39.json"></div>
+        <div class="sticker-item" data-sticker="40.json"></div>
+        <div class="sticker-item" data-sticker="41.json"></div>
+        <div class="sticker-item" data-sticker="44.json"></div>
+        <div class="sticker-item" data-sticker="45.json"></div>
+        <div class="sticker-item" data-sticker="48.json"></div>
+        <div class="sticker-item" data-sticker="49.json"></div>
+        <div class="sticker-item" data-sticker="50.json"></div>
+    </div>
+</div>
+
+<script>
+    const dialogId = {{ dialog.id }};
+    const isGroup = {{ is_group|yesno:'true,false' }};
+    let lastMessageId = Math.max(
+        0,
+        ...Array.from(document.querySelectorAll('.message[data-id]')).map(el => parseInt(el.dataset.id))
+    );
+    const messagesContainer = document.getElementById('chat-messages');
+    const messageInput = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send-btn');
+    const stickersBtn = document.getElementById('stickers-btn');
+    const stickersPanel = document.getElementById('stickers-panel');
+    const mealActionContainer = document.getElementById('meal-action-container');
+    
+    // ========== ФУНКЦИИ ДЛЯ ЧАТА ==========
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    function isSticker(text) {
+        return text.startsWith('[sticker]');
+    }
+
+    function renderMessageText(text) {
+        if (isSticker(text)) {
+            const sticker = text.replace('[sticker]', '');
+            return `<div class="chat-sticker" data-sticker="${escapeHtml(sticker)}"></div>`;
+        }
+        return escapeHtml(text);
+    }
+
+    function renderStickers() {
+        document.querySelectorAll('.chat-sticker:not([data-loaded="true"])').forEach(item => {
+            lottie.loadAnimation({
+                container: item,
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: `/static/stickers/${item.dataset.sticker}`
+            });
+            item.dataset.loaded = 'true';
+        });
+    }
+
+    document.querySelectorAll('.sticker-item').forEach(item => {
+        const animation = lottie.loadAnimation({
+            container: item,
+            renderer: 'svg',
+            loop: true,
+            autoplay: false,
+            path: `/static/stickers/${item.dataset.sticker}`
+        });
+        item.addEventListener('mouseenter', () => animation.play());
+        item.addEventListener('mouseleave', () => animation.stop());
+        item.addEventListener('click', () => {
+            const sticker = item.dataset.sticker;
+            fetch(`/roulette/api/messages/send/${dialogId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': window.CSRF_TOKEN
+                },
+                body: JSON.stringify({ text: `[sticker]${sticker}` })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    stickersPanel.classList.add('hidden');
+                    loadNewMessages();
+                }
+            });
+        });
+    });
+
+    function scrollToBottom() {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+    
+    function loadNewMessages() {
+        fetch(`/roulette/api/messages/new/${dialogId}/?after_id=${lastMessageId}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.messages && data.messages.length) {
+                    data.messages.forEach(msg => {
+                        if (document.querySelector(`.message[data-id="${msg.id}"]`)) return;
+                        
+                        const div = document.createElement('div');
+                        
+                        if (msg.text.startsWith('[system]')) {
+                            div.className = 'message message-system';
+                        } else if (msg.is_mine) {
+                            div.className = 'message message-mine';
+                        } else {
+                            div.className = 'message message-other';
+                        }
+                        
+                        div.setAttribute('data-id', msg.id);
+                        
+                        let displayText = msg.text;
+                        if (displayText.startsWith('[system]')) {
+                            displayText = displayText.slice(8);
+                        }
+                        
+                        const senderName = (isGroup && !msg.is_mine && !msg.text.startsWith('[system]')) 
+                            ? `<div class="message-sender">${escapeHtml(msg.sender)}</div>` 
+                            : '';
+                        
+                        div.innerHTML = `
+                            ${senderName}
+                            <div class="message-text">${renderMessageText(displayText)}</div>
+                            ${msg.text.startsWith('[system]') ? '' : `<div class="message-time">${msg.created_at}</div>`}
+                        `;
+                        messagesContainer.appendChild(div);
+                        renderStickers();
+                        
+                        if (msg.id > lastMessageId) lastMessageId = msg.id;
+                    });
+                    scrollToBottom();
+                }
+            });
+    }
+
+    function sendMessage() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+        
+        sendBtn.disabled = true;
+        
+        fetch(`/roulette/api/messages/send/${dialogId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': window.CSRF_TOKEN
+            },
+            body: JSON.stringify({text: text})
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                messageInput.value = '';
+                loadNewMessages();
+            }
+        })
+        .finally(() => { sendBtn.disabled = false; });
+    }
+    
+    // ========== ЛОГИКА ДЛЯ КНОПКИ ЗАВЕРШЕНИЯ ОБЕДА ==========
+    
+    async function loadDialogStatus() {
+        if (!mealActionContainer) return;
+        
+        try {
+            const res = await fetch(`/roulette/api/dialog/check-status/${dialogId}/`);
+            const data = await res.json();
+            
+            // Если обед ещё не завершён
+            if (!data.is_meal_completed) {
+                // Показываем кнопку "Завершить обед" для ЛЮБОГО чата (личного и группового)
+                mealActionContainer.innerHTML = `<button class="meal-action-btn" id="complete-meal-btn">🍽️ Завершить обед</button>`;
+                
+                const completeBtn = document.getElementById('complete-meal-btn');
+                if (completeBtn) {
+                    completeBtn.addEventListener('click', async () => {
+                        if (!confirm('Завершить обед?')) return;
+                        
+                        completeBtn.disabled = true;
+                        completeBtn.textContent = '⏳...';
+                        
+                        try {
+                            const completeRes = await fetch(`/roulette/api/dialog/complete/${dialogId}/`, {
+                                method: 'POST',
+                                headers: { 'X-CSRFToken': window.CSRF_TOKEN }
+                            });
+                            const completeData = await completeRes.json();
+                            
+                            if (completeData.status === 'ok') {
+                                location.reload();
+                            } else {
+                                alert(completeData.error || 'Ошибка');
+                                completeBtn.disabled = false;
+                                completeBtn.textContent = '🍽️ Завершить обед';
+                            }
+                        } catch (err) {
+                            alert('Ошибка соединения');
+                            completeBtn.disabled = false;
+                            completeBtn.textContent = '🍽️ Завершить обед';
+                        }
+                    });
+                }
+                return;
+            }
+            
+            // Обед завершён
+            if (data.is_group) {
+                // Групповой чат
+                if (data.has_rated) {
+                    mealActionContainer.innerHTML = `<span class="rated-badge">⭐ Оценено</span>`;
+                } else {
+                    mealActionContainer.innerHTML = `<button class="meal-action-btn" id="rate-group-btn">⭐ Оценить участников</button>`;
+                    
+                    const rateGroupBtn = document.getElementById('rate-group-btn');
+                    if (rateGroupBtn) {
+                        rateGroupBtn.addEventListener('click', () => {
+                            window.location.href = `/roulette/group-rate/${dialogId}/`;
+                        });
+                    }
+                }
+            } else {
+                // Личный чат - показывает бейдж после оценки
+                if (data.has_rated) {
+                    mealActionContainer.innerHTML = `<span class="rated-badge">⭐ Оценено</span>`;
+                } else {
+                    mealActionContainer.innerHTML = `<button class="meal-action-btn" id="rate-user-btn">⭐ Оценить пользователя</button>`;
+                    
+                    const rateUserBtn = document.getElementById('rate-user-btn');
+                    if (rateUserBtn) {
+                        rateUserBtn.addEventListener('click', () => {
+                            window.location.href = `/roulette/rate/${data.other_user_id}/`;
+                        });
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('Ошибка загрузки статуса:', err);
+        }
+    }
+
+    // ========== ИНИЦИАЛИЗАЦИЯ ==========
+    
+    sendBtn.onclick = sendMessage;
+    messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    
+    setInterval(loadNewMessages, 3000);
+    stickersBtn.onclick = () => {
+        stickersPanel.classList.toggle('hidden');
+    };
+    document.addEventListener('click', (e) => {
+        const clickedInsidePanel = stickersPanel.contains(e.target);
+        const clickedStickerButton = stickersBtn.contains(e.target);
+
+        if (!clickedInsidePanel && !clickedStickerButton) {
+            stickersPanel.classList.add('hidden');
+        }
+    });
+
+    renderStickers();
+    
+    renderStickers();
+    scrollToBottom();
+    loadDialogStatus();
+</script>
+
+{% endblock %}

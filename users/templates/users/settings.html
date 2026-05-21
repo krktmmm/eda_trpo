@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Настройки | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'settings.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    <h2>⚙️ Настройки интерфейса</h2>
+    
+    <form method="post" id="settings-form">
+        {% csrf_token %}
+        
+        <div class="settings-section">
+            <h3>📱 Внешний вид</h3>
+            
+            <div class="setting-item">
+                <span class="setting-label">🌓 Тёмная тема</span>
+                <select name="theme" id="theme-select">
+                    <option value="light" {% if user.profile.theme == 'light' %}selected{% endif %}>Светлая</option>
+                    <option value="dark" {% if user.profile.theme == 'dark' %}selected{% endif %}>Тёмная</option>
+                </select>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label">🔤 Размер шрифта</span>
+                <select name="font_size" id="font-size-select">
+                    <option value="small" {% if user.profile.font_size == 'small' %}selected{% endif %}>Маленький</option>
+                    <option value="medium" {% if user.profile.font_size == 'medium' %}selected{% endif %}>Средний</option>
+                    <option value="large" {% if user.profile.font_size == 'large' %}selected{% endif %}>Большой</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3>💬 Обращение</h3>
+            
+            <div class="setting-item">
+                <span class="setting-label">👋 Как к тебе обращаться</span>
+                <select name="greeting_style" id="greeting-select">
+                    <option value="sweet" {% if user.profile.greeting_style == 'sweet' %}selected{% endif %}>Малышочек (по умолчанию)</option>
+                    <option value="formal" {% if user.profile.greeting_style == 'formal' %}selected{% endif %}>Уважаемый студент</option>
+                    <option value="friend" {% if user.profile.greeting_style == 'friend' %}selected{% endif %}>Друн</option>
+                    <option value="comrade" {% if user.profile.greeting_style == 'comrade' %}selected{% endif %}>Товарищ</option>
+                    <option value="none" {% if user.profile.greeting_style == 'none' %}selected{% endif %}>Без обращения</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h3>🎬 Анимации</h3>
+            
+            <div class="setting-item">
+                <span class="setting-label">✨ Включить анимации</span>
+                <select name="animations" id="animations-select">
+                    <option value="on" {% if user.profile.animations != 'off' %}selected{% endif %}>Вкл</option>
+                    <option value="off" {% if user.profile.animations == 'off' %}selected{% endif %}>Выкл</option>
+                </select>
+            </div>
+        </div>
+        
+        <button type="submit" class="save-btn">💾 Сохранить настройки</button>
+    </form>
+</div>
+
+{# Кастомный dropdown — подключаем ДО основного скрипта страницы #}
+<script src="{% static 'js/custom-dropdown.js' %}" defer></script>
+
+<script>
+    (function() {
+        const themeSelect = document.getElementById('theme-select');
+        const fontSizeSelect = document.getElementById('font-size-select');
+        
+        if (!themeSelect && !fontSizeSelect) return;
+        
+        const originalTheme = themeSelect.value;
+        const originalFontSize = fontSizeSelect.value;
+
+        function updateDefaultAvatars(theme) {
+            document.querySelectorAll('.profile-avatar img, .profile-icon img, #avatar-preview').forEach(img => {
+                if (img.src.includes('default_avatar')) {
+                    img.src = theme === 'dark' 
+                        ? '/static/images/default_avatar_dark_theme.jpg' 
+                        : '/static/images/default_avatar.jpg';
+                }
+            });
+        }
+        
+        function checkAvatarLoading() {
+            document.querySelectorAll('img').forEach(img => {
+                if (img.src.includes('media/avatars/') || img.src.includes('avatars/')) {
+                    if (img.naturalWidth === 0 && img.naturalHeight === 0) {
+                        const isDarkTheme = document.body.classList.contains('dark-theme');
+                        img.src = isDarkTheme 
+                            ? '/static/images/default_avatar_dark_theme.jpg' 
+                            : '/static/images/default_avatar.jpg';
+                        img.onerror = null;
+                    }
+                }
+            });
+        }
+        
+        // Слушаем change на оригинальных <select> — custom-dropdown.js
+        // диспатчит это событие при выборе, так что всё работает как раньше
+        themeSelect.addEventListener('change', function() {
+            document.body.classList.remove('dark-theme');
+            if (this.value === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+            updateDefaultAvatars(this.value);
+            checkAvatarLoading();
+        });
+        
+        fontSizeSelect.addEventListener('change', function() {
+            document.body.classList.remove('font-small', 'font-medium', 'font-large');
+            if (this.value === 'small') document.body.classList.add('font-small');
+            else if (this.value === 'large') document.body.classList.add('font-large');
+            else document.body.classList.add('font-medium');
+        });
+        
+        function restore() {
+            document.body.classList.remove('dark-theme', 'font-small', 'font-medium', 'font-large');
+            if (originalTheme === 'dark') document.body.classList.add('dark-theme');
+            if (originalFontSize === 'small') document.body.classList.add('font-small');
+            else if (originalFontSize === 'large') document.body.classList.add('font-large');
+            else document.body.classList.add('font-medium');
+            updateDefaultAvatars(originalTheme);
+        }
+        
+        window.onbeforeunload = restore;
+        
+        document.getElementById('settings-form').onsubmit = function() {
+            window.onbeforeunload = null;
+        };
+    })();
+</script>
+
+{% endblock %}

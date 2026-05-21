@@ -1,0 +1,144 @@
+/* Страница групповой оценки */
+.group-rate-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.progress-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.progress-header h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.progress-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.dot-current {
+    background: #f99039;
+    width: 16px;
+    height: 16px;
+    box-shadow: 0 0 5px #f9903980;
+}
+
+.dot-rated {
+    background: #2c5f6e;
+}
+
+.dot-pending {
+    background: #5F9EA0;
+}
+
+.user-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px #0000001a;
+    margin-bottom: 30px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.user-avatar {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #5F9EA0;
+    border: 4px solid #4b8082;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-rate {
+    background: #f99039;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-rate:hover {
+    background: #e08530;
+    transform: scale(1.02);
+}
+
+.btn-skip {
+    background: #5F9EA0;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-skip:hover {
+    background: #4b8082;
+    transform: scale(1.02);
+}
+
+.btn-rate:disabled,
+.btn-skip:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.progress-info {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Дополнительные стили */
+.text-center {
+    text-align: center;
+}
+
+.btn-rate-inline {
+    display: inline-block;
+    text-decoration: none;
+    margin-top: 15px;
+}

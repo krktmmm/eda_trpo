@@ -1,0 +1,505 @@
+@charset "UTF-8";
+
+/* НАВИГАЦИЯ (общий контейнер) */
+.navigation {
+    background-color: #ADD8E6;
+    padding: 0px 15px;
+    width: 100%;
+    overflow: visible;
+    position: relative;
+    z-index: 100;
+}
+
+/* ПАНЕЛЬ (логотип, поиск, меню, профиль в ряд) */
+.panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 160px;
+    margin: 0 auto;
+    gap: 30px;
+    overflow: visible;
+}
+
+/* Логотип */
+a.logo {
+    position: relative;
+    height: 160px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    z-index: 1;
+    text-decoration: none;
+}
+
+.logo img {
+    height: clamp(80px, 20vw, 340px);
+    width: auto;
+    object-fit: contain;
+}
+
+/* Поисковая строка */
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+    max-width: 600px;
+    margin: 0 20px;
+    position: relative;
+}
+
+.search input {
+    width: 100%;
+    padding: 14px 22px;
+    border: 2px solid #4b8082;
+    border-radius: 15px 0 0 15px;
+    font-size: 18px;
+    font-family: 'Tobi';
+    font-weight: normal;
+    outline: none;
+}
+
+.search button {
+    padding: 14px 22px;
+    border-radius: 0 15px 15px 0;
+    border: 2px solid #4b8082;
+    background-color: #4b8082;
+    cursor: pointer;
+}
+
+.search button span {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Подсказки поиска */
+.search-suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 2px solid #5F9EA0;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 99999;
+    box-shadow: 0 10px 25px #00000026;
+}
+
+.suggestion-item {
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: 'Tobi';
+    color: #2c3f51;
+    background: white;
+    border-bottom: 2px solid #d8e8e9;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: #f99039;
+    color: white;
+}
+
+.suggestion-item span {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.suggestion-muted {
+    color: #8a8a8a;
+    background: #f7f7f7;
+}
+
+/* Меню (Главная, Чат, Уведомления) */
+.menu {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Кнопки меню */
+.menu-link {
+    background-color: #5F9EA0;
+    text-decoration: none;
+    color: #2c3e50;
+    width: clamp(80px, 10vw, 150px);
+    height: clamp(40px, 5vw, 75px);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Tobi';
+    font-size: clamp(14px, 2vw, 25px);
+    font-weight: normal;
+    transition: 0.3s;
+    cursor: pointer;
+    border: none;
+    position: relative;
+}
+
+.menu-link:hover {
+    background-color: #4b8082;
+    color: #1d2935;
+    transform: scale(1.1);
+}
+
+/* Выпадашка сообщений */
+.messages-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Выпадашка уведомлений */
+.notifications-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.notifications-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    width: 280px;
+    margin-top: 10px;
+    box-shadow: 0px 8px 16px 0px #00000033;
+    border-radius: 15px;
+    overflow: hidden;
+    z-index: 10000;
+}
+
+.notifications-content.show {
+    display: block;
+}
+
+.notifications-header {
+    padding: 12px 16px;
+    background-color: #5F9EA0;
+    color: white;
+    font-family: 'Tobi';
+    font-size: 16px;
+    border-bottom: 1px solid #4b8082;
+}
+
+.notifications-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-family: 'Tobi';
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.notification-item:hover {
+    background-color: #f5f5f5;
+}
+
+.notification-item.unread {
+    background-color: #fff3cd;
+    border-left: 3px solid #ffc107;
+}
+
+.notification-empty {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-family: 'Tobi';
+}
+
+/* Красные кружки на иконках */
+.notif-badge,
+.messages-badge {
+    position: absolute;
+    top: 8px;
+    right: 18px;
+    background-color: #e74c3c;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: none;
+}
+
+.messages-badge.hidden,
+.notif-badge.hidden {
+    display: none !important;
+}
+
+/* Кнопка профиля (круглая) */
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+    z-index: 1000;
+}
+
+.panel .profile {
+    background-color: #5F9EA0;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: 0.3s;
+}
+
+.panel .profile img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4b8082;
+    box-sizing: border-box;
+}
+
+.panel .profile:hover {
+    background-color: #4b8082;
+    transform: scale(1.1);
+}
+
+.profile-icon {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: #5F9EA0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1001;
+    transition: 0.3s;
+}
+
+.profile-icon img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4b8082;
+    box-sizing: border-box;
+}
+
+.profile-icon:hover {
+    background-color: #4b8082;
+    transform: scale(1.1);
+}
+
+/* Выпадающее меню профиля */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    min-width: 180px;
+    margin-top: 10px;
+    box-shadow: 0px 8px 16px 0px #00000033;
+    z-index: 10000;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.dropdown-content a,
+.dropdown-content form .dropdown-link {
+    all: unset;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    text-decoration: none;
+    font-family: 'Tobi';
+    font-size: 16px;
+    color: #2c3e50;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.dropdown-content form {
+    width: 100%;
+}
+
+.dropdown-content a:hover,
+.dropdown-content form .dropdown-link:hover {
+    background-color: #f99039;
+    color: white;
+}
+
+/* Вспомогательный класс для выпадашек */
+.show {
+    display: block;
+}
+
+/* ФУТЕР */
+.footer {
+    background-color: #ADD8E6;
+    margin-top: 60px;
+    padding: 40px 20px 20px;
+    width: 100%;
+}
+
+/* Содержимое футера */
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-section h3 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-family: 'Tobi';
+    font-weight: normal;
+}
+
+.footer-section p {
+    color: #2c3e50;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: 'Tobi';
+}
+
+/* Соцсети */
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.social-links a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+    font-family: 'Tobi';
+}
+
+.social-links a:hover {
+    color: #f99039;
+    transform: translateX(5px);
+}
+
+/* Нижняя строка */
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    margin-top: 30px;
+    border-top: 1px solid #5F9EA0;
+}
+
+.footer-bottom p {
+    color: #2c3e50;
+    font-size: 12px;
+    font-family: 'Tobi';
+}
+
+.mark-all-read {
+    background: none;
+    border: none;
+    color: #2c3e50;
+    cursor: pointer;
+    font-size: 12px;
+    float: right;
+    margin-top: 2px;
+    font-family: 'Tobi';
+}
+
+.mark-all-read:hover {
+    text-decoration: underline;
+}
+
+/* Стили для уведомлений с крестиком */
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-family: 'Tobi';
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.notification-content {
+    flex: 1;
+    cursor: pointer;
+}
+
+.notification-item.unread .notification-content {
+    background-color: #fff3cd;
+}
+
+.notification-item.read {
+    border-left: 3px solid #ccc;
+}
+
+.notification-item.read .notification-content {
+    color: #999;
+}
+
+.notification-delete {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px;
+    margin-left: 10px;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.notification-delete:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+/* Баг с наложением карты поверх открывшихся окон*/
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom,
+.leaflet-control {
+    z-index: 1 !important;
+}
+
+.profile-dropdown,
+.notifications-dropdown,
+.dropdown-menu {
+    z-index: 9999 !important;
+}

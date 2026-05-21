@@ -1,0 +1,1246 @@
+/* Базовые стили */
+body.dark-theme {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+/* Навигация */
+body.dark-theme .navigation {
+    background-color: #1e293b !important;
+}
+
+/* Поиск */
+body.dark-theme .search input {
+    background-color: #334155 !important;
+    border-color: #f97316 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .search button {
+    background-color: #f97316 !important;
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .search button:hover {
+    background-color: #f97316 !important;
+}
+
+body.dark-theme .search button span {
+    color: white !important;
+}
+
+body.dark-theme .search-suggestions {
+    background-color: #1e293b !important;
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .suggestion-item {
+    color: #e2e8f0 !important;
+    background: #1e293b !important;
+    border-bottom-color: #334155 !important;
+}
+
+body.dark-theme .suggestion-item:hover {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .suggestion-muted {
+    color: #94a3b8 !important;
+    background: #1e293b !important;
+}
+
+/* Меню */
+body.dark-theme .menu-link {
+    background-color: #334155 !important;
+    color: #f97316 !important;
+}
+
+body.dark-theme .menu-link:hover {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .profile-icon,
+body.dark-theme .messages-icon,
+body.dark-theme .notifications-icon {
+    background-color: #334155 !important;
+}
+
+body.dark-theme .profile-icon img,
+body.dark-theme .panel .profile img {
+    border-color: #475569 !important;
+}
+
+/* Выпадающее меню профиля */
+body.dark-theme .dropdown-content {
+    background-color: #1e293b !important;
+}
+
+body.dark-theme .dropdown-content a,
+body.dark-theme .dropdown-content form .dropdown-link {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .dropdown-content a:hover,
+body.dark-theme .dropdown-content form .dropdown-link:hover {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .dropdown-content button {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .dropdown-content button:hover {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+/* Уведомления */
+body.dark-theme .notifications-content {
+    background-color: #1e293b !important;
+}
+
+body.dark-theme .notifications-header {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .notification-item {
+    border-bottom-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .notification-item:hover {
+    background-color: #334155 !important;
+}
+
+body.dark-theme .notification-item.unread {
+    background-color: #0f172a !important;
+    border-left-color: #f97316 !important;
+}
+
+body.dark-theme .notification-empty {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .notif-badge,
+body.dark-theme .messages-badge {
+    background-color: #ef4444 !important;
+}
+
+/* Приветствие */
+body.dark-theme .greeting h1,
+body.dark-theme .greeting p {
+    color: #e2e8f0 !important;
+}
+
+/* Главное меню (карточки) */
+body.dark-theme .menu-card-inner {
+    background-color: #334155 !important;
+}
+
+body.dark-theme .menu-card-inner.roulette {
+    background-color: #f97316 !important;
+}
+
+body.dark-theme .menu-card h2,
+body.dark-theme .menu-card p {
+    color: white !important;
+}
+
+/* Левая панель */
+body.dark-theme .time-panel {
+    background-color: #1e293b !important;
+}
+
+body.dark-theme .time-panel h2 {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .time-btn {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .time-btn:hover,
+body.dark-theme .time-btn.active {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .back-text {
+    color: #e2e8f0 !important;
+}
+
+/* Правая панель */
+body.dark-theme .places-panel {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-theme .places-panel h2 {
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .place-card {
+    background-color: #334155 !important;
+    border-bottom-color: #475569 !important;
+}
+
+body.dark-theme .place-card:hover {
+    background-color: #3b4a60 !important;
+}
+
+body.dark-theme .place-name {
+    color: #f97316 !important;
+}
+
+body.dark-theme .place-address {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .place-info span {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .price {
+    color: #22c55e !important;
+}
+
+body.dark-theme .discount {
+    color: #38bdf8;
+}
+
+body.dark-theme .rating {
+    color: #fbbf24 !important;
+}
+
+body.dark-theme .time-needed {
+    color: #ef4444 !important;
+}
+
+body.dark-theme .empty-message {
+    color: #94a3b8 !important;
+}
+
+/* Кнопка избранного в списке */
+body.dark-theme .favorite-btn {
+    background: transparent !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .favorite-btn.active {
+    color: #ef4444 !important;
+}
+
+/* Карта */
+body.dark-theme .map-placeholder-inner {
+    background-color: #334155 !important;
+}
+
+body.dark-theme .map-placeholder-inner p,
+body.dark-theme .map-hint {
+    color: #94a3b8 !important;
+}
+
+/* Скроллбар */
+body.dark-theme .places-panel::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+body.dark-theme .places-panel::-webkit-scrollbar-thumb {
+    background: #f97316 !important;
+}
+
+body.dark-theme .places-panel {
+    scrollbar-color: #f97316 transparent !important;
+}
+
+/* Детали заведения */
+body.dark-theme .place-header {
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .place-header h1 {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .back-arrow {
+    color: #e2e8f0;
+}
+
+body.dark-theme .back-arrow:hover {
+    color: #f97316;
+}
+
+body.dark-theme .favorite-detail-btn {
+    background: transparent !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .favorite-detail-btn.active {
+    color: #ef4444 !important;
+}
+
+body.dark-theme .place-info-detail {
+    background: #334155 !important;
+}
+
+body.dark-theme .place-info-detail p {
+    color: #e2e8f0 !important;
+}
+
+/* Отзывы */
+body.dark-theme .reviews-section {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-theme .reviews-section h2 {
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .review-card {
+    background-color: #334155 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .review-card:hover {
+    background-color: #3b4a60 !important;
+}
+
+body.dark-theme .review-header {
+    border-bottom-color: #475569 !important;
+}
+
+body.dark-theme .review-header strong {
+    color: #f97316 !important;
+}
+
+body.dark-theme .review-header small {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .review-rating {
+    color: #fbbf24 !important;
+}
+
+body.dark-theme .review-text {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .review-date {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .empty-reviews {
+    color: #94a3b8 !important;
+}
+
+/* Меню отзыва */
+body.dark-theme .review-menu-btn {
+    background: #475569;
+    color: #e2e8f0;
+}
+
+body.dark-theme .review-menu-btn:hover {
+    background: #5a6a7e;
+}
+
+body.dark-theme .review-dropdown {
+    background: #1e293b;
+    border-color: #475569;
+}
+
+body.dark-theme .review-dropdown button,
+body.dark-theme .review-dropdown a {
+    color: #e2e8f0;
+}
+
+body.dark-theme .review-dropdown button:hover,
+body.dark-theme .review-dropdown a:hover {
+    background: #334155;
+}
+
+body.dark-theme .review-dropdown .danger {
+    color: #ef4444;
+}
+
+body.dark-theme .review-dropdown .danger:hover {
+    background: #3b1520;
+}
+
+/* Форма отзыва */
+body.dark-theme .add-review-form {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-theme .add-review-form h3 {
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .rating-label {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .add-review-form select,
+body.dark-theme .add-review-form textarea,
+body.dark-theme .add-review-form input {
+    background: #334155 !important;
+    color: #e2e8f0 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .add-review-form select:focus,
+body.dark-theme .add-review-form textarea:focus,
+body.dark-theme .add-review-form input:focus {
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .submit-review-btn {
+    background: #5F9EA0 !important;
+}
+
+body.dark-theme .submit-review-btn:hover {
+    background: #f97316 !important;
+}
+
+body.dark-theme .already-reviewed-message {
+    background-color: #334155;
+    color: #94a3b8;
+    border-color: #475569;
+}
+
+body.dark-theme .already-reviewed-message h3 {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .already-reviewed-message p {
+    color: #94a3b8 !important;
+}
+
+/* Уведомления отзывов */
+body.dark-theme .review-notification.success {
+    background: #1a3a2a;
+    color: #4ade80;
+    border-color: #2d5a3a;
+}
+
+body.dark-theme .review-notification.error {
+    background: #3b1520;
+    color: #fca5a5;
+    border-color: #5a1a1a;
+}
+
+body.dark-theme .review-notification.warning {
+    background: #3b3000;
+    color: #fbbf24;
+    border-color: #5a4a00;
+}
+
+/* Страница редактирования отзыва */
+body.dark-theme .detail-container h1 {
+    color: #e2e8f0;
+}
+
+body.dark-theme .detail-container p {
+    color: #94a3b8;
+}
+
+body.dark-theme .detail-container p strong {
+    color: #f97316;
+}
+
+body.dark-theme .review-place-name {
+    color: #94a3b8;
+}
+
+body.dark-theme .review-edit-hint {
+    color: #94a3b8;
+}
+
+body.dark-theme .back-to-place-link {
+    color: #5F9EA0;
+}
+
+body.dark-theme .back-to-place-link:hover {
+    color: #f97316;
+}
+
+/* Галерея фото */
+body.dark-theme .gallery-modal {
+    background: #000000fa !important;
+}
+
+body.dark-theme .gallery-close,
+body.dark-theme .gallery-prev,
+body.dark-theme .gallery-next {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .gallery-close:hover,
+body.dark-theme .gallery-prev:hover,
+body.dark-theme .gallery-next:hover {
+    color: #f97316 !important;
+}
+
+body.dark-theme .gallery-counter {
+    background: #000000b3 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .review-thumb {
+    border-color: #475569 !important;
+}
+
+body.dark-theme .image-preview-item img {
+    border-color: #475569 !important;
+}
+
+body.dark-theme .remove-preview,
+body.dark-theme .delete-photo-btn {
+    background: #ef4444 !important;
+}
+
+body.dark-theme .remove-preview:hover,
+body.dark-theme .delete-photo-btn:hover {
+    background: #dc2626 !important;
+}
+
+body.dark-theme .delete-photo-btn.active {
+    background: #2ecc71 !important;
+}
+
+body.dark-theme .duplicate-warning {
+    background: #3b3000 !important;
+    color: #fbbf24 !important;
+    border-color: #5a4a00 !important;
+}
+
+/* Обед-рулетка */
+body.dark-theme .roulette-mode-btn .btn-inner {
+    background-color: #334155 !important;
+}
+
+body.dark-theme .roulette-mode-btn:last-child .btn-inner {
+    background-color: #f97316 !important;
+}
+
+body.dark-theme .roulette-form {
+    background-color: #1e293b !important;
+}
+
+body.dark-theme .roulette-form h2,
+body.dark-theme .roulette-form label {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .roulette-form select,
+body.dark-theme .roulette-form input {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .roulette-form button {
+    background-color: #f97316 !important;
+}
+
+body.dark-theme .roulette-form button:hover {
+    background-color: #ea580c !important;
+}
+
+body.dark-theme .roulette-form small {
+    color: #94a3b8;
+}
+
+body.dark-theme .search-process,
+body.dark-theme #match-screen,
+body.dark-theme #not-found-screen {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-theme .search-process h2,
+body.dark-theme #match-screen h2,
+body.dark-theme #not-found-screen h2,
+body.dark-theme .search-process p,
+body.dark-theme #match-screen p,
+body.dark-theme #not-found-screen p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .search-title,
+body.dark-theme .match-title {
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .back-btn {
+    background-color: #334155 !important;
+    color: white !important;
+}
+
+body.dark-theme .back-btn:hover {
+    background-color: #f97316 !important;
+}
+
+body.dark-theme #not-found-screen h2 {
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .not-found-emoji {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme #not-found-cancel {
+    background-color: #334155 !important;
+}
+
+body.dark-theme #not-found-cancel:hover {
+    background-color: #f97316 !important;
+}
+
+body.dark-theme #not-found-again {
+    background-color: #f97316 !important;
+}
+
+body.dark-theme #not-found-again:hover {
+    background-color: #ea580c !important;
+}
+
+body.dark-theme #not-found-create {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .match-avatar img {
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .match-info p {
+    color: #e2e8f0 !important;
+    border-bottom-color: #475569 !important;
+}
+
+body.dark-theme .match-info p strong {
+    color: #f97316 !important;
+}
+
+body.dark-theme .match-info p span {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .match-username {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .match-username span {
+    color: #f97316 !important;
+}
+
+body.dark-theme .match-buttons button {
+    background-color: #f97316 !important;
+}
+
+body.dark-theme .match-buttons button:hover {
+    background-color: #ea580c !important;
+}
+
+body.dark-theme .group-members-list {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .group-member-card {
+    background: #334155 !important;
+}
+
+body.dark-theme .group-member-card .member-name {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .group-member-card .member-contact {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .group-member-card.filled {
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .group-member-card.empty {
+    background: #1e293b !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .group-member-card.empty .empty-slot {
+    border-color: #475569 !important;
+    color: #475569 !important;
+}
+
+body.dark-theme .group-info {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme #group-size-input {
+    background: #334155;
+    color: #e2e8f0;
+    border-color: #475569;
+}
+
+body.dark-theme .modal-content {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .modal-content button {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .modal-content button:hover {
+    background-color: #ea580c !important;
+}
+
+/* Чат и сообщения */
+body.dark-theme .chat-container {
+    background: #1e293b !important;
+}
+
+body.dark-theme .chat-header {
+    background: #334155 !important;
+}
+
+body.dark-theme .chat-header .back-link {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .chat-header .back-link:hover {
+    color: #f97316 !important;
+}
+
+body.dark-theme .chat-header h2 {
+    color: white !important;
+}
+
+body.dark-theme .chat-avatar {
+    background-color: #475569 !important;
+    border-color: #5a6a7e !important;
+}
+
+body.dark-theme .participants-names {
+    color: #e2e8f0d9 !important;
+}
+
+body.dark-theme .end-meal-link {
+    color: #f97316;
+}
+
+body.dark-theme .end-meal-link:hover {
+    color: #ff8c42;
+}
+
+body.dark-theme .chat-messages {
+    background: #0f172a !important;
+}
+
+body.dark-theme .message-mine {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .message-other {
+    background: #334155 !important;
+    color: #e2e8f0 !important;
+    box-shadow: none !important;
+}
+
+body.dark-theme .message-sender {
+    color: #ff8c42;
+}
+
+body.dark-theme .message-system .message-text {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .message-time {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .chat-input {
+    background: #1e293b !important;
+    border-top-color: #334155 !important;
+}
+
+body.dark-theme .chat-input textarea {
+    background: #334155 !important;
+    border-color: #475569 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .chat-input textarea:focus {
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .chat-input textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .chat-input button {
+    color: white !important;
+}
+
+body.dark-theme #stickers-btn {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme #stickers-btn:hover {
+    background: #475569 !important;
+}
+
+body.dark-theme .meal-action-btn {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .meal-action-btn:hover {
+    background-color: #ea580c !important;
+}
+
+body.dark-theme .rated-badge {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .meal-completed-badge {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .stickers-panel {
+    background: #1e293bf2 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .chat-sticker svg {
+    filter: brightness(0.9);
+}
+
+/* Список диалогов */
+body.dark-theme .messages-container h1 {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .dialog-card {
+    background-color: #334155 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .dialog-card:hover {
+    background-color: #3b4a60 !important;
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .dialog-avatar {
+    background: #475569 !important;
+}
+
+body.dark-theme .dialog-name {
+    color: #f97316 !important;
+}
+
+body.dark-theme .dialog-last-message {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .dialog-unread {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .delete-dialog-btn {
+    background: #1e293b !important;
+    color: #ef4444 !important;
+    border-color: #ef4444 !important;
+}
+
+body.dark-theme .delete-dialog-btn:hover {
+    background: #ef4444 !important;
+    color: white !important;
+}
+
+body.dark-theme .empty-messages {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .empty-messages a {
+    color: #f97316 !important;
+}
+
+body.dark-theme .empty-messages a:hover {
+    color: #ff8c42 !important;
+}
+
+body.dark-theme .meal-completed-icon {
+    color: #2ecc71 !important;
+}
+
+/* Профиль и настройки */
+body.dark-theme .profile-left,
+body.dark-theme .profile-right,
+body.dark-theme .edit-profile-left,
+body.dark-theme .edit-profile-right,
+body.dark-theme .settings-container {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-theme .profile-right h2,
+body.dark-theme .edit-profile-right h2,
+body.dark-theme .settings-container h2 {
+    color: #e2e8f0 !important;
+    border-bottom-color: #f97316 !important;
+}
+
+body.dark-theme .profile-avatar img {
+    border-color: #475569 !important;
+}
+
+body.dark-theme .profile-left-info,
+body.dark-theme .edit-profile-info {
+    border-top-color: #334155 !important;
+}
+
+body.dark-theme .profile-left-info p,
+body.dark-theme .edit-profile-info p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .profile-left-info strong,
+body.dark-theme .edit-profile-info strong {
+    color: #f97316 !important;
+}
+
+body.dark-theme .info-table td {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .info-table td:first-child {
+    color: #f97316 !important;
+}
+
+body.dark-theme .info-table tr {
+    border-bottom-color: #334155 !important;
+}
+
+body.dark-theme .edit-profile-btn {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .edit-profile-btn:hover {
+    background-color: #ea580c !important;
+}
+
+body.dark-theme .avatar-upload-label {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .avatar-upload-label:hover {
+    background: #ea580c !important;
+}
+
+body.dark-theme .avatar-delete-btn {
+    background: #475569 !important;
+    color: white !important;
+}
+
+body.dark-theme .avatar-delete-btn:hover {
+    background: #334155 !important;
+}
+
+body.dark-theme .edit-profile-form .form-group label {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .edit-profile-form input,
+body.dark-theme .edit-profile-form textarea,
+body.dark-theme .edit-profile-form select {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .edit-profile-form input:focus,
+body.dark-theme .edit-profile-form textarea:focus,
+body.dark-theme .edit-profile-form select:focus {
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .save-btn {
+    background-color: #f97316 !important;
+    color: white !important;
+}
+
+body.dark-theme .save-btn:hover {
+    background-color: #ea580c !important;
+}
+
+body.dark-theme .back-link {
+    color: #f97316 !important;
+}
+
+body.dark-theme .back-link:hover {
+    color: #ff8c42 !important;
+}
+
+body.dark-theme .settings-section {
+    border-bottom-color: #334155 !important;
+}
+
+body.dark-theme .settings-section h3 {
+    color: #f97316 !important;
+}
+
+body.dark-theme .setting-label {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .settings-container select {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .settings-container select:focus {
+    border-color: #f97316 !important;
+}
+
+/* Кастомный dropdown в тёмной теме */
+body.dark-theme .cd-wrapper .cd-trigger {
+    background: #334155 !important;
+    border-color: #475569 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .cd-wrapper .cd-list {
+    background: #1e293b !important;
+    border-color: #f97316 !important;
+}
+
+body.dark-theme .cd-wrapper .cd-item {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .cd-wrapper .cd-item:hover,
+body.dark-theme .cd-wrapper .cd-item.cd-item--focused {
+    background: #334155 !important;
+}
+
+body.dark-theme .cd-wrapper .cd-item.cd-item--selected {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+/* Избранное */
+body.dark-theme .favorites-container h1 {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .favorite-card {
+    background-color: #334155 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .favorite-card:hover {
+    background-color: #3b4a60 !important;
+}
+
+body.dark-theme .favorite-name {
+    color: #f97316 !important;
+}
+
+body.dark-theme .favorite-name:hover {
+    color: #ff8c42 !important;
+}
+
+body.dark-theme .favorite-address {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .favorite-price {
+    color: #22c55e !important;
+}
+
+body.dark-theme .remove-favorite {
+    background-color: #ef4444 !important;
+    color: white !important;
+}
+
+body.dark-theme .remove-favorite:hover {
+    background-color: #dc2626 !important;
+}
+
+body.dark-theme .empty-favorites {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .empty-favorites a {
+    color: #f97316 !important;
+}
+
+body.dark-theme .empty-favorites a:hover {
+    color: #ff8c42 !important;
+}
+
+/* Групповая оценка */
+body.dark-theme .group-rate-container h1,
+body.dark-theme .group-rate-container .progress-header p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .user-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-theme .user-name {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .btn-rate,
+body.dark-theme .btn-skip {
+    background: #f97316 !important;
+}
+
+body.dark-theme .btn-rate:hover {
+    background: #ea580c !important;
+}
+
+body.dark-theme .btn-skip {
+    background: #334155 !important;
+}
+
+body.dark-theme .btn-skip:hover {
+    background: #475569 !important;
+}
+
+body.dark-theme .progress-info {
+    color: #94a3b8 !important;
+}
+
+/* Оценка пользователя */
+body.dark-theme .rate-user-text {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .back-btn-rating {
+    background: #334155 !important;
+    color: white !important;
+}
+
+body.dark-theme .back-btn-rating:hover {
+    background: #475569 !important;
+}
+
+body.dark-theme .submit-rating-btn {
+    background: #f97316 !important;
+}
+
+body.dark-theme .submit-rating-btn:hover {
+    background: #ea580c !important;
+}
+
+/* Публичный профиль */
+body.dark-theme .profile-left .edit-profile-btn {
+    background: #f97316 !important;
+}
+
+body.dark-theme .profile-left .edit-profile-btn:hover {
+    background: #ea580c !important;
+}
+
+/* Ссылки */
+body.dark-theme .back-link a {
+    color: #f97316 !important;
+}
+
+body.dark-theme .back-link a:hover {
+    color: #ff8c42 !important;
+}
+
+body.dark-theme .login-link a {
+    color: #f97316 !important;
+}
+
+body.dark-theme .login-link a:hover {
+    color: #ff8c42 !important;
+}
+
+/* Футер */
+body.dark-theme .footer {
+    background-color: #1e293b !important;
+}
+
+body.dark-theme .footer-section h3,
+body.dark-theme .footer-section p,
+body.dark-theme .footer-bottom p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .footer-bottom {
+    border-top-color: #334155 !important;
+}
+
+body.dark-theme .social-links a {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .social-links a:hover {
+    color: #f97316 !important;
+}
+
+/* Вспомогательные стили */
+body.dark-theme .online-text {
+    color: #2ecc71 !important;
+}
+
+body.dark-theme .offline-text {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .required-star {
+    color: #ef4444 !important;
+}
+
+body.dark-theme.animations-off .menu-icon.lottie-icon svg {
+    filter: brightness(0.8);
+}
+
+body.dark-theme .notification-item.unread .notification-content {
+    background-color: #2d2b00;
+    border-left-color: #f97316;
+}
+
+body.dark-theme .notification-item.read .notification-content {
+    background-color: #1e293b;
+    border-left-color: #475569;
+    color: #64748b;
+}
+
+body.dark-theme .notification-delete {
+    color: #64748b;
+}
+
+body.dark-theme .notification-delete:hover {
+    background: #ef4444;
+    color: white;
+}

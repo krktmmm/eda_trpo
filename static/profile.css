@@ -1,0 +1,220 @@
+/* КОНТЕЙНЕР С ДВУМЯ КОЛОНКАМИ */
+.profile-container {
+    display: flex;
+    gap: 50px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    flex-wrap: wrap;
+}
+
+/* ЛЕВАЯ КОЛОНКА (аватар) */
+.profile-left {
+    flex: 1;
+    min-width: 280px;
+    text-align: center;
+    background: white;
+    border-radius: 30px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px #0000000d;
+    border: 1px solid #e0e0e0;
+    height: fit-content;
+}
+
+/* Аватар */
+.profile-avatar {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: #5F9EA0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #4b8082;
+    box-sizing: border-box;
+}
+
+/* Информация (дата регистрации) */
+.profile-left-info {
+    margin-top: 20px;
+    text-align: left;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+}
+
+.profile-left-info p {
+    margin: 10px 0;
+    color: #2c3e50;
+    font-size: 18px;
+}
+
+.profile-left-info strong {
+    color: #4b8082;
+}
+
+/* Кнопки действий */
+.edit-profile-btn {
+    background: #f99039;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.edit-profile-btn:hover {
+    background: #5F9EA0;
+    transform: scale(1.02);
+}
+
+/* ПРАВАЯ КОЛОНКА (данные) */
+.profile-right {
+    flex: 2;
+    min-width: 400px;
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 10px 30px #0000000d;
+    border: 1px solid #e0e0e0;
+}
+
+/* Заголовок */
+.profile-right h2 {
+    color: #2c3e50;
+    font-size: 28px;
+    margin-bottom: 25px;
+    border-bottom: 3px solid #f99039;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+/* Таблица с данными */
+.info-table {
+    width: 100%;
+    margin: 20px 0;
+}
+
+.info-table tr {
+    border-bottom: 1px solid #eee;
+}
+
+.info-table td {
+    padding: 15px 10px;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.info-table td:first-child {
+    font-weight: bold;
+    width: 40%;
+    color: #4b8082;
+}
+
+/* ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ */
+.reviews-section {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Заголовок */
+.reviews-section h2 {
+    color: #2c3e50;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #f99039;
+    display: inline-block;
+    padding-bottom: 10px;
+    width: auto;
+}
+
+/* Сетка отзывов */
+.reviews-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Карточка отзыва */
+.review-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 20px;
+    background: #fefcfc;
+    transition: 0.3s;
+}
+
+.review-card:hover {
+    background: #f8f9fa;
+    transform: translateX(5px);
+}
+
+.review-place {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.review-place-link {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.review-place-link:hover {
+    color: #f99039 !important;
+}
+
+.review-rating {
+    color: #f99039;
+    margin-bottom: 10px;
+}
+
+.review-text {
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.review-date {
+    color: #999;
+    font-size: 12px;
+}
+
+/* Пустые отзывы */
+.empty-reviews {
+    text-align: center;
+    color: #999;
+    padding: 40px;
+}
+
+/* Статус в профиле */
+.profile-left-info .online-status {
+    display: inline-block;
+}
+
+.online-text {
+    color: #2ecc71;
+}
+
+.offline-text {
+    color: #95a5a6;
+}

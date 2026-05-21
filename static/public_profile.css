@@ -1,0 +1,36 @@
+.chat-avatar-link {
+    text-decoration: none;
+    display: block;
+}
+
+.chat-avatar-link:hover .chat-avatar {
+    transform: scale(1.05);
+    border-color: #f99039;
+}
+
+.sender-link {
+    color: inherit;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.sender-link:hover {
+    color: #f99039;
+    text-decoration: underline;
+}
+
+/* Информация о рейтинге */
+.profile-left-info p {
+    margin: 10px 0;
+}
+
+.profile-left-info strong {
+    color: #4b8082;
+}
+
+/* Кнопка "Написать сообщение" на чужом профиле */
+.edit-profile-btn {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}

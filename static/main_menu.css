@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+/* КОНТЕЙНЕР ДЛЯ КАРТОЧЕК */
+.main-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    min-height: 50vh;
+    flex-wrap: wrap;
+}
+
+/* КАРТОЧКА */
+.menu-card {
+    text-decoration: none;
+    text-align: center;
+}
+
+/* Внутренняя обёртка карточки */
+.menu-card-inner {
+    background: #5F9EA0;
+    padding: 60px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px #0000001a;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 380px;               /* ширина */
+    height: 380px;              /* высота */
+    display: flex;              /* для центрирования */
+    flex-direction: column;     /* вертикальное расположение */
+    justify-content: center;    /* центрирование по вертикали */
+    align-items: center;        /* центрирование по горизонтали */
+}
+
+/* Карточка рулетки */
+.menu-card-inner.roulette {
+    background: #f99039;
+}
+
+/* Эффект при наведении */
+.menu-card-inner:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px #00000033;
+}
+
+/* Анимированная иконка */
+.menu-icon.lottie-icon {
+    width: 140px !important;
+    height: 140px !important;
+    margin: 0 auto 25px auto;
+    overflow: hidden;
+}
+
+.menu-icon.lottie-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Заголовок */
+.menu-card h2 {
+    color: white;
+    margin-top: 20px;
+    font-family: 'Tobi';
+    font-weight: normal;
+}
+
+/* Описание */
+.menu-card p {
+    color: white;
+    font-family: 'Tobi';
+    font-size: 20px;
+}

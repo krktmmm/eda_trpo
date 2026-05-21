@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Оценка участников | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'group_rate.css' %}">
+    <link rel="stylesheet" href="{% static 'place_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="group-rate-container">
+    <div class="progress-header">
+        <h1>⭐ Оценка участников</h1>
+        <p>Оцените, как прошёл обед с каждым</p>
+        
+        <div class="progress-dots" id="progress-dots">
+            {% for dot in dots %}
+            <div class="dot 
+                {% if dot.is_current %}dot-current
+                {% elif dot.status == 'rated' %}dot-rated
+                {% else %}dot-pending{% endif %}"
+                data-user-id="{{ dot.id }}"
+                data-status="{{ dot.status }}"
+                data-is-current="{{ dot.is_current|yesno:'true,false' }}">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if current_user %}
+    <div class="user-card">
+        <div class="user-avatar">
+            {% if current_user.profile.avatar %}
+                <img src="{{ current_user.profile.avatar.url }}" alt="{{ current_user.username }}">
+            {% elif user.profile.theme == 'dark' %}
+                <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="{{ current_user.username }}">
+            {% else %}
+                <img src="{% static 'images/default_avatar.jpg' %}" alt="{{ current_user.username }}">
+            {% endif %}
+        </div>
+        
+        <h2 class="user-name">{{ current_user.username }}</h2>
+        
+        <form id="rating-form">
+            {% csrf_token %}
+            <input type="hidden" id="user-id" value="{{ current_user.id }}">
+            
+            <div class="rating-input">
+                <label class="rating-label">Ваша оценка:</label>
+                <div class="stars">
+                    <input type="radio" name="rating" value="5" id="star5" required>
+                    <label for="star5" title="5 звезд"></label>
+                    <input type="radio" name="rating" value="4" id="star4">
+                    <label for="star4" title="4 звезды"></label>
+                    <input type="radio" name="rating" value="3" id="star3">
+                    <label for="star3" title="3 звезды"></label>
+                    <input type="radio" name="rating" value="2" id="star2">
+                    <label for="star2" title="2 звезды"></label>
+                    <input type="radio" name="rating" value="1" id="star1">
+                    <label for="star1" title="1 звезда"></label>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="action-buttons">
+        <button id="rate-btn" class="btn-rate">⭐ Оценить сейчас</button>
+        <button id="skip-btn" class="btn-skip">⏰ Позже</button>
+    </div>
+    
+    <div class="progress-info">
+        Оценено: {{ rated_count }} из {{ total_count }}
+    </div>
+    {% else %}
+    <div class="user-card text-center">
+        <p>🎉 Все участники оценены!</p>
+        <a href="{% url 'messages_list' %}" class="btn-rate btn-rate-inline">Вернуться к чатам</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    const dialogId = {{ dialog.id }};
+    let currentUserId = {{ current_user.id|default:'null' }};
+    let currentIndex = {{ current_index|default:0 }};
+    let isSubmitting = false;
+    
+    const rateBtn = document.getElementById('rate-btn');
+    const skipBtn = document.getElementById('skip-btn');
+    
+    function showError(message) {
+        alert(message);
+    }
+    
+    async function loadProgress() {
+        try {
+            const res = await fetch(`/roulette/api/group-rate/progress/${dialogId}/`);
+            const data = await res.json();
+            
+            const dotsContainer = document.getElementById('progress-dots');
+            if (dotsContainer && data.dots) {
+                dotsContainer.innerHTML = '';
+                data.dots.forEach((dot, idx) => {
+                    const dotDiv = document.createElement('div');
+                    dotDiv.className = `dot ${dot.is_current ? 'dot-current' : (dot.status === 'rated' ? 'dot-rated' : 'dot-pending')}`;
+                    dotDiv.setAttribute('data-user-id', dot.id);
+                    dotDiv.setAttribute('data-status', dot.status);
+                    dotDiv.setAttribute('data-is-current', dot.is_current);
+                    dotsContainer.appendChild(dotDiv);
+                });
+            }
+            
+            const progressInfo = document.querySelector('.progress-info');
+            if (progressInfo && data.total_remaining !== undefined) {
+                const total = {{ total_count }};
+                progressInfo.innerHTML = `Оценено: ${data.rated_count} из ${total}`;
+            }
+        } catch (err) {
+            console.error('Ошибка загрузки прогресса:', err);
+        }
+    }
+    
+    async function saveRating() {
+        if (isSubmitting) return;
+        
+        const ratingInput = document.querySelector('input[name="rating"]:checked');
+        if (!ratingInput) {
+            showError('Пожалуйста, поставьте оценку');
+            return;
+        }
+        
+        const rating = ratingInput.value;
+        
+        isSubmitting = true;
+        rateBtn.disabled = true;
+        rateBtn.textContent = '⏳ Сохранение...';
+        
+        try {
+            const res = await fetch(`/roulette/api/group-rate/save/${dialogId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': window.CSRF_TOKEN
+                },
+                body: JSON.stringify({
+                    user_id: currentUserId,
+                    rating: parseInt(rating),
+                    text: '',
+                    photo_url: ''
+                })
+            });
+            
+            const data = await res.json();
+            
+            if (data.status === 'ok') {
+                await loadProgress();
+                location.reload();
+            } else {
+                showError(data.error || 'Ошибка при сохранении оценки');
+            }
+        } catch (err) {
+            console.error('Ошибка:', err);
+            showError('Ошибка соединения');
+        } finally {
+            isSubmitting = false;
+            rateBtn.disabled = false;
+            rateBtn.textContent = '⭐ Оценить сейчас';
+        }
+    }
+    
+    async function skipRating() {
+        if (isSubmitting) return;
+        
+        isSubmitting = true;
+        skipBtn.disabled = true;
+        skipBtn.textContent = '⏳...';
+        
+        try {
+            const res = await fetch(`/roulette/api/group-rate/skip/${dialogId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': window.CSRF_TOKEN
+                },
+                body: JSON.stringify({
+                    user_id: currentUserId
+                })
+            });
+            
+            const data = await res.json();
+            
+            if (data.status === 'ok') {
+                await loadProgress();
+                location.reload();
+            } else {
+                showError(data.error || 'Ошибка при пропуске');
+            }
+        } catch (err) {
+            console.error('Ошибка:', err);
+            showError('Ошибка соединения');
+        } finally {
+            isSubmitting = false;
+            skipBtn.disabled = false;
+            skipBtn.textContent = '⏰ Оценить позже';
+        }
+    }
+    
+    if (rateBtn) rateBtn.addEventListener('click', saveRating);
+    if (skipBtn) skipBtn.addEventListener('click', skipRating);
+</script>
+{% endblock %}

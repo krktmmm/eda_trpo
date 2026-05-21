@@ -1,0 +1,51 @@
+.rate-user-text {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 16px;
+    text-align: center;
+}
+
+.rating-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.back-btn-rating {
+    background: #5F9EA0;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.back-btn-rating:hover {
+    background: #4b8082;
+    transform: scale(1.02);
+}
+
+.submit-rating-btn {
+    background: #f99039;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 15px;
+    font-family: 'Tobi';
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-rating-btn:hover {
+    background: #e08530;
+    transform: scale(1.02);
+}

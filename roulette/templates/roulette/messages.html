@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Сообщения | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'messages.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="messages-container">
+    <h1>💬 Сообщения</h1>
+    
+    <div class="dialogs-list" id="dialogs-list">
+        {% for d in dialogs %}
+        <div class="dialog-card-wrapper" data-dialog-id="{{ d.dialog.id }}">
+            <a href="{% url 'dialog_detail' d.dialog.id %}" class="dialog-card">
+                <div class="dialog-avatar">
+                    {% if d.is_group %}
+                        {% if user.profile.theme == 'dark' %}
+                            <img src="{% static 'images/group_avatar_dark_theme.jpg' %}" alt="Группа">
+                        {% else %}
+                            <img src="{% static 'images/group_avatar.jpg' %}" alt="Группа">
+                        {% endif %}
+                    {% elif d.other_user and d.other_user.profile.avatar %}
+                        <img src="{{ d.other_user.profile.avatar.url }}?v={{ d.other_user.id }}" 
+                            alt="{{ d.other_user.username }}"
+                            onerror="this.onerror=null; this.src=document.body.classList.contains('dark-theme') ? '/static/images/default_avatar_dark_theme.jpg' : '/static/images/default_avatar.jpg';">
+                    {% else %}
+                        {% if user.profile.theme == 'dark' %}
+                            <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Аватар">
+                        {% else %}
+                            <img src="{% static 'images/default_avatar.jpg' %}" alt="Аватар">
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="dialog-info">
+                    <div class="dialog-name">
+                        {{ d.chat_name }}
+                        {% if d.dialog.is_meal_completed %}
+                            <span class="meal-completed-icon" title="Обед завершён">🍽️</span>
+                        {% endif %}
+                    </div>
+                    <div class="dialog-last-message">
+                        {% if d.last_message %}
+                            {% if '[sticker]' in d.last_message.text %}
+                                {{ d.last_message.sender.username }}: 🎭 Стикер
+                            {% elif d.last_message.text|slice:":8" == '[system]' %}
+                                {{ d.last_message.text|slice:"8:" }}
+                            {% else %}
+                                {{ d.last_message.sender.username }}: {{ d.last_message.text|truncatechars:50 }}
+                            {% endif %}
+                        {% else %}
+                            Начните диалог
+                        {% endif %}
+                    </div>
+                </div>
+                {% if d.unread_count > 0 %}
+                <div class="dialog-unread">{{ d.unread_count }}</div>
+                {% endif %}
+            </a>
+            <button class="delete-dialog-btn">
+                <span>🗑️ Удалить</span>
+            </button>
+        </div>
+        {% empty %}
+        <div class="empty-messages" id="empty-messages">
+            📭 У вас пока нет диалогов<br>
+            Найдите собеседника в <a href="/roulette/">Обед-рулетке</a>!
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function deleteDialog(btn) {
+    const wrapper = btn.closest('.dialog-card-wrapper');
+    const dialogId = wrapper.dataset.dialogId;
+    if (!confirm('Удалить этот диалог? Все сообщения будут потеряны.')) {
+        return;
+    }
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳ Удаление...</span>';
+    fetch(`/roulette/api/dialog/delete/${dialogId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': window.CSRF_TOKEN,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            wrapper.style.opacity = '0';
+            wrapper.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+                wrapper.remove();
+                if (document.querySelectorAll('.dialog-card-wrapper').length === 0) {
+                    document.getElementById('dialogs-list').innerHTML = `
+                        <div class="empty-messages">
+                            📭 У вас пока нет диалогов<br>
+                            Найдите собеседника в <a href="/roulette/">Обед-рулетке</a>!
+                        </div>
+                    `;
+                }
+            }, 300);
+        } else {
+            alert('Ошибка при удалении');
+        }
+    })
+    .catch(() => {
+        alert('Ошибка при удалении');
+    })
+    .finally(() => {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="delete-icon">🗑️</span><span>Удалить</span>';
+    });
+}
+
+document.querySelectorAll('.delete-dialog-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        deleteDialog(this);
+    });
+});
+</script>
+
+{% endblock %}

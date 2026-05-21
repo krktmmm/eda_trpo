@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}СытГУТИ 🍔{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link rel="stylesheet" href="{% static 'header_and_footer.css' %}">
+    <link rel="stylesheet" href="{% static 'greeting.css' %}">
+    <link rel="stylesheet" href="{% static 'main_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'panels_and_map.css' %}">
+    <link rel="stylesheet" href="{% static 'dark_theme.css' %}">
+    <link rel="stylesheet" href="{% static 'roulette.css' %}">
+    <link rel="stylesheet" href="{% static 'gallery.css' %}">
+    <link rel="stylesheet" href="{% static 'responsive.css' %}">
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <!-- Скрипт для анимации в главном меню -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    {% block extra_css %}{% endblock %}
+    <script>
+        window.CSRF_TOKEN = '{{ csrf_token }}';
+    </script>
+</head>
+
+<body class="{% if user.is_authenticated and user.profile.theme == 'dark' %}dark-theme{% endif %} {% if user.is_authenticated %}font-{{ user.profile.font_size|default:'medium' }}{% else %}font-medium{% endif %} {% if user.is_authenticated and user.profile.animations == 'off' %}animations-off{% endif %}" data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}" data-animations="{{ user.profile.animations|default:'on' }}">
+    <!-- ШАПКА САЙТА -->
+    <div class="navigation">
+        <div class="panel">
+            <!-- ЛОГОТИП -->
+            <a href="/" class="logo">
+                <img src="{% static 'images/log.png' %}" alt="Логотип">
+            </a>
+            
+            <!-- ПОИСКОВАЯ СТРОКА -->
+            <div class="search">
+                <input id="global-search" type="text" placeholder="Нямка..." autocomplete="off">
+                <button id="global-search-btn" type="button">
+                    <span>🔍</span>
+                </button>
+                <div id="search-suggestions" class="search-suggestions hidden"></div>
+            </div>
+
+            <!-- МЕНЮ (Главная, Уведомления, Чат) -->
+            <div class="menu">
+                <a href="/" class="menu-link">Главная</a>
+
+                <div class="messages-dropdown">
+                    <a href="/roulette/messages/" class="menu-link messages-icon" id="messagesIcon">
+                        Чат💬
+                        <span class="messages-badge hidden" id="messagesBadge"></span>
+                    </a>
+                </div>
+
+                <div class="notifications-dropdown">
+                    <div class="menu-link notifications-icon" id="notifIcon">
+                        Бзз🔔
+                        <span class="notif-badge hidden" id="notifBadge">0</span>
+                    </div>
+                    <div class="notifications-content" id="notificationsMenu">
+                        <div class="notifications-header">
+                            📢 Уведомления
+                            <button id="mark-all-read" class="mark-all-read">✔️ прочитано</button>
+                        </div>
+                        <div class="notifications-list" id="notificationsList">
+                            <div class="notification-empty">Загрузка...</div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- ПРОФИЛЬ (ВЫПАДАЮЩЕЕ МЕНЮ) -->
+            <div class="profile-dropdown">
+                {% if user.is_authenticated %}
+                    <div class="profile-icon" id="profileBtn">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}?v={{ user.id }}" alt="Аватар">
+                        {% elif user.profile.theme == 'dark' %}
+                            <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Профиль">
+                        {% else %}
+                            <img src="{% static 'images/default_avatar.jpg' %}" alt="Профиль">
+                        {% endif %}
+                    </div>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <a href="/profile/">👤 Профиль</a>
+                        <a href="/favorites/">❤️ Избранное</a>
+                        <a href="/profile/settings/">⚙️ Настройки</a>
+                        <div class="dropdown-divider"></div>
+                        <form action="/accounts/logout/" method="post" id="logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-link">🚪 Выход</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <a href="/accounts/login/" class="profile">
+                        <img src="{% static 'images/default_avatar.jpg' %}" alt="Войти">
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- ОСНОВНОЕ СОДЕРЖИМОЕ -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- ФУТЕР -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>🍽️ СытГУТИ</h3>
+                <p>Умный поиск заведений<br>рядом с учебными корпусами</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>О нас</h3>
+                <p>Мы помогаем студентам быстро найти<br>место для перекуса между парами.<br>Подбираем заведения под твой перерыв!</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Соцсети</h3>
+                <div class="social-links">
+                    <a href="#">📘 VK</a>
+                    <a href="#">📱 Telegram</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>📧 info@sytguti.ru<br>📞 ************</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 СытГУТИ. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/gallery.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/search.js' %}"></script>
+    <script src="{% static 'js/reviews.js' %}"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{% static 'js/map.js' %}"></script>
+    
+</body>
+</html>

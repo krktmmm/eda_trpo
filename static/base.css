@@ -1,0 +1,73 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: 'Tobi';
+    src: url('/static/fonts/Tobi\ Greek\ Cyrillic\ Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: #fefcfc;
+    font-family: 'Tobi';
+    overflow-x: hidden;
+}
+
+.content {
+    min-height: 60vh;
+}
+
+.profile-avatar img,
+.profile-icon img,
+.panel .profile img,
+.dialog-avatar img {
+    background-color: #5F9EA0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* РАЗМЕРЫ ШРИФТА */
+.font-small { font-size: 14px; }
+.font-small h1 { font-size: 36px !important; }
+.font-small h2 { font-size: 24px !important; }
+.font-small .greeting h1 { font-size: 48px !important; }
+.font-small .greeting p { font-size: 20px !important; }
+.font-small .menu-card h2 { font-size: 28px !important; }
+.font-small .menu-card p { font-size: 16px !important; }
+.font-small .time-btn { font-size: 18px !important; }
+
+.font-medium { font-size: 16px; }
+.font-medium h1 { font-size: 48px !important; }
+.font-medium h2 { font-size: 28px !important; }
+.font-medium .greeting h1 { font-size: 66px !important; }
+.font-medium .greeting p { font-size: 28px !important; }
+.font-medium .menu-card h2 { font-size: 32px !important; }
+.font-medium .menu-card p { font-size: 20px !important; }
+.font-medium .time-btn { font-size: 22px !important; }
+
+.font-large { font-size: 18px; }
+.font-large h1 { font-size: 58px !important; }
+.font-large h2 { font-size: 34px !important; }
+.font-large .greeting h1 { font-size: 80px !important; }
+.font-large .greeting p { font-size: 36px !important; }
+.font-large .menu-card h2 { font-size: 38px !important; }
+.font-large .menu-card p { font-size: 24px !important; }
+.font-large .time-btn { font-size: 26px !important; }
+.font-large .place-name { font-size: 1.5em !important; }
+.font-large .place-info { font-size: 16px !important; }
+
+.hidden {
+    display: none !important;
+}

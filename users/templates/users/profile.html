@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Профиль | СытГУТИ{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'profile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-container">
+    <!-- ЛЕВАЯ КОЛОНКА: АВАТАР -->
+    <div class="profile-left">
+        <div class="profile-avatar">
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}?v={{ user.id }}" alt="Аватар">
+            {% elif user.profile.theme == 'dark' %}
+                <img src="{% static 'images/default_avatar_dark_theme.jpg' %}" alt="Профиль">
+            {% else %}
+                <img src="{% static 'images/default_avatar.jpg' %}" alt="Профиль">
+            {% endif %}
+        </div>
+        
+        <div class="profile-left-info">
+            <p>
+                <strong>⭐ Мой рейтинг:</strong> 
+                {{ user.profile.rating|floatformat:1 }} 
+                ({{ user.profile.rating_count }}{% if user.profile.rating_count == 1 %} оценка{% elif user.profile.rating_count == 2 or user.profile.rating_count == 3 or user.profile.rating_count == 4 %} оценки{% else %} оценок{% endif %})
+            </p>
+            <p>
+                <strong>📱 Статус:</strong>
+                {% if user.profile.is_online %}
+                    <span class="online-text">онлайн</span>
+                {% else %}
+                    <span class="offline-text">был(а) {{ user.profile.get_last_activity_display }}</span>
+                {% endif %}
+            </p>
+            <p><strong>📅 На сайте с:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+        </div>
+        
+        <a href="{% url 'edit_profile' %}" class="edit-profile-btn">
+            ✏️ Редактировать профиль
+        </a>
+        <a href="{% url 'change_password' %}" class="edit-profile-btn">
+            🔐 Сменить пароль
+        </a>
+    </div>
+
+    <!-- ПРАВАЯ КОЛОНКА: ДАННЫЕ ПОЛЬЗОВАТЕЛЯ -->
+    <div class="profile-right">
+        <h2>👤 Личная информация</h2>
+        
+        <table class="info-table">
+            <tr>
+                <td>👤 Имя пользователя:</td>
+                <td><strong>{{ user.username }}</strong></td>
+            </tr>
+            <tr>
+                <td>📧 Email:</td>
+                <td>{{ user.email|default:"Не указан" }}</td>
+            </tr>
+            <tr>
+                <td>📱 Telegram:</td>
+                <td>{{ user.profile.telegram|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>📘 VK:</td>
+                <td>{{ user.profile.vk|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>📝 О себе:</td>
+                <td>{{ user.profile.bio|default:"—"|linebreaksbr }}</td>
+            </tr>
+            <tr>
+                <td>🎓 Курс:</td>
+                <td>{{ user.profile.course|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>👥 Группа:</td>
+                <td>{{ user.profile.group|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td>🍽️ Любимая кухня:</td>
+                <td>{{ user.profile.favorite_cuisine|default:"—" }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- ОТЗЫВЫ ПОЛЬЗОВАТЕЛЯ -->
+<div class="reviews-section">
+    <h2>📝 Мои отзывы</h2>
+    <div class="reviews-grid">
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-place">
+                <a href="{% url 'place_detail' review.place.id %}" class="review-place-link">
+                    {{ review.place.name }}
+                </a>
+            </div>
+            <div class="review-rating">⭐ {{ review.rating }}/5</div>
+            <div class="review-text">{{ review.text }}</div>
+            <div class="review-date">{{ review.created_at|date:"d.m.Y H:i" }}</div>
+        </div>
+        {% empty %}
+        <div class="empty-reviews">📭 Вы ещё не оставили ни одного отзыва.</div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

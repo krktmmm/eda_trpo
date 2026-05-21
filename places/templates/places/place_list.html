@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Заведения | СытГУТИ{% endblock %}
+
+{% block content %}
+
+<!-- ДВА ПАРАЛЛЕЛЬНЫХ ПРЯМОУГОЛЬНИКА -->
+<div class="main-container">
+    <!-- ЛЕВАЯ ПАНЕЛЬ -->
+    <div class="time-panel">
+        <!-- ЭКРАН 1 -->
+        <div id="building-screen" class="panel-screen">
+            <h2>🎓 Выбери корпус, в котором находишься</h2>
+
+            <div class="center-content">
+                <div class="time-buttons">
+                    <button class="time-btn building-btn" data-building="1">🏰 Корпус №1</button>
+                    <button class="time-btn building-btn" data-building="3">⛪️ Корпус №3</button>
+                    <button class="time-btn building-btn" data-building="5">🏨 Корпус №5</button>
+                </div>
+            </div>
+        </div>
+        <!-- ЭКРАН 2 -->
+        <div id="time-screen" class="panel-screen hidden">
+            <h2>⏱️ Сколько у тебя есть времени?</h2>
+
+            <div class="time-buttons">
+                <button class="time-btn" data-time="5">🍙 5 мин</button>
+                <button class="time-btn" data-time="15">🥪 15 мин</button>
+                <button class="time-btn" data-time="30">🥗 30 мин</button>
+                <button class="time-btn" data-time="60">🍝 60 мин</button>
+                <button class="time-btn" data-time="90">🍱 90+ мин</button>
+            </div>
+
+            <div id="back-btn" class="back-text">⬅ Назад</div>
+        </div>
+    </div>
+
+    <!-- ПРАВАЯ ПАНЕЛЬ -->
+    <div class="places-panel">
+        <!-- КАРТА-ЗАГЛУШКА (ВИДНА ИЗНАЧАЛЬНО) -->
+         <div id="map-placeholder">
+            <h2>🗺️ Карта заведений</h2>
+            <div class="map-placeholder-inner">
+                <div id="places-map"></div>
+            </div>
+            <p class="map-hint">Выберите корпус, чтобы увидеть список заведений</p>
+        </div>
+
+        <!-- СПИСОК ЗАВЕДЕНИЙ (ИЗНАЧАЛЬНО СКРЫТ) -->
+        <div id="places-container" class="hidden">
+            <h2 id="places-title">🍴 Заведения рядом с корпусом</h2>
+            <div id="places-list">
+                {% for place in places %}
+                <div class="place-card"
+                     data-time1="{{ place.time_from_building_1|default:999 }}"
+                     data-time3="{{ place.time_from_building_3|default:999 }}"
+                     data-time5="{{ place.time_from_building_5|default:999 }}">
+                    <div class="place-header">
+                        <a href="{% url 'place_detail' place.id %}" class="place-name">{{ place.name }}</a>
+                        <button class="favorite-btn {% if place.id in favorited_ids %}active{% endif %}" 
+                                data-place-id="{{ place.id }}">
+                            {% if place.id in favorited_ids %}❤️{% else %}🤍{% endif %}
+                        </button>
+                    </div>
+                    <div class="place-address">📍 {{ place.address }}</div>
+                    <div class="place-info">
+                        <span class="price">💰 {{ place.avg_price|default:"—" }} ₽</span>
+                        {% if place.student_discount %}
+                            <span class="discount">🎓 Скидка: {{ place.student_discount }}</span>
+                        {% endif %}
+                        <span class="rating">⭐ {{ place.rating|floatformat:1 }}</span>
+                        <span class="time-needed">⏰ — мин</span>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="empty-message">Пока нет заведений. Добавьте их через админку.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ places_for_map|json_script:"places-map-data" }}
+
+<script src="{% static 'js/place_list.js' %}"></script>
+<script>
+    // Восстановление параметров из сессии
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/get-selection/')
+            .then(r => r.json())
+            .then(data => {
+                console.log('Восстанавливаем параметры:', data);
+                
+                if (data.building) {
+                    // Нажимаем на кнопку корпуса
+                    const buildingBtn = document.querySelector(`.building-btn[data-building="${data.building}"]`);
+                    if (buildingBtn) {
+                        buildingBtn.click();
+                    }
+                    
+                    // Если есть время — применяем фильтрацию
+                    if (data.time !== null && data.time !== undefined) {
+                        // Ждём появления списка заведений
+                        setTimeout(() => {
+                            const timeBtn = document.querySelector(`.time-btn[data-time="${data.time}"]`);
+                            if (timeBtn) {
+                                timeBtn.click();
+                            } else {
+                                // Если кнопки времени нет, просто фильтруем
+                                if (typeof filterPlaces === 'function') {
+                                    filterPlaces();
+                                }
+                            }
+                        }, 300);
+                    }
+                }
+            })
+            .catch(err => console.error('Ошибка восстановления:', err));
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная | СытГУТИ{% endblock %}
+
+{% block content %}
+
+    <!-- ПРИВЕТСТВИЕ -->
+    <div class="greeting">
+        <h1>Добро пожаловать в СытГУТИ! 🍔</h1>
+        {% if user.is_authenticated %}
+            <p>
+                {% if user.is_authenticated %}
+                    {% if user.profile.greeting_style == 'sweet' %}
+                        Привет, сладенький-вкусненький малышочек {{ user.username }}!
+                    {% elif user.profile.greeting_style == 'formal' %}
+                        Здравствуйте, уважаемый студент {{ user.username }}.
+                    {% elif user.profile.greeting_style == 'friend' %}
+                        що ти, друн {{ user.username }}?
+                    {% elif user.profile.greeting_style == 'comrade' %}
+                        Здравия желаю, товарищ {{ user.username }}!
+                    {% else %}
+                        Привет, {{ user.username }}!
+                    {% endif %}
+                {% endif %}
+            </p>
+        {% endif %}
+    </div>
+    
+    <div class="main-menu">
+    <a href="/places/" class="menu-card">
+    <div class="menu-card-inner">
+        <div class="menu-icon lottie-icon" id="plate-animation"></div>
+        <h2>Заведения</h2>
+        <p>Найди место, где успеешь поесть</p>
+    </div>
+</a>
+
+<a href="/roulette/" class="menu-card">
+    <div class="menu-card-inner roulette">
+        <div class="menu-icon lottie-icon" id="dice-animation"></div>
+        <h2>Обед-рулетка</h2>
+        <p>Найди компанию для обеда</p>
+    </div>
+</a>
+</div>
+
+<script src="{% static 'js/main_menu.js' %}"></script>
+
+{% endblock %}
