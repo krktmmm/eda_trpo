@@ -1224,3 +1224,23 @@ body.dark-theme .required-star {
 body.dark-theme.animations-off .menu-icon.lottie-icon svg {
     filter: brightness(0.8);
 }
+
+body.dark-theme .notification-item.unread .notification-content {
+    background-color: #2d2b00;
+    border-left-color: #f97316;
+}
+
+body.dark-theme .notification-item.read .notification-content {
+    background-color: #1e293b;
+    border-left-color: #475569;
+    color: #64748b;
+}
+
+body.dark-theme .notification-delete {
+    color: #64748b;
+}
+
+body.dark-theme .notification-delete:hover {
+    background: #ef4444;
+    color: white;
+}

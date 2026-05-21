@@ -13,11 +13,42 @@ const notificationsList = document.getElementById('notificationsList');
 
 let notifications = [];
 
-/* Отмечает уведомление как прочитанное */
-function markAsRead(id) {
+/* Отмечает уведомление как прочитанное (меняет цвет) */
+async function markAsRead(id) {
     const notification = notifications.find(n => n.id === id);
-    if (notification) {
+    if (notification && !notification.read) {
         notification.read = true;
+        
+        // Отправляем запрос на сервер
+        try {
+            await fetch(`/roulette/api/notifications/mark-read/${id}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': window.CSRF_TOKEN }
+            });
+        } catch(err) {
+            console.error('Ошибка:', err);
+        }
+        
+        renderNotifications();
+    }
+}
+
+/* Удаляет уведомление из списка */
+async function deleteNotification(id) {
+    // Сначала отмечаем как прочитанное на сервере
+    try {
+        await fetch(`/roulette/api/notifications/mark-read/${id}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': window.CSRF_TOKEN }
+        });
+    } catch(err) {
+        console.error('Ошибка:', err);
+    }
+    
+    // Удаляем из массива
+    const index = notifications.findIndex(n => n.id === id);
+    if (index !== -1) {
+        notifications.splice(index, 1);
         renderNotifications();
     }
 }
@@ -29,23 +60,24 @@ function fetchNotifications() {
     fetch('/roulette/api/notifications/')
         .then(r => r.json())
         .then(data => {
-            if (data.notifications.length > 0) {
-                // Добавляем новые уведомления
+            if (data.notifications && data.notifications.length > 0) {
+                // Добавляем только новые уведомления (которых ещё нет в списке)
                 data.notifications.forEach(notif => {
-                    // Проверяем, нет ли уже такого (по id)
-                    if (!notifications.find(n => n.id === notif.id)) {
+                    const exists = notifications.some(n => n.id === notif.id);
+                    if (!exists) {
                         addNotification(
                             notif.text,
-                            () => { if (notif.link) window.location.href = notif.link; }
+                            () => { if (notif.link) window.location.href = notif.link; },
+                            notif.id
                         );
                     }
                 });
                 
                 // Обновляем бейдж
-                const notifBadge = document.getElementById('notifBadge');
-                if (data.unread_count > 0) {
+                const unreadCount = notifications.filter(n => !n.read).length;
+                if (unreadCount > 0) {
                     notifBadge.classList.remove('hidden');
-                    notifBadge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
+                    notifBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
                 } else {
                     notifBadge.classList.add('hidden');
                 }
@@ -122,55 +154,70 @@ function updateUnreadMessagesCount() {
 updateUnreadMessagesCount();
 setInterval(updateUnreadMessagesCount, 5000);
 
-// Уведомления
+// Уведомления - рендер с крестиком
 function renderNotifications() {
     if (!notificationsList || !notifBadge) return;
 
     const unreadCount = notifications.filter(n => !n.read).length;
-    
-    const typeIcons = {
-        'message': '💬',
-        'match': '🎲',
-        'group_join': '👥',
-        'rating': '⭐'
-    };
 
     // Обновляем кружок
     if (unreadCount > 0) {
         notifBadge.classList.remove('hidden');
+        notifBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
     } else {
         notifBadge.classList.add('hidden');
     }
 
     // Рендерим список
     if (notifications.length === 0) {
-        notificationsList.innerHTML = '<div class="notification-empty">Нет новых уведомлений</div>';
+        notificationsList.innerHTML = '<div class="notification-empty">Нет уведомлений</div>';
         return;
     }
 
     notificationsList.innerHTML = notifications.map(notif => `
-        <div class="notification-item ${notif.read ? '' : 'unread'}" data-id="${notif.id}">
-            <div class="notification-text">${notif.text}</div>
-            <div class="notification-time">${notif.time}</div>
+        <div class="notification-item ${notif.read ? 'read' : 'unread'}" data-id="${notif.id}">
+            <div class="notification-content" data-link="${notif.link || ''}">
+                <div class="notification-text">${notif.text}</div>
+                <div class="notification-time">${notif.time}</div>
+            </div>
+            <button class="notification-delete" data-id="${notif.id}">✖</button>
         </div>
     `).join('');
 
-    // Вешаем обработчики
-    document.querySelectorAll('.notification-item').forEach(item => {
-        item.addEventListener('click', () => {
+    // Обработчик клика по содержимому уведомления (переход + отметить прочитанным)
+    document.querySelectorAll('.notification-content').forEach(content => {
+        content.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const item = content.closest('.notification-item');
             const id = parseInt(item.dataset.id);
             const notification = notifications.find(n => n.id === id);
+            const link = content.dataset.link;
+            
+            // Отмечаем как прочитанное
+            markAsRead(id);
+            
+            // Переходим по ссылке, если есть
             if (notification && notification.onClick) {
                 notification.onClick();
+            } else if (link) {
+                window.location.href = link;
             }
-            markAsRead(id);
+        });
+    });
+    
+    // Обработчик клика по крестику (удаление)
+    document.querySelectorAll('.notification-delete').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = parseInt(btn.dataset.id);
+            deleteNotification(id);
         });
     });
 }
 
-function addNotification(text, onClick = null) {
+function addNotification(text, onClick = null, id = null) {
     const newNotif = {
-        id: Date.now(),
+        id: id || Date.now(),
         text: text,
         time: new Date().toLocaleTimeString(),
         read: false,
@@ -178,6 +225,27 @@ function addNotification(text, onClick = null) {
     };
     notifications.unshift(newNotif);
     renderNotifications();
+}
+
+// Кнопка "Все прочитаны" (отмечает все как прочитанные, но не удаляет)
+const markAllReadBtn = document.getElementById('mark-all-read');
+if (markAllReadBtn) {
+    markAllReadBtn.addEventListener('click', async function(e) {
+        e.stopPropagation();
+        try {
+            const response = await fetch('/roulette/api/notifications/mark-all-read/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': window.CSRF_TOKEN }
+            });
+            if (response.ok) {
+                // Отмечаем все как прочитанные
+                notifications.forEach(n => { n.read = true; });
+                renderNotifications();
+            }
+        } catch(err) {
+            console.error('Ошибка:', err);
+        }
+    });
 }
 
 // Глобальный доступ для рулетки

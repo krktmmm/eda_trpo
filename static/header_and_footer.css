@@ -432,8 +432,60 @@ a.logo {
     font-size: 12px;
     float: right;
     margin-top: 2px;
+    font-family: 'Tobi';
 }
 
 .mark-all-read:hover {
     text-decoration: underline;
+}
+
+/* Стили для уведомлений с крестиком */
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-family: 'Tobi';
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.notification-content {
+    flex: 1;
+    cursor: pointer;
+}
+
+.notification-item.unread .notification-content {
+    background-color: #fff3cd;
+}
+
+.notification-item.read {
+    border-left: 3px solid #ccc;
+}
+
+.notification-item.read .notification-content {
+    color: #999;
+}
+
+.notification-delete {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px;
+    margin-left: 10px;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.notification-delete:hover {
+    background: #e74c3c;
+    color: white;
 }

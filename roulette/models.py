@@ -32,6 +32,7 @@ class SoloRequest(models.Model):
         verbose_name = "Заявка (один)"
         verbose_name_plural = "Заявки (один)"
 
+
 class GroupRequest(models.Model):
     """Заявка на поиск компании (2+ человек)"""
     
@@ -66,6 +67,7 @@ class GroupRequest(models.Model):
         verbose_name = "Заявка (группа)"
         verbose_name_plural = "Заявки (группа)"
 
+
 class GroupMember(models.Model):
     """Участники групповой заявки"""
     group = models.ForeignKey(GroupRequest, on_delete=models.CASCADE, related_name='members')
@@ -76,6 +78,7 @@ class GroupMember(models.Model):
         verbose_name = "Участник группы"
         verbose_name_plural = "Участники группы"
         unique_together = ('group', 'user')
+
 
 class UserRating(models.Model):
     """Оценка пользователя после встречи"""
@@ -92,6 +95,7 @@ class UserRating(models.Model):
 
     def __str__(self):
         return f"{self.from_user.username} → {self.to_user.username}: {self.rating}⭐"
+
 
 class Dialog(models.Model):
     """Диалог между пользователями"""
@@ -117,8 +121,17 @@ class Dialog(models.Model):
         """Создать или найти существующий диалог"""
         u1, u2 = sorted([user1, user2], key=lambda u: u.id)
         dialog = cls.objects.filter(participants=u1).filter(participants=u2).first()
+        
         if dialog:
+            # Если диалог есть, но обед завершён — просто сбрасываем флаг
+            if dialog.is_meal_completed:
+                dialog.is_meal_completed = False
+                dialog.completed_by = None
+                dialog.completed_at = None
+                dialog.save()
             return dialog, False
+        
+        # Диалога нет — создаём новый
         dialog = cls.objects.create()
         dialog.participants.add(u1, u2)
         return dialog, True
@@ -184,6 +197,7 @@ class Message(models.Model):
     def __str__(self):
         return f"{self.sender.username}: {self.text[:30]}"
 
+
 class Notification(models.Model):
     NOTIFICATION_TYPES = [
         ('message', 'Новое сообщение'),
@@ -196,7 +210,7 @@ class Notification(models.Model):
     type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
     title = models.CharField(max_length=200)
     text = models.TextField()
-    link = models.CharField(max_length=500, blank=True)  # куда ведёт уведомление
+    link = models.CharField(max_length=500, blank=True)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
