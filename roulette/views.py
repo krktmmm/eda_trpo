@@ -518,7 +518,6 @@ def rate_user(request, user_id):
                 to_user=to_user,
                 rating=int(rating),
                 text=text,
-                photo_url=photo_url
             )
             
             # Обновляем рейтинг пользователя
@@ -1027,7 +1026,6 @@ def save_group_rating(request, dialog_id):
     user_id = data.get('user_id')
     rating = data.get('rating')
     text = data.get('text', '')
-    photo_url = data.get('photo_url', '')
     
     dialog = get_object_or_404(Dialog, id=dialog_id)
     to_user = get_object_or_404(get_user_model(), id=user_id)
@@ -1041,8 +1039,7 @@ def save_group_rating(request, dialog_id):
         from_user=request.user,
         to_user=to_user,
         rating=rating,
-        text=text,
-        photo_url=photo_url
+        text=text
     )
     
     # Обновляем рейтинг пользователя
@@ -1070,17 +1067,11 @@ def save_group_rating(request, dialog_id):
     if to_user in progress.skipped_users.all():
         progress.skipped_users.remove(to_user)
     
-    # Переходим к следующему
-    all_participants = list(dialog.participants.exclude(id=request.user.id))
-    rated_ids = progress.rated_users.values_list('id', flat=True)
-    skipped_ids = progress.skipped_users.values_list('id', flat=True)
-    
-    remaining = [p for p in all_participants if p.id not in rated_ids]
+    # Сбрасываем индекс для следующего
     progress.current_index = 0
     progress.save()
     
     return JsonResponse({'status': 'ok'})
-
 
 @login_required
 @require_http_methods(["POST"])
