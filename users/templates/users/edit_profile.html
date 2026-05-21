@@ -5,6 +5,7 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'edit-profile.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
 {% endblock %}
 
 {% block content %}
@@ -92,11 +93,22 @@
             
             <button type="submit" class="save-btn">💾 Сохранить изменения</button>
         </form>
-        
+        <div id="avatar-crop-modal" class="crop-modal">
+        <div class="crop-modal-content">
+            <h3>Обрежьте аватарку</h3>
+            <div class="crop-image-wrapper">
+                <img id="crop-image" alt="Кадрирование аватарки">
+            </div>
+            <div class="crop-buttons">
+                <button type="button" id="crop-save-btn" class="save-btn">✅ Применить</button>
+                <button type="button" id="crop-cancel-btn" class="avatar-delete-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
         <a href="{% url 'profile' %}" class="back-link">← Назад в профиль</a>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 <script src="{% static 'js/edit_profile.js' %}"></script>
 
 {% endblock %}

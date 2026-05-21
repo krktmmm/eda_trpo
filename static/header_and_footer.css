@@ -489,3 +489,17 @@ a.logo {
     background: #e74c3c;
     color: white;
 }
+
+/* Баг с наложением карты поверх открывшихся окон*/
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom,
+.leaflet-control {
+    z-index: 1 !important;
+}
+
+.profile-dropdown,
+.notifications-dropdown,
+.dropdown-menu {
+    z-index: 9999 !important;
+}

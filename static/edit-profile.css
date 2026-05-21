@@ -230,3 +230,76 @@
     color: red;
     font-size: 12px;
 }
+
+/* Кадрирование аватарки */
+.crop-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    align-items: center;
+    justify-content: center;
+}
+
+.crop-modal-content {
+    background: white;
+    width: 90%;
+    max-width: 520px;
+    border-radius: 25px;
+    padding: 25px;
+    text-align: center;
+}
+
+.crop-modal-content h3 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.crop-image-wrapper {
+    width: 100%;
+    max-height: 420px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#crop-image {
+    display: block;
+    max-width: 100%;
+}
+
+.crop-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.cropper-view-box,
+.cropper-face {
+    border-radius: 50%;
+}
+
+.cropper-face {
+    background-color: transparent;
+}
+
+/* Убираем линии */
+.cropper-line {
+    display: none !important;
+}
+
+/* Точки изменения размера */
+.cropper-point {
+    width: 14px !important;
+    height: 14px !important;
+    border-radius: 50%;
+    background-color: #4b8082 !important;
+    border: 2px solid white;
+    opacity: 1 !important;
+}
+
+.cropper-view-box {
+    outline: 3px solid #4b8082;
+    outline-color: #4b8082;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+}

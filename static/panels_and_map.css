@@ -260,3 +260,8 @@
     scrollbar-width: thin;
     scrollbar-color: #f99039 transparent;  /* (ползунок) (дорожка прозрачная) */
 }
+
+/* Баг с наложением карты поверх открывшихся окон*/
+#places-map {
+    z-index: 1;
+}
