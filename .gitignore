@@ -1,41 +1,92 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 *.so
-.Python
+*.dll
 
-# Виртуальное окружение
+# Virtual environment
 venv/
 env/
 ENV/
 .venv
 .env
+.env.local
+.env.*.local
 
-# База данных
-# db.sqlite3
+# Database
+db.sqlite3
 db.sqlite3-journal
+*.sqlite3
 
-# Бинарники
+# Binaries
 sqlite3.exe
+*.exe
 
 # Django
 *.log
 *.pot
 *.pyc
 local_settings.py
+*.pid
+*.pid.lock
+
+# Media files
+media/
+avatars/
+place_photos/
+review_photos/
+
+# Static files collected
+staticfiles/
+static_collected/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+.project
+.pydevproject
+.settings/
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
+._*
 
-# Логи и тесты
+# Logs and tests
 *.log
 .pytest_cache/
 .coverage
 htmlcov/
+.tox/
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Poetry
+poetry.lock
+pyproject.toml.bak
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+
+# Secrets
+*.pem
+*.key
+*.crt
