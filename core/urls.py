@@ -33,6 +33,7 @@ urlpatterns = [
     path('profile/settings/', settings_view, name='settings'),
     path('', include('places.urls')),
     path('roulette/', include('roulette.urls')),
+    path('api/', include('api.urls')),
 ]
 
 if settings.DEBUG:
